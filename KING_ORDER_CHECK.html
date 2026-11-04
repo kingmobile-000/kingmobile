@@ -72,11 +72,18 @@ header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#c62d12
 .cbar button{width:100%;padding:13px;border:0;border-radius:12px;font-size:16px;font-weight:900;background:#4f46e5;color:#fff}.cbar button.on{background:#e63c1f}
 #list{padding-bottom:80px}.cimg{width:92px;height:92px;object-fit:cover;border-radius:10px;margin-top:8px}
 .c1{background:#4f46e5;color:#fff}.c2{background:#16a34a;color:#fff}.c3{background:#fde4e1;color:#b42410}
+.dl select{width:100%;padding:12px;font-size:15px;font-weight:800;border:2px solid #0f766e;border-radius:10px;background:#fff;color:#111}
+.dls{margin-top:6px;font-size:12px;font-weight:800;color:#0f766e;line-height:1.4}.dlw{margin-top:6px;font-size:12px;font-weight:800;color:#b42410;line-height:1.4}
+.bx{border:1px solid #d5d8dd;border-radius:12px;padding:10px;background:#fafafa}.bxh{font-size:15px;font-weight:900}.bxa{font-size:13px;font-weight:700;color:#333;margin-top:4px;line-height:1.4}
+.bof{background:#fde4e1;color:#b42410;border-radius:999px;padding:2px 8px;font-size:11px;font-weight:900}
+.bxb{display:flex;gap:6px;margin-top:8px}.bxb button{flex:1;padding:9px 4px;border:0;border-radius:9px;font-size:13px;font-weight:900;background:#e8f0fe;color:#0b4fa8}.bxb button.rd{background:#fde4e1;color:#b42410}
+.bfm{border-top:2px dashed #ccd;padding-top:10px;display:flex;flex-direction:column;gap:8px}.bfm .t{font-size:14px;font-weight:900;color:#0f766e}
+.bun{background:#fff3e0;color:#b45309;border-radius:10px;padding:8px 10px;font-size:12px;font-weight:800;line-height:1.5}
 </style>
 </head>
 <body>
 <header>
-<div class="h1"><b>👑 KING ORDER CHECK</b><div style="display:flex;gap:6px"><button id="bp">📋 पेस्ट</button><button id="br">🔄</button><button id="bs">⚙</button></div></div>
+<div class="h1"><b>👑 KING ORDER CHECK</b><div style="display:flex;gap:6px"><button id="bd">🛵</button><button id="bp">📋 पेस्ट</button><button id="br">🔄</button><button id="bs">⚙</button></div></div>
 <div class="sw">🔍<input type="search" id="q" placeholder="नाम / मोबाइल / आइटम / ऑर्डर नंबर खोजें"></div>
 </header>
 <div class="tabs" id="tabs"></div>
@@ -89,6 +96,8 @@ header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#c62d12
 <script>
 var DEFAULT_URL="https://script.google.com/macros/s/AKfycbwMqxsa0AeHvuvHRK2G7plFFXpAvDrLimyLgs4m6lvA6S5fmlX0yHtZsXCh_bZ7dFqK/exec";            // यहाँ Google Apps Script (Web App) का /exec लिंक डाल सकते हैं (या ⚙ से डालें)
 var SRC="kms_orders",LK="kms_orders_page",UK="kms_order_url";
+var DEFAULT_BURL="PASTE_BOYS_LINK_HERE",BUK="kms_boys_url",BPK="kms_boys_pin",BCK="kms_boys_cache",boys=[];  /* Delivery_Boys_Code.gs का /exec लिंक (या ⚙ से डालें) */
+try{boys=JSON.parse(localStorage.getItem(BCK)||"[]")||[]}catch(e){boys=[]}
 var TABS=[["New","New"],["Confirmed","Confirmed"],["Shipped","Shipped"],["OutForDelivery","Out For Delivery"],["Done","Delivery Done"],["Cancelled","Cancelled"],["All","All"]],tab="New",orders=[],dd={};
 var SL={New:"New Order",Confirmed:"Order Confirmed",Shipped:"Shipped",OutForDelivery:"Out For Delivery",Done:"Delivery Done",DelCancelled:"Delivery Cancelled",Cancelled:"Order Cancelled"};
 function ns(s){s=String(s==null?"":s).trim();var m={"":"New","नया":"New","कन्फर्म":"Confirmed","डिलीवर्ड":"Done","रद्द":"Cancelled"};return m.hasOwnProperty(s)?m[s]:s}
@@ -145,7 +154,7 @@ if(s==="New")h+=B("b1","Confirmed","✔ Order Confirmed")+B("b3","Cancelled","�
 else if(s==="Confirmed")h+=B("b5","Shipped","📦 Shipped")+B("b3","Cancelled","✖ Cancel Order");
 else if(s==="Shipped")h+=B("b6","OutForDelivery","🛵 Out For Delivery")+B("b3","Cancelled","✖ Cancel Order");
 else if(s==="OutForDelivery"){var dm=dd[o.id]!==undefined?dd[o.id]:(o.dboy||""),ok=tel10(dm).length===10;
-h+='<div class="dl"><div class="dlt">'+esc(o.no||"#"+o.id)+' ➜ डिलीवरी वाले का मोबाइल नंबर</div><input type="tel" inputmode="numeric" maxlength="14" data-dm="'+id+'" placeholder="10 अंक का मोबाइल नंबर" value="'+esc(dm)+'"></div>'
+h+=dlBox(o,id,dm)
 +'<div class="dbtn" style="display:'+(ok?'flex':'none')+'">'+B("b2","Done","✅ Done Delivery")+B("b3","DelCancelled","❌ Cancel Delivery")+'</div>'}
 return h}
 function card(o){
@@ -198,6 +207,7 @@ var m="";if(s==="Done"||s==="DelCancelled"){m=tel10(dd[id]!==undefined?dd[id]:o.
 var ask=s==="Done"?"✅ Delivery Done करें? ("+(o.no||"")+")":s==="DelCancelled"?"❌ Delivery Cancel करें? ("+(o.no||"")+")":s==="Cancelled"?"✖ यह ऑर्डर रद्द करें? ("+(o.no||"")+")":"";
 function go(){var f={};
 if(m){o.dboy=m;f.dboy=m}
+if(s==="OutForDelivery"&&tel10(o.dboy).length!==10){var sgb=boyForOrder(o);if(sgb){o.dboy=sgb.mobile;f.dboy=sgb.mobile}}
 if(s==="Cancelled"){o.cancelby="Shop";f.cancelby="Shop"}else{o.cancelby="";f.cancelby=""}
 o.status=s;if(offerRefund(o))f.offerref="1";if(s==="Done"&&(num(o.offer)||0)>0)post({action:"offer",op:"done",id:o.id,mobile:tel10(o.mobile),amount:num(o.offer)});o.upd=new Date().toISOString();f.upd=o.upd;o._dirty=1;save();post({action:"status",id:id,status:s,fields:f});logO(o,s);tab=(s==="DelCancelled")?"Cancelled":s;render()}
 if(s==="Cancelled")askPw(ask+" – पासवर्ड चाहिए",go);else if(ask)askYes(ask,go);else go()}
@@ -292,6 +302,63 @@ var _br=document.getElementById("br").onclick;document.getElementById("br").oncl
 var _bs=document.getElementById("bs").onclick;document.getElementById("bs").onclick=function(){_bs();var sh=document.getElementById("shb"),r=sh.querySelector(".r");if(r)r.insertAdjacentHTML("beforebegin",'<p><b>🛠 Complaint का /exec लिंक</b> (Complaints_Code.gs)</p><input type="text" id="cu2" placeholder="https://script.google.com/macros/s/…/exec" value="'+esc(getCUrl())+'">');
 var us=document.getElementById("us"),_us=us.onclick;us.onclick=function(){var e=document.getElementById("cu2");if(e)try{localStorage.setItem(CUK,e.value.trim())}catch(x){}_us();cfetch()}};
 cfetch();render();setInterval(function(){if(getCUrl()&&!document.hidden)cfetch()},20000);
+
+/* ===== 🛵 Delivery Boys (नंबर + एरिया/गाँव) ===== */
+function nz(s){return String(s==null?"":s).toLowerCase().replace(/\s+/g," ").trim()}
+function oAddr(o){return [o.address,o.city,o.pin].join(" ")}
+function normB(b){var a=b.areas;if(typeof a==="string")a=a.split(/[,;\n،]+/);a=(a||[]).map(function(x){return String(x).trim()}).filter(Boolean);return{mobile:tel10(b.mobile),name:String(b.name||""),areas:a,active:b.active!==false}}
+function activeBoys(){return boys.filter(function(b){return b.active!==false})}
+function boyBy(m){m=tel10(m);for(var i=0;i<boys.length;i++)if(tel10(boys[i].mobile)===m)return boys[i];return null}
+function boyForOrder(o){var t=nz(oAddr(o)),AB=activeBoys();for(var i=0;i<AB.length;i++)for(var j=0;j<AB[i].areas.length;j++){var a=nz(AB[i].areas[j]);if(a&&t.indexOf(a)>=0)return AB[i]}return null}
+function dlBox(o,id,dm){var AB=activeBoys(),t=esc(o.no||"#"+o.id);
+if(!AB.length)return '<div class="dl"><div class="dlt">'+t+' ➜ डिलीवरी वाले का मोबाइल नंबर</div><input type="tel" inputmode="numeric" maxlength="14" data-dm="'+id+'" placeholder="10 अंक का मोबाइल नंबर" value="'+esc(dm)+'"><div class="dlw">⚠ पहले ऊपर 🛵 बटन से डिलीवरी वाले (नंबर + गाँव) जोड़िए – तब सिर्फ़ वही लॉगिन कर पाएँगे</div></div>';
+var sg=boyForOrder(o),cur=tel10(dm),found=false,h='<div class="dl"><div class="dlt">'+t+' ➜ कौन सा डिलीवरी वाला जाएगा?</div><select data-dm="'+id+'"><option value="">— डिलीवरी वाला चुनिए —</option>';
+AB.forEach(function(b){var sel=cur===tel10(b.mobile);if(sel)found=true;h+='<option value="'+esc(b.mobile)+'"'+(sel?" selected":"")+'>'+esc((b.name?b.name+" • ":"")+b.mobile+" ("+b.areas.join(", ")+")")+'</option>'});
+if(cur&&!found)h+='<option value="'+esc(cur)+'" selected>'+esc(cur)+' (लिस्ट में नहीं – लॉगिन नहीं कर पाएगा)</option>';
+h+='</select>';if(sg&&cur!==tel10(sg.mobile))h+='<div class="dls">👉 इस पते के हिसाब से: '+esc((sg.name?sg.name+" • ":"")+sg.mobile)+' ('+esc(sg.areas.join(", "))+')</div>';
+if(!sg)h+='<div class="dlw">⚠ इस पते का गाँव किसी डिलीवरी वाले के एरिया में नहीं मिला – ऊपर से खुद चुनिए</div>';
+return h+'</div>'}
+function getBUrl(){var u="";try{u=localStorage.getItem(BUK)||""}catch(e){}return u||DEFAULT_BURL}
+function bok(){return /^https?:/.test(getBUrl())}
+function getPin(){try{return localStorage.getItem(BPK)||""}catch(e){return""}}
+function bfetch(cb){var u=getBUrl();if(!bok()||!getPin()){if(cb)cb(false,"setup");return}
+fetch(u+(u.indexOf("?")<0?"?":"&")+"action=list&pin="+encodeURIComponent(getPin())+"&t="+Date.now()).then(function(r){return r.json()}).then(function(j){
+if(j&&j.ok){boys=(j.boys||[]).map(normB);sv(BCK,boys);if(cb)cb(true)}else{if(j&&j.err==="pin"){try{localStorage.removeItem(BPK)}catch(e){}}if(cb)cb(false,(j&&j.err)||"err")}}).catch(function(){if(cb)cb(false,"net")})}
+function bpost(o){o.pin=getPin();var u=getBUrl();if(!bok())return;try{fetch(u,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(o)}).catch(function(){})}catch(e){}}
+function boysSheet(){
+if(!bok()){openSheet('<h3>🛵 Delivery Boys</h3><p>पहले Delivery_Boys_Code.gs का /exec लिंक डालिए: ऊपर ⚙ दबाइए → "Delivery Boys का /exec लिंक" → सेव।</p><div class="r"><button class="no" id="bcl">बंद</button></div>');document.getElementById("bcl").onclick=closeSheet;return}
+if(!getPin()){openSheet('<h3>🔒 Delivery Boys – PIN</h3><p>Delivery_Boys_Code.gs में जो ADMIN_PIN रखा है वह डालिए (एक बार, इसी फ़ोन में याद रहेगा)।</p><input type="password" id="bpin" placeholder="PIN" autocomplete="off"><div id="msg"></div><div class="r"><button class="no" id="bcl">बंद</button><button class="ok" id="bpk">खोलें</button></div>');
+document.getElementById("bcl").onclick=closeSheet;document.getElementById("bpk").onclick=function(){var v=document.getElementById("bpin").value.trim();if(!v)return;try{localStorage.setItem(BPK,v)}catch(e){}
+document.getElementById("msg").textContent="⏳ जाँच रहे हैं…";bfetch(function(ok,err){if(ok)drawBoys();else document.getElementById("msg").textContent=err==="pin"?"⚠ गलत PIN":"⚠ जुड़ नहीं पाए – इंटरनेट / लिंक जाँचिए"})};return}
+drawBoys();bfetch(function(ok){if(ok&&document.getElementById("bfn"))drawBoys(true)})}
+var bEdit=null;
+function drawBoys(keep){var f=keep&&document.getElementById("bfn")?{n:document.getElementById("bfn").value,m:document.getElementById("bfm").value,a:document.getElementById("bfa").value}:null;
+var h='<h3>🛵 Delivery Boys ('+boys.length+')</h3><p>यहाँ जिनके नंबर जुड़ेंगे सिर्फ़ वही KING_DELIVERY में लॉगिन कर पाएँगे, और सिर्फ़ अपने गाँव / एरिया के ऑर्डर व Complaint देखेंगे।</p>';
+boys.forEach(function(b){var pend=orders.filter(function(o){return ns(o.status)==="OutForDelivery"&&tel10(o.dboy)===tel10(b.mobile)}).length;
+h+='<div class="bx"><div class="bxh">'+esc(b.name||"डिलीवरी वाला")+' • '+esc(b.mobile)+(b.active===false?' <span class="bof">बंद</span>':'')+'</div><div class="bxa">📍 '+esc(b.areas.join(", ")||"— एरिया नहीं —")+'</div><div class="bxa">🛵 अभी चल रही डिलीवरी: '+pend+'</div>'
++'<div class="bxb"><button data-ba="edit" data-bm="'+esc(b.mobile)+'">✏ बदलें</button><button data-ba="tog" data-bm="'+esc(b.mobile)+'">'+(b.active===false?"✅ चालू करें":"⏸ बंद करें")+'</button><button class="rd" data-ba="del" data-bm="'+esc(b.mobile)+'">🗑 हटाएँ</button></div></div>'});
+if(!boys.length)h+='<div class="bun">अभी कोई डिलीवरी वाला नहीं जुड़ा है।</div>';
+var un=orders.filter(function(o){var s=ns(o.status);return(s==="Confirmed"||s==="Shipped"||s==="OutForDelivery")&&o.delivery==="घर"&&!boyForOrder(o)&&!(s==="OutForDelivery"&&tel10(o.dboy).length===10)});
+if(boys.length&&un.length)h+='<div class="bun">⚠ इन चालू ऑर्डर का गाँव किसी के एरिया में नहीं मिला: '+un.slice(0,6).map(function(o){return esc(o.no||o.id)+" ("+esc([o.address,o.city].filter(Boolean).join(", ")||"पता नहीं")+")"}).join(" • ")+(un.length>6?" …":"")+'</div>';
+var e=bEdit?boyBy(bEdit):null;
+h+='<div class="bfm"><div class="t">'+(e?"✏ बदलाव करें":"➕ नया डिलीवरी वाला जोड़ें")+'</div><input type="text" id="bfn" placeholder="नाम (जैसे: राजू)" value="'+esc(f?f.n:(e?e.name:""))+'"><input type="tel" inputmode="numeric" maxlength="10" id="bfm" placeholder="10 अंक का मोबाइल नंबर"'+(e?" readonly":"")+' value="'+esc(f?f.m:(e?e.mobile:""))+'"><textarea id="bfa" style="min-height:76px" placeholder="कौन-कौन से गाँव / एरिया देखेगा – कॉमा से अलग करें (जैसे: रामपुर, सिंगारपुर, 226021)">'+esc(f?f.a:(e?e.areas.join(", "):""))+'</textarea><p>💡 गाँव का नाम वैसा लिखिए जैसा ग्राहक पते में लिखता है। एक गाँव के 2 स्पेलिंग हों तो दोनों लिख दीजिए। पिन कोड भी लिख सकते हैं।</p><div id="msg"></div></div>'
++'<div class="r"><button class="no" id="bcl">बंद</button><button class="ok" id="bsv">'+(e?"सेव करें":"जोड़ें")+'</button></div>';
+document.getElementById("shb").innerHTML=h;document.getElementById("ov").classList.add("on");
+document.getElementById("bcl").onclick=function(){bEdit=null;closeSheet()};
+document.getElementById("bsv").onclick=function(){var n=document.getElementById("bfn").value.trim(),m=tel10(document.getElementById("bfm").value),a=normB({mobile:m,areas:document.getElementById("bfa").value}).areas,ms=document.getElementById("msg");
+if(m.length!==10){ms.textContent="⚠ 10 अंक का सही मोबाइल नंबर डालिए";return}if(!a.length){ms.textContent="⚠ कम से कम एक गाँव / एरिया डालिए";return}
+var ex=boyBy(m),act=ex?ex.active!==false:true;if(ex&&!bEdit){ms.textContent="⚠ यह नंबर पहले से जुड़ा है – उसके आगे ✏ बदलें दबाइए";return}
+if(ex){ex.name=n;ex.areas=a}else boys.push({mobile:m,name:n,areas:a,active:true});
+sv(BCK,boys);bpost({action:"save",mobile:m,name:n,areas:a,active:act});bEdit=null;drawBoys();setTimeout(function(){bfetch(function(ok){if(ok&&document.getElementById("bfn"))drawBoys(true)})},3500)}}
+document.getElementById("shb").addEventListener("click",function(e){var b=e.target.closest("[data-ba]");if(!b)return;var m=b.getAttribute("data-bm"),x=boyBy(m),k=b.getAttribute("data-ba");if(!x)return;
+if(k==="edit"){bEdit=m;drawBoys();return}
+if(k==="tog"){x.active=x.active===false;sv(BCK,boys);bpost({action:"save",mobile:x.mobile,name:x.name,areas:x.areas,active:x.active});drawBoys();render();return}
+if(k==="del"){askYes("🗑 "+(x.name||x.mobile)+" को हटाएँ? (उसका लॉगिन तुरंत बंद हो जाएगा)",function(){boys=boys.filter(function(y){return tel10(y.mobile)!==tel10(m)});sv(BCK,boys);bpost({action:"remove",mobile:m});bEdit=null;drawBoys();render()},"हाँ, हटाएँ")}});
+document.getElementById("bd").onclick=function(){bEdit=null;boysSheet()};
+var _bs2=document.getElementById("bs").onclick;document.getElementById("bs").onclick=function(){_bs2();var sh=document.getElementById("shb"),r=sh.querySelector(".r"),cur=getBUrl();if(r)r.insertAdjacentHTML("beforebegin",'<p><b>🛵 Delivery Boys का /exec लिंक</b> (Delivery_Boys_Code.gs)</p><input type="text" id="bu2" placeholder="https://script.google.com/macros/s/…/exec" value="'+esc(/^https?:/.test(cur)?cur:"")+'">');
+var us=document.getElementById("us"),_us2=us.onclick;us.onclick=function(){var e=document.getElementById("bu2");if(e)try{localStorage.setItem(BUK,e.value.trim())}catch(x){}_us2();bfetch(function(){render()})}};
+bfetch(function(ok){if(ok&&!typing())render()});
+setInterval(function(){if(!document.hidden&&bok()&&getPin()&&!typing())bfetch(function(ok){if(ok&&!typing()&&!document.getElementById("bfn"))render()})},60000);
 </script>
 </body>
 </html>
