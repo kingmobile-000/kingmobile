@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="hi"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>KING DELIVERY</title>
+<style>
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:#f3f4f6;color:#111;font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Devanagari",sans-serif}
+header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#0f766e,#14958a);color:#fff;padding:10px 12px;padding-top:calc(10px + env(safe-area-inset-top,0px));display:flex;justify-content:space-between;align-items:center;gap:8px}
+header b{font-size:18px;font-weight:900}header span{font-size:13px;font-weight:700;opacity:.9}
+header button{background:rgba(255,255,255,.22);border:0;color:#fff;border-radius:10px;padding:8px 11px;font-size:15px;font-weight:800}
+.tabs{display:flex;gap:6px;padding:8px 10px;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.12);position:sticky;top:56px;z-index:4}
+.tb{flex:1;padding:10px;border-radius:999px;border:2px solid #d5d8dd;background:#fff;font-size:14px;font-weight:900;color:#000}.tb.on{background:#0f766e;border-color:#0f766e;color:#fff}
+#sync{font-size:12px;font-weight:700;color:#555;padding:6px 12px}
+.oc{background:#fff;margin:8px 10px;border-radius:14px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.1)}
+.oh{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#f1f9f8;border-bottom:1px solid #eee;font-weight:900}
+.st{font-size:12px;font-weight:900;padding:4px 10px;border-radius:999px}.st.o{background:#e0f7f4;color:#0f766e}.st.d{background:#e3f6e8;color:#0a5d24}.st.x{background:#fde4e1;color:#b42410}
+.sec{padding:10px 12px}.sec+.sec{border-top:1px dashed #ddd}.sl{font-size:12px;font-weight:900;color:#0f766e;margin-bottom:6px}
+.it{display:flex;gap:12px}.th{flex:none;width:80px;height:80px;border-radius:10px;background:#eceef1;display:flex;align-items:center;justify-content:center;overflow:hidden;font-size:28px}.th img{width:100%;height:100%;object-fit:contain}
+.in{font-size:16px;font-weight:800;line-height:1.3}.cp{display:inline-block;font-size:12px;font-weight:800;background:#f1f2f4;border-radius:8px;padding:3px 9px;margin:6px 6px 0 0}
+.tot{display:flex;justify-content:space-between;margin-top:10px;background:#fff7e6;border-radius:10px;padding:9px 12px;font-weight:900;font-size:18px}
+.kv{display:flex;gap:8px;padding:3px 0;font-size:15px}.kv span:first-child{flex:none;width:78px;color:#555;font-weight:700}.kv span:last-child{font-weight:800;word-break:break-word}
+.cb{display:flex;gap:8px;margin-top:8px}.cb a{flex:1;text-align:center;text-decoration:none;padding:11px 6px;border-radius:10px;font-size:14px;font-weight:900}
+.ca{background:#e8f0fe;color:#0b4fa8}.cw{background:#dcf8e6;color:#0a5d24}.cm{background:#fff3e0;color:#b45309}
+.ab{display:flex;gap:8px;padding:10px 12px;border-top:1px solid #eee}.ab button{flex:1;padding:14px 6px;border-radius:10px;border:0;font-size:15px;font-weight:900}
+.b2{background:#16a34a;color:#fff}.b3{background:#fde4e1;color:#b42410}
+.empty{text-align:center;color:#666;padding:50px 20px;font-weight:700;line-height:1.7}
+#lg{padding:40px 20px;max-width:420px;margin:0 auto;text-align:center}#lg h2{margin:0 0 6px}#lg p{color:#444;font-weight:700;margin:0 0 16px}
+#lg input{width:100%;padding:15px;font-size:20px;font-weight:800;border:2px solid #0f766e;border-radius:12px;text-align:center;letter-spacing:1px}
+#lg button{width:100%;margin-top:12px;padding:15px;font-size:17px;font-weight:900;border:0;border-radius:12px;background:#0f766e;color:#fff}#lm{color:#c0160c;font-weight:800;font-size:13px;margin-top:8px}
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20;align-items:flex-end;justify-content:center;padding:10px}#ov.on{display:flex}
+.sh{background:#fff;width:100%;max-width:460px;border-radius:16px;padding:14px}.sh h3{margin:0 0 12px;font-size:17px}.sh .r{display:flex;gap:8px}.sh .r button{flex:1;padding:13px;font-size:16px;font-weight:900;border-radius:12px;border:0}
+</style></head><body>
+<header><div><b>🛵 KING DELIVERY</b><br><span id="who"></span></div><div><button id="br">🔄</button> <button id="bo">Logout</button></div></header>
+<div id="app"></div>
+<div id="ov"><div class="sh" id="shb"></div></div>
+<script>
+var URL_="https://script.google.com/macros/s/AKfycbwMqxsa0AeHvuvHRK2G7plFFXpAvDrLimyLgs4m6lvA6S5fmlX0yHtZsXCh_bZ7dFqK/exec";  // Orders wala /exec link (Order Check wala hi)
+var LOG_URL="https://script.google.com/macros/s/AKfycbw5CiNZ87QH5rLHzPl7Et83Nn9RT67S8f07FMxwmfrphRiyF4XrFh0RMIRDLPmBXZmMcg/exec";  // Complaints_Code.gs ka /exec link (Delivery_Log sheet me line judne ke liye)
+var MK="kms_boy_mobile",OK="kms_boy_ov",me="",all=[],ov={},tab="out",last="";
+function t10(m){var d=String(m||"").replace(/\D/g,"");return d.length>10?d.slice(-10):d}
+function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function num(x){var n=parseFloat(String(x==null?"":x).replace(/,/g,""));return isNaN(n)?null:n}
+function inr(x){var n=num(x);return n===null?"—":"₹"+(Math.round(n*100)/100).toLocaleString("en-IN")}
+function lget(k,d){try{return JSON.parse(localStorage.getItem(k))||d}catch(e){return d}}
+function lset(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+function post(o){try{fetch(URL_,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(o)}).catch(function(){})}catch(e){}}
+function st(o){return ov[o.id]||o.status}
+function mine(){return all.filter(function(o){return t10(o.dboy)===me})}
+function amt(o){var R=num(o.rate),T=(o.total!==""&&o.total!=null)?num(o.total):(R!==null?R*(num(o.qty)||1):null),OF=num(o.offer)||0;if(T===null)return null;return(OF>0&&String(o.offerref)!=="1")?Math.max(0,T-OF):T}
+function card(o){var s=st(o),m=t10(o.mobile),adr=(o.delivery==="घर"?(o.address||"")+(o.city?", "+o.city:"")+(o.pin?" - "+o.pin:""):"");
+var h='<div class="oc"><div class="oh"><span>'+esc(o.no||"#"+o.id)+'</span><span class="st '+(s==="OutForDelivery"?"o":s==="Done"?"d":"x")+'">'+(s==="OutForDelivery"?"Out For Delivery":s==="Done"?"Delivery Done":"Delivery Cancelled")+'</span></div>';
+h+='<div class="sec"><div class="sl">🛒 आइटम</div><div class="it"><div class="th">'+(o.thumb?'<img alt="" src="'+esc(o.thumb)+'">':'📦')+'</div><div><div class="in">'+esc(o.item)+'</div><span class="cp">मात्रा: '+esc(o.qty||1)+'</span>'+(o.sku?'<span class="cp">SKU: '+esc(o.sku)+'</span>':'')+'</div></div>';
+h+='<div class="tot"><span>ग्राहक से लेना है</span><span>'+inr(amt(o))+'</span></div><div class="kv" style="margin-top:6px"><span>पेमेंट</span><span>'+esc(o.payment||"—")+'</span></div></div>';
+h+='<div class="sec"><div class="sl">👤 ग्राहक</div><div class="kv"><span>नाम</span><span>'+esc(o.name)+'</span></div><div class="kv"><span>मोबाइल</span><span>'+esc(m)+'</span></div>'+(adr?'<div class="kv"><span>पता</span><span>'+esc(adr)+'</span></div>':'')+(o.note?'<div class="kv"><span>नोट</span><span>'+esc(o.note)+'</span></div>':'')
++'<div class="cb"><a class="ca" href="tel:'+esc(m)+'">📞 कॉल</a><a class="cw" target="_blank" href="https://wa.me/91'+esc(m)+'">💬 WhatsApp</a>'+(adr?'<a class="cm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(adr)+'">📍 Map</a>':'')+'</div></div>';
+if(s==="OutForDelivery")h+='<div class="ab"><button class="b2" data-s="Done" data-id="'+esc(o.id)+'">✅ Delivery Done</button><button class="b3" data-s="DelCancelled" data-id="'+esc(o.id)+'">❌ Cancel Delivery</button></div>';
+return h+'</div>'}
+function render(){var app=document.getElementById("app"),hd=document.querySelector("header");
+document.getElementById("who").textContent=me?"📞 "+me:"";document.getElementById("bo").style.display=me?"":"none";document.getElementById("br").style.display=me?"":"none";
+if(!me){app.innerHTML='<div id="lg"><h2>🛵 Delivery Login</h2><p>अपना 10 अंक का मोबाइल नंबर डालिए<br>(वही नंबर जो दुकान ने आपके लिए डाला है)</p><input type="tel" inputmode="numeric" maxlength="10" id="lm1" placeholder="मोबाइल नंबर"><div id="lm"></div><button id="lb">Login</button></div>';
+document.getElementById("lb").onclick=function(){var v=t10(document.getElementById("lm1").value);if(v.length!==10){document.getElementById("lm").textContent="⚠ 10 अंक का सही नंबर डालिए";return}me=v;lset(MK,v);render();fetchAll()};return}
+var a=mine(),out=a.filter(function(o){return st(o)==="OutForDelivery"}),dn=a.filter(function(o){var s=st(o);return s==="Done"||s==="DelCancelled"});
+var L=tab==="out"?out:dn;L.sort(function(x,y){return String(y.upd||y.time).localeCompare(String(x.upd||x.time))});
+var h='<div class="tabs"><button class="tb'+(tab==="out"?" on":"")+'" data-t="out">🛵 देने जाना है ('+out.length+')</button><button class="tb'+(tab==="dn"?" on":"")+'" data-t="dn">✔ पूरे हुए ('+dn.length+')</button></div><div id="sync">'+esc(last)+'</div>';
+L.forEach(function(o){h+=card(o)});
+app.innerHTML=h+(L.length?"":'<div class="empty">'+(tab==="out"?"अभी आपके लिए कोई डिलीवरी नहीं है<br>(दुकान Out For Delivery करेगी तो यहाँ अपने आप आएगी)":"अभी कोई पूरी डिलीवरी नहीं")+'</div>')}
+function fetchAll(){if(!me)return;last="⏳ ला रहे हैं…";fetch(URL_+"?t="+Date.now()).then(function(r){return r.json()}).then(function(j){all=(j&&j.orders)||[];
+all.forEach(function(o){o.id=String(o.id);if(ov[o.id]&&o.status===ov[o.id]){delete ov[o.id]}});lset(OK,ov);last="✔ अपडेट: "+new Date().toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit"});render()}).catch(function(){last="⚠ इंटरनेट / लिंक जाँचिए";render()})}
+function ask(msg,yes){document.getElementById("shb").innerHTML='<h3>'+esc(msg)+'</h3><div class="r"><button style="background:#eee" id="an">नहीं</button><button style="background:#0f766e;color:#fff" id="ay">हाँ, पक्का</button></div>';document.getElementById("ov").classList.add("on");
+document.getElementById("an").onclick=function(){document.getElementById("ov").classList.remove("on")};document.getElementById("ay").onclick=function(){document.getElementById("ov").classList.remove("on");yes()}}
+function setS(id,s){var o=null;all.forEach(function(x){if(String(x.id)===id)o=x});if(!o)return;
+ask(s==="Done"?"✅ Delivery Done करें? ("+(o.no||"")+")":"❌ Delivery Cancel करें? ("+(o.no||"")+")",function(){
+var f={dboy:me,cancelby:"",upd:new Date().toISOString()},of=num(o.offer)||0;
+if(s==="DelCancelled"&&of>0&&String(o.offerref)!=="1"){f.offerref="1";o.offerref="1";post({action:"offer",op:"refund",id:o.id,mobile:t10(o.mobile),amount:of})}
+if(s==="Done"&&of>0)post({action:"offer",op:"done",id:o.id,mobile:t10(o.mobile),amount:of});
+ov[id]=s;lset(OK,ov);post({action:"status",id:id,status:s,fields:f});if(LOG_URL){var ad=o.delivery==="घर"?(o.address||"")+(o.city?", "+o.city:"")+(o.pin?" - "+o.pin:""):"दुकान से";try{fetch(LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"log",status:s==="Done"?"Delivery Done":"Delivery Cancelled",order:{id:o.id,no:o.no,time:o.time,item:o.item,sku:o.sku,qty:o.qty,rate:o.rate,total:o.total,offer:o.offer,name:o.name,mobile:o.mobile,address:ad,payment:o.payment,dboy:me,billno:o.billno}})}).catch(function(){})}catch(e){}}render();setTimeout(fetchAll,4000)})}
+document.getElementById("app").addEventListener("click",function(e){var t=e.target.closest("[data-t]");if(t){tab=t.getAttribute("data-t");render();return}var b=e.target.closest("[data-s]");if(b)setS(b.getAttribute("data-id"),b.getAttribute("data-s"))});
+document.getElementById("br").onclick=fetchAll;
+document.getElementById("bo").onclick=function(){ask("Logout करें?",function(){me="";try{localStorage.removeItem(MK)}catch(e){}all=[];render()})};
+me=t10(lget(MK,""));ov=lget(OK,{});render();fetchAll();
+setInterval(function(){if(me&&!document.hidden)fetchAll()},10000);
+</script></body></html>
