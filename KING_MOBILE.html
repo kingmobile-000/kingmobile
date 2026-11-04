@@ -372,6 +372,7 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 #xcf img{max-width:100%;max-height:180px;border-radius:10px;margin-top:8px;display:block}
 #xcf .r{display:flex;gap:8px;margin-top:14px}#xcf .r button{flex:1;padding:14px;border-radius:12px;border:0;font-size:16px;font-weight:900}
 #cmsg{color:#c0160c;font-weight:800;font-size:13px;margin-top:6px}
+#sbar{position:sticky}body.srch header,body.srch #catw,body.srch #st,body.srch #add{display:none!important}
 </style>
 </head>
 <body>
@@ -660,7 +661,7 @@ function catOf(o){var n=nrm(o.Item);for(var i=1;i<CATS.length-1;i++){var k=CATS[
 function drawCats(){var h="";CATS.forEach(function(c){h+='<div class="ch'+(c[0]===curCat?' on':'')+'" data-c="'+c[0]+'"><div class="ci">'+c[1]+'</div><div class="cl">'+c[0]+'</div></div>'});document.getElementById("cats").innerHTML=h}
 function render(){
 document.getElementById("stc").textContent="कुल: "+items.length+" आइटम · फोटो "+items.filter(function(o){return o.Photos&&o.Photos.length}).length+"/"+items.length;
-var t=document.getElementById("q").value.trim().toLowerCase(),h="";
+var t=document.getElementById("q").value.trim().toLowerCase(),h="";document.body.classList.toggle("srch",!!t);
 var order=[],best=9;
 items.forEach(function(o,i){if(curCat!=="सभी"&&catOf(o)!==curCat)return;if(onlyNo&&((o.Photos&&o.Photos.length)||(o.Videos&&o.Videos.length)))return;var tr=t?itemTier(o.Item,t):0;if(tr<9){order.push([i,tr]);if(tr<best)best=tr}});
 if(t)order.forEach(function(x){x.push(x[1]>=3?nrm(shortName(items[x[0]].Item,t)):"")});
@@ -1133,7 +1134,7 @@ document.addEventListener("visibilitychange",function(){if(!document.hidden&&get
 if(u){syncOrders();setInterval(function(){if(!document.hidden&&(curPg==="orders"||odId))syncOrders()},5000)}else{setInterval(function(){var uu=getUser();if(uu&&!document.hidden&&(curPg==="orders"||odId))syncOrders()},5000)}})();
 
 /* ===== Complaint (नीचे के मेनू में) ===== */
-var COMPLAINT_URL="https://script.google.com/macros/s/AKfycbw5CiNZ87QH5rLHzPl7Et83Nn9RT67S8f07FMxwmfrphRiyF4XrFh0RMIRDLPmBXZmMcg/exec";  /* Complaints_Code.gs का /exec लिंक यहाँ डालिए */
+var COMPLAINT_URL=ORDER_URL;  /* wahi ek link (KING_ALL_IN_ONE) */
 var CKEY="kms_complaints",cmode=false,cPh="",CSL={New:"Complaint Placed",Accepted:"Complaint Accepted",Done:"Work Done",Cancelled:"Cancelled"},CCOL={New:"#fff3e0;color:#b45309",Accepted:"#e3effd;color:#0b4fa8",Done:"#e3f6e8;color:#0a5d24",Cancelled:"#fde4e1;color:#b42410"};
 function cRead(){try{var a=JSON.parse(localStorage.getItem(CKEY)||"[]");return Array.isArray(a)?a:[]}catch(e){return[]}}
 function cWrite(a){try{localStorage.setItem(CKEY,JSON.stringify(a.slice(0,100)))}catch(e){}}
@@ -1147,7 +1148,7 @@ h+='<div style="padding:10px 12px"><button class="xbtn" data-cnew="1" style="mar
 var a=cMine();if(!a.length)h+='<div class="xemp"><div class="big">🛠</div>अभी तक कोई Complaint नहीं</div>';
 a.forEach(function(c){var s=CSL[c.status]?c.status:"New";h+='<div class="ccd"><div class="cn">'+esc(c.no||"नंबर आ रहा है…")+'</div><div class="ct">'+esc(fdt(c.time))+'</div><div class="ci">'+esc(c.item)+'</div><div class="cp">⚠ '+esc(c.problem)+'</div>'+(c.thumb?'<img alt="" src="'+esc(c.thumb)+'">':'')+'<div><span class="ccs" style="background:'+CCOL[s]+'">'+CSL[s]+'</span></div></div>'});
 x.innerHTML=h}
-function cResize(f,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var k=Math.min(1,400/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);var d=c.toDataURL("image/jpeg",.5);if(d.length>45000){c.width=Math.round(c.width*.65);c.height=Math.round(c.height*.65);c.getContext("2d").drawImage(im,0,0,c.width,c.height);d=c.toDataURL("image/jpeg",.4)}cb(d)};im.src=r.result};r.readAsDataURL(f)}
+function cResize(f,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var k=Math.min(1,520/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);cb(c.toDataURL("image/jpeg",.6))};im.src=r.result};r.readAsDataURL(f)}
 function cForm(){var u=getUser(),d=document.getElementById("xcf");if(!d){d=document.createElement("div");d.id="xcf";document.body.appendChild(d)}cPh="";
 d.innerHTML='<div class="sh"><h3>🛠 नई Complaint</h3><label>1. ग्राहक का नाम और पता</label><textarea id="cf1" rows="2" placeholder="नाम, पता"></textarea><label>2. मोबाइल नंबर</label><input type="tel" id="cf2" maxlength="10" inputmode="numeric" value="'+esc(u?u.m:"")+'"><label>3. आइटम का नाम</label><input type="text" id="cf3" placeholder="कौन सा आइटम?"><label>4. प्रोडक्ट में प्रॉब्लम</label><textarea id="cf4" rows="3" placeholder="क्या खराबी है?"></textarea><label>5. फोटो (ज़रूरी नहीं)</label><div class="pb"><button type="button" id="cfcb">📷 कैमरा</button><button type="button" id="cfgb">🖼 गैलरी</button></div><input type="file" accept="image/*" capture="environment" id="cfc" hidden><input type="file" accept="image/*" id="cfg" hidden><img id="cfp" alt="" style="display:none"><div id="cmsg"></div><div class="r"><button style="background:#eee;color:#222" id="cfx">बंद</button><button style="background:#e63c1f;color:#fff" id="cfs">Complaint भेजें</button></div></div>';
 d.classList.add("on");
@@ -1167,6 +1168,39 @@ document.getElementById("xpo").addEventListener("click",function(e){var m=e.targ
 document.getElementById("xnav").addEventListener("click",function(e){var b=e.target.closest("[data-xp]");if(b&&b.getAttribute("data-xp")==="orders"){cmode=true;setTimeout(cSync,50)}},true);
 var _ao0=window.afterOrder;window.afterOrder=function(o){cmode=false;if(_ao0)_ao0(o)};
 setInterval(function(){if(!document.hidden&&curPg==="orders"&&cmode)cSync()},6000);
+
+/* ===== Back button: Buy -> Item -> List -> (Home) -> bahar. Ek Back = ek step ===== */
+function kbStep(){
+  var on=function(id){var e=document.getElementById(id);return !!(e&&e.classList.contains("on"))};
+  if(on("pv")){hidePhoto();return true}
+  if(on("xcf")){document.getElementById("xcf").classList.remove("on");return true}
+  if(on("xok")){var k=document.getElementById("xok");k.classList.remove("on");k.innerHTML="";return true}
+  if(on("xlg")){closeLogin();return true}
+  if(on("ps")){closeSheet();return true}
+  if(on("sk")){closeStock();return true}
+  if(on("md")){var c=document.getElementById("mc");if(c&&c.onclick)c.onclick();else{var o=document.getElementById("mo");if(o&&o.onclick)o.onclick()}return true}
+  if(on("by")){closeBuy();return true}
+  if(on("xod")){closeOd();return true}
+  if(on("dt")){closeDt();return true}
+  if(curPg!=="home"){showPg("home");return true}
+  if(on("add")){document.getElementById("add").classList.remove("on");return true}
+  var q=document.getElementById("q");
+  if(q.value.trim()!==""||curCat!=="\u0938\u092d\u0940"){q.value="";curCat="\u0938\u092d\u0940";drawCats();render();window.scrollTo(0,0);return true}
+  return false}
+(function(){
+var armed=false,tm=null,started=false;
+function toast(t){var e=document.getElementById("kbToast");if(!e){e=document.createElement("div");e.id="kbToast";e.style.cssText="position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:rgba(20,20,20,.92);color:#fff;padding:10px 16px;border-radius:999px;font:700 14px system-ui,sans-serif;z-index:2147483647;max-width:90%;text-align:center;opacity:0;transition:opacity .2s;pointer-events:none";document.body.appendChild(e)}e.textContent=t;e.style.opacity="1";clearTimeout(e._t);e._t=setTimeout(function(){e.style.opacity="0"},2200)}
+function guard(){try{history.pushState({kb:"guard"},"")}catch(x){}}
+function start(){if(started)return;started=true;try{var s=history.state;if(!(s&&s.kb))history.replaceState({kb:"base"},"");if(!(s&&s.kb==="guard"))guard()}catch(x){}}
+["click","pointerup","touchend","keydown"].forEach(function(ev){window.addEventListener(ev,function(){start();if(armed){armed=false;clearTimeout(tm);guard()}},true)});
+window.addEventListener("popstate",function(ev){
+  var s=ev.state;if(s&&s.kb==="guard")return;
+  if(!started)return;
+  var did=false;try{did=!!kbStep()}catch(x){}
+  if(did){armed=false;clearTimeout(tm);guard();return}
+  armed=true;toast("\u092c\u093e\u0939\u0930 \u0928\u093f\u0915\u0932\u0928\u0947 \u0915\u0947 \u0932\u093f\u090f \u090f\u0915 \u092c\u093e\u0930 \u0914\u0930 Back \u0926\u092c\u093e\u0907\u090f");
+  clearTimeout(tm);tm=setTimeout(function(){armed=false;guard()},2500)});
+})();
 </script>
 </body>
 </html>
