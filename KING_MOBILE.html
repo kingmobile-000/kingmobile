@@ -1183,7 +1183,7 @@ function drawC(){var u=getUser(),x=document.getElementById("xpo"),h=cSeg()+'<div
 if(!u){x.innerHTML=h+'<div class="xemp"><div class="big">🔐</div>Complaint के लिए पहले Login कीजिए<button class="xbtn" data-xlogin="1">Login</button></div>';return}
 h+='<div style="padding:10px 12px"><button class="xbtn" data-cnew="1" style="margin:0">➕ नई Complaint दर्ज करें</button></div>';if(cDbg&&cMine().some(function(c){return !c.no}))h+='<div style="margin:0 12px 8px;padding:10px 12px;border-radius:12px;background:#fff3cd;color:#664d03;font-size:12px;font-weight:700;line-height:1.5;word-break:break-word">⚠ Number क्यों नहीं आया: '+esc(cDbg)+'<br><button class="xbtn" data-cretry="1" style="margin:8px 0 0;padding:8px">🔄 फिर कोशिश करें</button></div>';
 var a=cMine();if(!a.length)h+='<div class="xemp"><div class="big">🛠</div>अभी तक कोई Complaint नहीं</div>';
-a.forEach(function(c){var s=cNorm(c.status);h+='<div class="ccd" data-cd="'+esc(c.id)+'" style="cursor:pointer;position:relative"><div class="cn">'+esc(c.no||"नंबर आ रहा है…")+'</div><div class="ct">'+esc(fdt(c.time))+'</div><div class="ci">'+esc(c.item)+'</div>'+((c.address||c.pin)?'<div class="ct">📍 '+esc([c.address,c.city,c.pin].filter(Boolean).join(", "))+'</div>':'')+'<div class="cp">⚠ '+esc(c.problem)+'</div>'+(c.thumb?'<img alt="" src="'+esc(c.thumb)+'">':'')+'<div><span class="ccs" style="background:'+CCOL[s]+'">'+CSL[s]+'</span><span style="float:right;font-size:24px;line-height:1;color:#999">›</span></div></div>'});
+a.forEach(function(c){var s=cNorm(c.status);h+='<div class="ccd" data-cd="'+esc(c.id)+'" style="cursor:pointer;position:relative"><div class="cn">'+esc(c.no||"नंबर आ रहा है…")+'</div><div class="ct">'+esc(fdt(c.time))+'</div><div class="ci">'+esc(c.item)+'</div>'+((c.address||c.pin)?'<div class="ct">📍 '+esc([c.address,c.city,c.pin].filter(Boolean).join(", "))+'</div>':'')+'<div class="cp">⚠ '+esc(c.problem)+'</div>'+(c.thumb?'<img alt="" src="'+esc(c.thumb)+'">':'')+'<div><span class="ccs" style="background:'+CCOL[s]+'">'+((s==="New"&&t10(c.dboy).length===10&&!hget(c).BoyOk)?"Complaint दर्ज – सामान लेना बाकी":CSL[s])+'</span><span style="float:right;font-size:24px;line-height:1;color:#999">›</span></div></div>'});
 x.innerHTML=h}
 function cResize(f,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var k=Math.min(1,520/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);cb(c.toDataURL("image/jpeg",.6))};im.src=r.result};r.readAsDataURL(f)}
 function cForm(){var u=getUser(),d=document.getElementById("xcf");if(!d){d=document.createElement("div");d.id="xcf";document.body.appendChild(d)}cPh="";
@@ -1223,13 +1223,13 @@ setInterval(function(){if(!document.hidden&&((curPg==="orders"&&cmode)||cdId))cS
 function hget(o){var h=o&&o.hist;if(typeof h==="string"){try{h=JSON.parse(h)}catch(e){h=null}}return(h&&typeof h==="object")?h:{}}
 function hmark(o,s,ts){var h=hget(o);if(!h[s]){h[s]=ts||new Date().toISOString();o.hist=h}}
 function mh(l,r){var rh=hget(r),h=hget(l),c=false;for(var k in rh)if(!h[k]){h[k]=rh[k];c=true}if(c)l.hist=h;return c}
-function stepDt(o,key,i,cur){var t=i===0?o.time:hget(o)[key];if(!t&&cur&&o.upd&&i>0)t=o.upd;return t?'<small>'+esc(fdt(t))+'</small>':""}
+function stepDt(o,key,i,cur){var t=i===0?(hget(o).BoyOk||o.time):hget(o)[key];if(!t&&cur&&o.upd&&i>0)t=o.upd;return t?'<small>'+esc(fdt(t))+'</small>':""}
 function cNorm(s){s=String(s==null?"":s).trim();if(s==="Accepted")s="Confirmed";if(s==="Work Done")s="Done";return CSL[s]?s:"New"}
 function openCd(id){cdId=id;odId=null;drawCd();var d=document.getElementById("xod");d.classList.add("on");d.scrollTop=0;cSync()}
 var _closeOd0=closeOd;closeOd=function(){cdId=null;_closeOd0()};
 function drawCd(){var c=null;cRead().forEach(function(x){if(String(x.id)===String(cdId))c=x});var d=document.getElementById("xod");if(!c){closeOd();return}
 var s=cNorm(c.status),dm=t10(c.dboy),m=t10(c.mobile);
-var ix={New:0,ShopReceived:1,Confirmed:2,Shipped:3,OutForDelivery:4,Done:5,DelCancelled:4}[s];
+var ix={New:0,ShopReceived:1,Confirmed:2,Shipped:3,OutForDelivery:4,Done:5,DelCancelled:4}[s];if(s==="New"&&dm.length===10&&!hget(c).BoyOk)ix=-1;
 var steps=["Complaint Received","Shop Received","Complaint Confirmed","Shipped","Out For Delivery","Delivery Done"],CK2=["New","ShopReceived","Confirmed","Shipped","OutForDelivery","Done"];
 var h='<div class="xbar"><button id="xodx" aria-label="वापस">←</button><span>Complaint Details</span></div>';
 h+='<div class="xsec"><div class="xs2" style="font-size:13px">Complaint नंबर</div><div style="font-size:22px;font-weight:900;color:#000">'+esc(c.no||"नंबर आ रहा है…")+'</div><div class="xs2">'+esc(fdt(c.time))+'</div></div>';
@@ -1238,7 +1238,7 @@ if(s==="Cancelled"){h+='<div class="xbox r">❌ Complaint रद्द हो �
 else{h+='<div class="xtk">';steps.forEach(function(t,i){var k=i<=ix?" on":"",cur=i===ix&&s!=="DelCancelled"?" cur":"",nx=i<ix?" nx":"";h+='<div class="xs'+k+cur+nx+'"><i></i>'+t+(i<=ix?stepDt(c,CK2[i],i,i===ix&&s!=="DelCancelled"):'')+'</div>'});
 if(s==="DelCancelled"){var _t=hget(c).DelCancelled||c.upd;h+='<div class="xs bad nx"><i></i>Delivery Cancelled'+(_t?'<small>'+esc(fdt(_t))+'</small>':'')+'</div>'}
 h+='</div>';
-if(s==="New")h+='<div class="xbox b" style="margin-top:14px">🛠 आपकी Complaint दुकान को मिल गई है – जल्द ही Confirm होगी</div>';
+if(s==="New")h+=(dm.length===10&&!hget(c).BoyOk)?'<div class="xbox b" style="margin-top:14px">🛵 डिलीवरी वाला आपसे सामान लेने आएगा – सामान मिलते ही यहाँ "Complaint Received" दिखेगा</div>':'<div class="xbox b" style="margin-top:14px">🛠 आपकी Complaint मिल गई है – जल्द ही Confirm होगी</div>';
 if(s==="OutForDelivery"&&dm)h+='<div class="xbox b" style="margin-top:14px">🛵 आपका सामान लेकर आ रहे हैं<br><a href="tel:'+esc(dm)+'">📞 '+esc(dm)+'</a></div>';
 if(s==="Done")h+='<div class="xbox g" style="margin-top:14px">✅ Delivery हो गई – धन्यवाद!</div>';
 if(s==="DelCancelled")h+='<div class="xbox r" style="margin-top:14px">❌ Delivery रद्द हो गई<br><span style="font-weight:700;font-size:14px">कृपया दुकान से बात कीजिए</span></div>'}
