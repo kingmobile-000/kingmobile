@@ -88,14 +88,14 @@ header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#c62d12
 #ar .arg input{padding:11px 2px;text-align:center;font-size:15px;font-weight:800;letter-spacing:0}
 #ar .arn{font-size:13px;font-weight:800;color:#0a7a2f;margin-top:8px}
 #ar .arc{margin-top:8px;border:0;background:#eef0f3;color:#333;font-weight:900;border-radius:10px;padding:9px 12px;font-size:13px}
-#mt{display:flex;gap:8px;padding:2px 10px 8px}#mt button{flex:1;padding:10px 4px;border:0;border-radius:12px;font-size:15px;font-weight:900;background:rgba(255,255,255,.25);color:#fff}#mt button.on{background:#fff;color:#c0160c}
+#mt{display:flex;gap:8px;padding:2px 10px 8px}#mt button{flex:1;padding:10px 4px;border:0;border-radius:12px;font-size:15px;font-weight:900;background:rgba(255,255,255,.25);color:#fff}#mt{display:none!important}#mt.one button:not(.on){display:none}#mt button.on{background:#16a34a;color:#fff;box-shadow:0 0 0 2px #fff inset}
 </style>
 </head>
 <body>
 <header>
 <div class="h1"><b>👑 KING ORDER CHECK</b><div style="display:flex;gap:6px"><button id="bd">🛵</button><button id="bp">📋 पेस्ट</button><button id="br">🔄</button><button id="bs">⚙</button></div></div>
 <div class="sw">🔍<input type="search" id="q" placeholder="नाम / मोबाइल / आइटम / ऑर्डर नंबर खोजें"></div>
-<div id="mt"><button id="mo" class="on">📦 Orders (0)</button><button id="mc">🛠 Complaints (0)</button></div>
+<div id="mt" class=""><button id="mo" class="on">📦 Orders (0)</button><button id="mc">🛠 Complaints (0)</button></div>
 </header>
 <div id="ar"><div class="arh">🛵 डिलीवरी बॉय का नंबर</div><input type="tel" id="arm" inputmode="numeric" maxlength="14" placeholder="10 अंक का मोबाइल नंबर" autocomplete="off"><div id="arp" style="display:none"><div class="arh" style="margin-top:10px">📍 पिन कोड डालिए (5 तक) – उन्हीं के ऑर्डर दिखेंगे</div><div class="arg"><input type="tel" inputmode="numeric" maxlength="6" data-ap="0" placeholder="पिन 1"><input type="tel" inputmode="numeric" maxlength="6" data-ap="1" placeholder="पिन 2"><input type="tel" inputmode="numeric" maxlength="6" data-ap="2" placeholder="पिन 3"><input type="tel" inputmode="numeric" maxlength="6" data-ap="3" placeholder="पिन 4"><input type="tel" inputmode="numeric" maxlength="6" data-ap="4" placeholder="पिन 5"></div><div class="arn" id="arn"></div><button class="arc" id="arc">✖ साफ़ करें</button></div></div>
 <div class="tabs" id="tabs"></div>
@@ -106,7 +106,7 @@ header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#c62d12
 <div id="ov"><div class="sh" id="shb"></div></div>
 
 <script>
-var DEFAULT_URL="https://script.google.com/macros/s/AKfycbwMqxsa0AeHvuvHRK2G7plFFXpAvDrLimyLgs4m6lvA6S5fmlX0yHtZsXCh_bZ7dFqK/exec";            // यहाँ Google Apps Script (Web App) का /exec लिंक डाल सकते हैं (या ⚙ से डालें)
+var DEFAULT_URL="https://script.google.com/macros/s/AKfycbyHV3p2fZWAPaEH6p1xadJtm9TF00Ox8zA216NSzHUCxGxydcl6loAlmp4UZuzD7nsGbQ/exec";            // यहाँ Google Apps Script (Web App) का /exec लिंक डाल सकते हैं (या ⚙ से डालें)
 var SRC="kms_orders",LK="kms_orders_page",UK="kms_order_url";
 var DEFAULT_PIN="1234",BUK="kms_boys_url",BPK="kms_boys_pin",BCK="kms_boys_cache",boys=[];  /* Delivery_Boys_Code.gs का /exec लिंक (या ⚙ से डालें) */
 try{boys=JSON.parse(localStorage.getItem(BCK)||"[]")||[]}catch(e){boys=[]}
@@ -118,7 +118,7 @@ function typing(){var a=document.activeElement;return !!(a&&a.hasAttribute&&a.ha
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function ld(k){try{var a=JSON.parse(localStorage.getItem(k)||"[]");return Array.isArray(a)?a:[]}catch(e){return[]}}
 function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
-function getUrl(){var u="";try{u=localStorage.getItem(UK)||""}catch(e){}return u||DEFAULT_URL}
+function getUrl(){if(DEFAULT_URL)return DEFAULT_URL;var u="";try{u=localStorage.getItem(UK)||""}catch(e){}return u}
 function num(x){var n=parseFloat(String(x==null?"":x).replace(/,/g,""));return isNaN(n)?null:n}
 function inr(x){var n=num(x);return n===null?"":"₹"+(Math.round(n*100)/100).toLocaleString("en-IN")}
 function fmt(t){var d=new Date(t);return isNaN(d)?String(t||""):d.toLocaleString("en-IN",{day:"2-digit",month:"short",year:"numeric",hour:"2-digit",minute:"2-digit",hour12:true})}
@@ -132,7 +132,7 @@ function save(){sv(LK,orders)}
 function mergeRemote(arr){var by={};orders.forEach(function(o){by[o.id]=o});var ch=false;
 arr.forEach(function(r){if(!r||!r.id)return;r.id=String(r.id);r.mobile=tel10(r.mobile);r.status=ns(r.status);var l=by[r.id];
 if(!l){orders.push(r);by[r.id]=r;ch=true;return}
-if(l._dirty){if(r.status===l.status){delete l._dirty;ch=true}return}
+if(l._dirty){if(r.status===l.status||Date.now()-Number(l._dirty)>20000){delete l._dirty;ch=true;if(r.status===l.status)return}else return}
 var was=l.status;
 ["no","status","item","sku","warranty","mrate","rate","qty","total","stock","name","mobile","delivery","address","city","pin","payment","note","time","dboy","cancelby","upd","offer","offerref","billno"].forEach(function(k){if(r[k]!==undefined&&r[k]!==""&&String(l[k])!==String(r[k])){l[k]=r[k];ch=true}});
 if(was!==l.status&&offerRefund(l))ch=true;
@@ -201,7 +201,7 @@ document.getElementById("list").innerHTML=h||'<div class="empty">कोई ऑ�
 function ornFmt(n){var t=String(n);while(t.length<5)t="0"+t;return "ORN "+t}
 function nextLocalNo(){var mx=0;orders.forEach(function(o){var m=String(o.no||"").match(/(\d+)\s*$/);if(m)mx=Math.max(mx,Number(m[1]))});return ornFmt(mx+1)}
 var SK="kms_shop_url";
-function shopUrl(){var u="";try{u=localStorage.getItem(SK)||""}catch(e){}return u||"KING_MOBILE.html"}
+function shopUrl(){var u="";try{u=localStorage.getItem(SK)||""}catch(e){}return u||parent.location.href.split("#")[0]}
 function openShopItem(o){var u=shopUrl(),nm=String(o.item||"").split(" \u2013 ")[0];window.open(u+(u.indexOf("?")<0?"?":"&")+"q="+encodeURIComponent(nm),"_blank")}
 function offerRefund(o){var a=num(o.offer)||0,s=ns(o.status);
 if(a>0&&(s==="Cancelled"||s==="DelCancelled")&&String(o.offerref)!=="1"){o.offerref="1";save();post({action:"offer",op:"refund",id:o.id,mobile:tel10(o.mobile),amount:a});return true}return false}
@@ -221,7 +221,7 @@ function go(){var f={};
 if(m){o.dboy=m;f.dboy=m}
 if(s==="OutForDelivery"&&tel10(o.dboy).length!==10){var sgb=boyForOrder(o);if(sgb){o.dboy=sgb.mobile;f.dboy=sgb.mobile}}
 if(s==="Cancelled"){o.cancelby="Shop";f.cancelby="Shop"}else{o.cancelby="";f.cancelby=""}
-o.status=s;if(offerRefund(o))f.offerref="1";if(s==="Done"&&(num(o.offer)||0)>0)post({action:"offer",op:"done",id:o.id,mobile:tel10(o.mobile),amount:num(o.offer)});o.upd=new Date().toISOString();f.upd=o.upd;o._dirty=1;save();post({action:"status",id:id,status:s,fields:f});logO(o,s);tab=(s==="DelCancelled")?"Cancelled":s;render()}
+o.status=s;if(offerRefund(o))f.offerref="1";if(s==="Done"&&(num(o.offer)||0)>0)post({action:"offer",op:"done",id:o.id,mobile:tel10(o.mobile),amount:num(o.offer)});o.upd=new Date().toISOString();f.upd=o.upd;o._dirty=Date.now();save();post({action:"status",id:id,status:s,fields:f});logO(o,s);tab=(s==="DelCancelled")?"Cancelled":s;render()}
 if(s==="Cancelled")askPw(ask+" – पासवर्ड चाहिए",go);else if(ask)askYes(ask,go);else go()}
 function copyText(o){var L=["KING MOBILE SHOP – ऑर्डर "+(o.no||"#"+o.id),fmt(o.time),"","आइटम: "+o.item];
 if(o.sku!=="")L.push("SKU: "+o.sku);if(o.warranty)L.push("Warranty: "+o.warranty);
@@ -239,7 +239,7 @@ var d=e.target.closest("[data-del]");if(d){var id=d.getAttribute("data-del");if(
 document.getElementById("list").addEventListener("input",function(e){var t=e.target;if(!t.hasAttribute||!t.hasAttribute("data-dm"))return;
 var v=t.value.replace(/[^\d+\s]/g,"");if(v!==t.value)t.value=v;dd[t.getAttribute("data-dm")]=v;var bx=t.closest(".ab").querySelector(".dbtn");if(bx)bx.style.display=tel10(v).length===10?"flex":"none"});
 document.getElementById("list").addEventListener("change",function(e){var t=e.target;if(!t.hasAttribute||!t.hasAttribute("data-dm"))return;
-var id=t.getAttribute("data-dm"),o=find(id),m=tel10(t.value);if(o&&m.length===10){o.dboy=m;save();post({action:"status",id:id,status:"OutForDelivery",fields:{dboy:m}})}else if(!o&&m.length===10){var cc=cfind(id);if(cc){cc.dboy=m;cc._dirty=1;sv(LC,comps);cpost({action:"status",id:id,status:"OutForDelivery",dboy:m})}}});
+var id=t.getAttribute("data-dm"),o=find(id),m=tel10(t.value);if(o&&m.length===10){o.dboy=m;save();post({action:"status",id:id,status:"OutForDelivery",fields:{dboy:m}})}else if(!o&&m.length===10){var cc=cfind(id);if(cc){cc.dboy=m;cc._dirty=Date.now();sv(LC,comps);cpost({action:"status",id:id,status:"OutForDelivery",dboy:m})}}});
 document.getElementById("br").onclick=function(){fetchOrders(true)};
 
 /* WhatsApp से आया ऑर्डर पेस्ट करके जोड़ना */
@@ -283,7 +283,7 @@ function cpost(o){var u=getCUrl();if(!u)return;try{fetch(u,{method:"POST",mode:"
 function cfind(id){for(var i=0;i<comps.length;i++)if(String(comps[i].id)===id)return comps[i]}
 function cfetch(){var u=getCUrl();if(!u)return;fetch(u+(u.indexOf("?")<0?"?":"&")+"action=list&t="+Date.now()).then(function(r){return r.json()}).then(function(j){var by={},ch=false;comps.forEach(function(c){by[c.id]=c});
 ((j&&j.complaints)||[]).forEach(function(r){r.id=String(r.id);r.mobile=tel10(r.mobile);r.status=cns(r.status);var l=by[r.id];if(!l){comps.push(r);by[r.id]=r;ch=true;return}
-if(l._dirty){if(r.status===l.status){delete l._dirty;ch=true}return}
+if(l._dirty){if(r.status===l.status||Date.now()-Number(l._dirty)>20000){delete l._dirty;ch=true;if(r.status===l.status)return}else return}
 ["no","status","billno","name","mobile","item","problem","time","upd","dboy","address","city","pin"].forEach(function(k){if(r[k]!==undefined&&r[k]!==""&&String(l[k])!==String(r[k])){l[k]=r[k];ch=true}});if(!l.thumb&&r.thumb){l.thumb=r.thumb;ch=true}});
 if(ch)sv(LC,comps);if(!typing())render()}).catch(function(){})}
 function cInTab(c,t){var s=cns(c.status);if(t==="Cancelled")return s==="Cancelled"||s==="DelCancelled";return t==="All"||s===t}
@@ -296,8 +296,8 @@ if(s==="Done")h+='<div class="nt g">✅ Delivery Done'+dl+'</div>';
 if(s==="DelCancelled")h+='<div class="nt r">❌ Delivery Cancelled'+dl+'</div>';
 return h}
 function cCard(c){var s=cns(c.status),m=tel10(c.mobile),id=esc(c.id),h='<div class="oc"><div class="oh"><div><div class="oid">'+(c.no?esc(c.no):'#'+esc(c.id)+' <span style="font-size:11px;color:#888">(नंबर आ रहा है…)</span>')+'</div><div class="otm">'+esc(fmt(c.time))+'</div></div><span class="st '+({New:"n",Confirmed:"c",Shipped:"s",OutForDelivery:"o",Done:"d"}[s]||"x")+'">'+CST[s]+'</span></div>'+ctrk(c,s);
-h+='<div class="sec"><div class="sl">🛠 Complaint की पूरी जानकारी</div><div class="kv"><span>आइटम</span><span>'+esc(c.item)+'</span></div><div class="kv"><span>प्रॉब्लम</span><span>'+esc(c.problem)+'</span></div>'+(c.thumb?'<img class="cimg" alt="" src="'+esc(c.thumb)+'">':'')+'</div>';
-h+='<div class="sec"><div class="sl">👤 ग्राहक</div><div class="kv"><span>नाम / पता</span><span>'+esc(c.name)+'</span></div><div class="kv"><span>मोबाइल</span><span><a class="tl" href="tel:'+esc(m)+'">📞 '+esc(m)+'</a></span></div><div class="kv"><span>Bill No.</span><span>'+(c.billno?esc(c.billno):'—')+'</span></div><div class="cb"><a class="ca" href="tel:'+esc(m)+'">📞 कॉल करें</a><a class="cw" target="_blank" href="https://wa.me/91'+esc(m)+'">💬 WhatsApp</a></div></div>';
+h+='<div class="sec"><div class="sl">🛠 Complaint की पूरी जानकारी</div><div class="kv"><span>आइटम</span><span>'+esc(c.item)+(c.orderno?' (ऑर्डर '+esc(c.orderno)+')':'')+'</span></div><div class="kv"><span>प्रॉब्लम</span><span>'+esc(c.problem)+'</span></div>'+(c.thumb?'<img class="cimg" alt="" src="'+esc(c.thumb)+'">':'')+'</div>';
+h+='<div class="sec"><div class="sl">👤 ग्राहक</div><div class="kv"><span>नाम</span><span>'+esc(c.name)+'</span></div>'+((c.address||c.pin)?'<div class="kv"><span>पता</span><span>'+esc([c.address,c.city,c.pin].filter(Boolean).join(", "))+'</span></div>':'')+'<div class="kv"><span>मोबाइल</span><span><a class="tl" href="tel:'+esc(m)+'">📞 '+esc(m)+'</a></span></div><div class="kv"><span>Bill No.</span><span>'+(c.billno?esc(c.billno):'—')+'</span></div><div class="cb"><a class="ca" href="tel:'+esc(m)+'">📞 कॉल करें</a><a class="cw" target="_blank" href="https://wa.me/91'+esc(m)+'">💬 WhatsApp</a></div></div>';
 if(s==="Done"||s==="DelCancelled"||s==="Cancelled")return h+'</div>';
 function B(k,st,t){return '<button class="'+k+'" data-cs="'+st+'" data-id="'+id+'">'+t+'</button>'}
 var a='<div class="ab">';
@@ -311,7 +311,7 @@ if(st!=="Cancelled"&&!String(c.billno||"").trim()){alert("❌ Error: "+(c.no||""
 var m="";if(st==="Done"||st==="DelCancelled"){m=tel10(dd[id]!==undefined?dd[id]:c.dboy);if(m.length!==10){alert("पहले डिलीवरी वाला चुनिए");return}}
 var q={Confirmed:"✔ Complaint Confirm करें? (",Shipped:"📦 Shipped करें? (",OutForDelivery:"🛵 Out For Delivery करें? (",Done:"✅ Delivery Done करें? (",DelCancelled:"❌ Delivery Cancel करें? ("}[st];
 function go(){c.status=st;if(m)c.dboy=m;if(st==="OutForDelivery"&&tel10(c.dboy).length!==10){var sg=boyForOrder(c);if(sg)c.dboy=sg.mobile}
-c.upd=new Date().toISOString();c._dirty=1;sv(LC,comps);cpost({action:"status",id:id,status:st,dboy:c.dboy||""});tab=st==="DelCancelled"?"Cancelled":st;render()}
+c.upd=new Date().toISOString();c._dirty=Date.now();sv(LC,comps);cpost({action:"status",id:id,status:st,dboy:c.dboy||""});tab=st==="DelCancelled"?"Cancelled":st;render()}
 if(st==="Cancelled")askPw("✖ यह Complaint रद्द करें? ("+(c.no||"")+") – पासवर्ड चाहिए",go);else askYes(q+(c.no||"")+")",go)}
 function logO(o,s){if(s!=="Done"&&s!=="DelCancelled"&&s!=="Cancelled")return;var a=o.delivery==="घर"?(o.address||"")+(o.city?", "+o.city:"")+(o.pin?" - "+o.pin:""):"दुकान से";
 cpost({action:"log",status:{Done:"Delivery Done",DelCancelled:"Delivery Cancelled",Cancelled:"Order Cancelled"}[s],order:{id:o.id,no:o.no,time:o.time,item:o.item,sku:o.sku,qty:o.qty,rate:o.rate,total:o.total,offer:o.offer,name:o.name,mobile:o.mobile,address:a,payment:o.payment,dboy:o.dboy,billno:o.billno}})}
@@ -374,7 +374,7 @@ rows.sort(function(a,b){return(act(b)-act(a))||String(b.o.time).localeCompare(St
 var cnt={};rows.forEach(function(r){cnt[r.k]=(cnt[r.k]||0)+1});
 var h='<div class="t">📋 इन एरिया के कुल '+rows.length+' ऑर्डर / Complaint</div><div class="bxa">'+keys.map(function(k){return esc(k)+' → <b>'+(cnt[k]||0)+'</b>'}).join(" &nbsp;•&nbsp; ")+'</div>';
 if(!rows.length)h+='<div class="bun">इन पिन कोड का अभी कोई ऑर्डर / Complaint नहीं है</div>';
-rows.slice(0,60).forEach(function(r){var o=r.o,s=r.c?cns(o.status):ns(o.status),m=tel10(o.mobile),ad=r.c?o.name:[o.address,o.city,o.pin].filter(Boolean).join(", ");
+rows.slice(0,60).forEach(function(r){var o=r.o,s=r.c?cns(o.status):ns(o.status),m=tel10(o.mobile),ad=(r.c&&!o.address&&!o.pin)?o.name:[o.address,o.city,o.pin].filter(Boolean).join(", ");
 h+='<div class="bx"><div class="bxh">'+(r.c?"🛠 ":"📦 ")+esc(o.no||"#"+o.id)+' <span class="bof" style="background:#e3effd;color:#0b4fa8">'+esc((r.c?CST:SL)[s]||s)+'</span> <span class="bof" style="background:#e0f7f4;color:#0f766e">📮 '+esc(r.k)+'</span></div>'
 +'<div class="bxa">👤 '+esc(r.c?String(o.name||"").split(",")[0]:o.name)+'</div>'
 +'<div class="bxb"><a href="tel:'+esc(m)+'" style="flex:1;text-align:center;text-decoration:none;padding:11px 4px;border-radius:9px;font-size:15px;font-weight:900;background:#e8f0fe;color:#0b4fa8">📞 '+esc(m)+'</a></div>'
@@ -443,6 +443,10 @@ document.getElementById("arc").onclick=function(){arBox().forEach(function(x){x.
 var _rA=render;render=function(){_rA();arNote()};
 (function(){var v="";try{v=localStorage.getItem(ABK)||""}catch(e){}
  if(v){document.getElementById("arm").value=v;var m=tel10(v);if(m.length===10){arShow();arLoad(m);arOn=arPins().length>0;if(arOn)tab="All"}}render()})();
+
+var mtOpen=true,mtEl=document.getElementById("mt");
+function mtApply(){mtEl.classList.toggle("one",!mtOpen)}
+mtEl.addEventListener("click",function(e){if(!e.target.closest("button"))return;if(!mtOpen){e.stopImmediatePropagation();mtOpen=true;mtApply();return}setTimeout(function(){mtOpen=false;mtApply()},0)},true);
 </script>
 </body>
 </html>

@@ -355,11 +355,16 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 #xlg h3{margin:0;font-size:20px}#xlg p{margin:0;font-size:14px;color:#444;font-weight:700}
 #xle{color:#c0160c;font-weight:800;font-size:14px;min-height:0}#xle:empty{display:none}
 #xlg .xbtn{margin-top:2px}
+
+/* Stock button hataya; (i) ab niche Stock hai ke saamne right side me */
+.cd .ov .sbr{order:2;display:flex!important;align-items:center;justify-content:space-between;gap:6px;width:100%!important;max-width:100%;box-sizing:border-box;margin:4px 0 0!important;pointer-events:auto}
+.cd .ov .sbr .sbd{margin:0!important;order:0}
+.cd .ov .sbr .abt{margin-left:auto!important;flex:none}
 </style>
 <style>
 .cseg{display:flex;gap:8px;padding:8px 12px;background:#fff;border-bottom:1px solid #e3e5e8}
 .cseg button{flex:1;padding:10px;border-radius:999px;border:2px solid #d5d8dd;background:#fff;font-size:15px;font-weight:900;color:#000}
-.cseg button.on{background:#e63c1f;border-color:#e63c1f;color:#fff}
+.cseg button.on{background:#16a34a;border-color:#16a34a;color:#fff}
 .ccd{display:block!important;padding:12px;margin:8px 10px;background:#fff;border-radius:12px;box-shadow:0 1px 4px rgba(0,0,0,.1);color:#111}
 .ccd .cn{font-weight:900;font-size:15px}.ccd .ct{font-size:12px;color:#555;font-weight:700}.ccd .ci{font-size:16px;font-weight:800;margin-top:6px}.ccd .cp{font-size:14px;color:#333;margin-top:2px}
 .ccd img{width:84px;height:84px;object-fit:cover;border-radius:10px;margin-top:8px}
@@ -410,7 +415,7 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 <div class="bysec" id="bypd"></div>
 <div id="byerr"></div>
 <div id="byfoot"><button id="bysend">✅ Order Now</button></div></div>
-<nav id="xnav"><button data-xp="home" class="on"><i>🏠</i>Home</button><button data-xp="cats"><i>🗂️</i>Categories</button><button data-xp="orders"><i>🛠️</i>Complaint</button><button data-xp="acct"><i>👤</i><span id="xnl">Login</span></button></nav>
+<nav id="xnav"><button data-xp="home" class="on"><i>🏠</i>Home</button><button data-xp="cats"><i>🗂️</i>Categories</button><button data-xp="orders" data-m="o"><i>📦</i>Orders</button><button data-xp="orders" data-m="c"><i>🛠️</i>Complaint</button><button data-xp="acct"><i>👤</i><span id="xnl">Login</span></button></nav>
 <div class="xpg" id="xpc"></div><div class="xpg" id="xpo"></div><div class="xpg" id="xpa"></div>
 <div id="xod"></div><div id="xlg"></div><div id="xok"></div>
 <div id="md"><div class="mb"><div id="mm"></div><input type="password" id="mi"><div class="row"><button class="p" id="mo">OK</button><button id="mc">रद्द करें</button></div></div></div>
@@ -431,6 +436,35 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 .xbar .xch.t{border:0;font-family:inherit;cursor:pointer}.xbar .xch.t.on{background:#1f8a3b;color:#fff}.xbar .xch.t.off{background:#555;color:#fff}
 .xbar .xch s,.byr s{text-decoration:line-through;text-decoration-thickness:2px;text-decoration-color:#d00;opacity:.8}
 .offt{border:0;border-radius:8px;padding:5px 14px;font-weight:900;font-size:13px;color:#fff;cursor:pointer;font-family:inherit}.offt.on{background:#1f8a3b}.offt.off{background:#777}
+/* 'बिना फोटो' बटन सिर्फ़ screen से छुपाया है (कोड वैसा ही है) */
+#nf{display:none!important}
+
+/* ===== FIX 1: photo wale card me Stock button / naam / rate card ke andar hi rahe (right side me na khisken) ===== */
+.cd.hp .ov{box-sizing:border-box;z-index:3}   /* naam / rate / Stock photo ke UPAR dikhe (pehle photo unhe dhak leti thi) */
+.cd.hp .ov .ln,.cd.hp .ov .prw{pointer-events:none}   /* khaali jagah par tap photo tak pahunche */
+.cd.hp .ov .ln{width:100%!important;max-width:100%!important;min-width:0!important}
+.cd.hp .prw{width:100%!important;max-width:100%!important;justify-content:space-between!important;gap:4px 6px!important}
+.cd.hp .prw .abt{margin-left:auto!important}
+.cd.hp .prw .abt+.stk{margin-left:0!important}
+.cd.hp .nm{max-width:100%!important;min-width:0!important;box-sizing:border-box;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cd.hp .pr{max-width:100%;box-sizing:border-box;flex-wrap:wrap}
+.cd.hp .sub{max-width:100%;box-sizing:border-box}
+/* ===== FIX 2: page ko side me hilne (horizontal scroll) se roko ===== */
+html{overflow-x:hidden}
+
+/* ===== Flipkart style: photo upar, saara text photo ke NICHE (koi overlap nahi) ===== */
+.cd.hp .ov,.cd .ov{position:static!important;left:auto!important;right:auto!important;bottom:auto!important;top:auto!important;width:100%!important;box-sizing:border-box;padding:8px 2px 0!important;margin:0!important;background:none!important;border:0!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;pointer-events:auto!important;z-index:auto!important;display:flex!important;flex-direction:column!important;gap:4px!important;align-items:stretch!important}
+.cd.hp .ov *{pointer-events:auto!important}
+.cd.hp .ov .ln,.cd .ov .ln{width:100%!important;max-width:100%!important;align-items:flex-start!important;gap:3px!important;margin:0!important}
+.cd.hp .pr,.cd.hp .nm,.cd.hp .sub,.cd.hp .prw .stk{background:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border:0!important;border-radius:0!important;padding:0!important;color:#000!important;max-width:100%!important}
+.cd.hp .sub{color:#555!important}
+.cd.hp .prw{width:100%!important;justify-content:flex-start!important}
+.cd .ln .nm,.cd.hp .nm{white-space:normal!important;display:-webkit-box!important;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;text-overflow:ellipsis;min-height:2.6em;word-break:break-word;font-size:14px!important;font-weight:600!important}
+.cd.hp .sbd.yes,.cd .sbd.yes{background:none!important;color:#16a34a!important;border:1.5px solid #16a34a!important;border-radius:999px!important;padding:2px 8px!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.cd.hp .sbd.no,.cd .sbd.no{background:none!important;color:#dc2626!important;border:1.5px solid #dc2626!important;border-radius:999px!important;padding:2px 8px!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.cd.hp .abt{background:#fff!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important}
+.pw:not(.np):not(.vd){height:190px!important}
+.cd{overflow:hidden}
 </style>
 <script>
 /* ===== उधार + ऑफर: दोनों Daily Hisab से आते हैं (ग्राहक के मोबाइल नंबर के हिसाब से) ===== */
@@ -673,7 +707,7 @@ var pl=o.Photos||[];
 var vids=o.Videos||[];var ph=vids.length?vids.map(function(v){return '<div class="vw" data-vid="'+esc(v)+'"><div class="p0"><div>⏳</div><div>वीडियो खुल रहा है…</div></div></div>'}).join(''):pl.length?'<img class="phb" aria-hidden="true" alt="" src="'+esc(pl[0])+'"><img class="ph" data-p="'+i+'" src="'+esc(pl[0])+'" alt="फोटो">'+(pl.length>1?'<span class="pcnt" data-p="'+i+'">'+pl.length+' फोटो</span>':''):'<div class="p0"></div>';
 var sq=stkOf(o.Qty),sb=sq==="Yes"?'<div class="sbd yes">✔ Stock है</div>':sq==="NO"?'<div class="sbd no">✘ Stock नहीं</div>':'';
 var pinned=pinPos(o)>=0;
-h+='<div class="cw"><div class="cd'+(pl.length&&!vids.length?' hp':'')+'" data-it="'+i+'"><button class="rb l" data-d="'+i+'" aria-label="हटाएँ">✕</button><button class="rb r'+(pinned?' on':'')+'" data-pin="'+i+'" aria-label="Pin">📌</button><div class="'+(vids.length?'pw vd':pl.length?'pw':'pw np')+'">'+ph+'</div><div class="ov">'+sb+'<div class="ln"><div class="prw">'+pr+'<button class="abt" data-ab="'+i+'" aria-label="About">i</button><button class="stk" data-stk="'+i+'">Stock</button></div><div class="nm">'+esc(shortName(o.Item,t))+'</div><div class="sub">'+sk+'</div></div>'+ofl+'</div>'+(vids.length?'<div class="br"><button class="b2" data-vdel="'+i+'" aria-label="वीडियो हटाएँ">🗑</button></div>':'')+'</div><button class="bn" data-buy="'+i+'">🛒 Buy Now</button></div>';
+h+='<div class="cw"><div class="cd'+(pl.length&&!vids.length?' hp':'')+'" data-it="'+i+'"><button class="rb l" data-d="'+i+'" aria-label="हटाएँ">✕</button><button class="rb r'+(pinned?' on':'')+'" data-pin="'+i+'" aria-label="Pin">📌</button><div class="'+(vids.length?'pw vd':pl.length?'pw':'pw np')+'">'+ph+'</div><div class="ov"><div class="ln"><div class="prw">'+pr+'</div><div class="nm">'+esc(shortName(o.Item,t))+'</div><div class="sub">'+sk+'</div></div><div class="sbr">'+sb+'<button class="abt" data-ab="'+i+'" aria-label="About">i</button></div>'+ofl+'</div>'+(vids.length?'<div class="br"><button class="b2" data-vdel="'+i+'" aria-label="वीडियो हटाएँ">🗑</button></div>':'')+'</div><button class="bn" data-buy="'+i+'">🛒 Buy Now</button></div>';
 });
 vUrls.forEach(function(u){try{URL.revokeObjectURL(u)}catch(e){}});vUrls=[];
 document.getElementById("list").innerHTML=h||'<div class="empty">कोई आइटम नहीं मिला<br>(ऊपर पीले बैनर को दबाकर आइटम जोड़ें / Excel से लोड करें)</div>'
@@ -952,8 +986,9 @@ var p=e.target.closest("[data-bp]");if(p){byP=p.getAttribute("data-bp");drawBy()
 if(e.target.closest("#bysend")){sendBuy()}});
 function ornFmt(n){var t=String(n);while(t.length<5)t="0"+t;return "ORN "+t}
 function getOrderNo(cb){
-if(ORDER_URL){var done=false,tm=setTimeout(function(){if(!done){done=true;cb("")}},5000);
-try{fetch(ORDER_URL+(ORDER_URL.indexOf("?")<0?"?":"&")+"action=next&t="+Date.now()).then(function(r){return r.json()}).then(function(j){if(done)return;done=true;clearTimeout(tm);cb(j&&j.no?String(j.no):"")}).catch(function(){if(done)return;done=true;clearTimeout(tm);cb("")})}catch(e){if(!done){done=true;clearTimeout(tm);cb("")}}return}
+if(ORDER_URL){var tries=0;
+(function go(){tries++;var done=false,tm=setTimeout(function(){if(done)return;done=true;if(tries<2)go();else cb("")},12000);
+try{fetch(ORDER_URL+(ORDER_URL.indexOf("?")<0?"?":"&")+"action=next&t="+Date.now()).then(function(r){return r.json()}).then(function(j){if(done)return;done=true;clearTimeout(tm);var n=j&&j.no?String(j.no):"";if(!n&&tries<2)go();else cb(n)}).catch(function(){if(done)return;done=true;clearTimeout(tm);if(tries<2)go();else cb("")})}catch(e){if(!done){done=true;clearTimeout(tm);cb("")}}})();return}
 var n=0;try{n=Number(localStorage.getItem("kms_ordno")||0)}catch(e){}n++;try{localStorage.setItem("kms_ordno",String(n))}catch(e){}cb(ornFmt(n))}
 function sendBuy(){var o=items[byI];if(!o)return;var er=document.getElementById("byerr");
 var n=document.getElementById("byn").value.trim(),m=document.getElementById("bym").value.replace(/\D/g,"");if(m.length>10)m=m.slice(-10);
@@ -988,11 +1023,11 @@ var ord={id:"KM"+Date.now().toString(36).toUpperCase(),no:no,time:new Date().toI
 pushOrder(ord,(o.Photos&&o.Photos[0])||"");
 if(D>0){offConsume(D);offPost("use",ord)}try{render()}catch(e){}try{if(curPg==="orders")drawOrders()}catch(e){}
 btn.disabled=false;btn.textContent="✅ Order Now";closeBuy()})}
-var ORDER_URL="https://script.google.com/macros/s/AKfycbwMqxsa0AeHvuvHRK2G7plFFXpAvDrLimyLgs4m6lvA6S5fmlX0yHtZsXCh_bZ7dFqK/exec";
+var ORDER_URL="https://script.google.com/macros/s/AKfycbyHV3p2fZWAPaEH6p1xadJtm9TF00Ox8zA216NSzHUCxGxydcl6loAlmp4UZuzD7nsGbQ/exec";
 function mkThumb(u,cb){if(!u){cb("");return}var im=new Image();im.onload=function(){try{var f=140/Math.max(im.width,im.height,1),c=document.createElement("canvas");c.width=Math.max(1,Math.round(im.width*f));c.height=Math.max(1,Math.round(im.height*f));c.getContext("2d").drawImage(im,0,0,c.width,c.height);cb(c.toDataURL("image/jpeg",0.6))}catch(e){cb("")}};im.onerror=function(){cb("")};im.src=u}
 function pushOrder(ord,photo){mkThumb(photo,function(t){ord.thumb=t;
 try{var a=JSON.parse(localStorage.getItem("kms_orders")||"[]");a.unshift(ord);localStorage.setItem("kms_orders",JSON.stringify(a.slice(0,200)))}catch(e){}
-if(ORDER_URL){try{fetch(ORDER_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"add",order:ord})}).catch(function(){})}catch(e){}}if(window.afterOrder)window.afterOrder(ord)})}
+if(ORDER_URL){var _addB=JSON.stringify({action:"add",order:ord});var _addP=function(){return fetch(ORDER_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:_addB})};try{_addP().catch(function(){setTimeout(function(){try{_addP().catch(function(){})}catch(e){}},4000)})}catch(e){}}if(window.afterOrder)window.afterOrder(ord)})}
 
 /* ===================== Login + neeche ka menu + My Orders ===================== */
 var UKEY="kms_user",OKEY="kms_orders",curPg="home",odId=null,pendingBuy=null;
@@ -1027,7 +1062,7 @@ function showPg(p){
 if(p==="home"&&curPg==="home"){curCat="सभी";document.getElementById("q").value="";drawCats();render();window.scrollTo(0,0)}
 curPg=p;closeOd();closeDt();
 [["cats","xpc"],["orders","xpo"],["acct","xpa"]].forEach(function(x){document.getElementById(x[1]).classList.toggle("on",x[0]===p)});
-Array.prototype.forEach.call(document.querySelectorAll("#xnav [data-xp]"),function(b){b.classList.toggle("on",b.getAttribute("data-xp")===p)});
+Array.prototype.forEach.call(document.querySelectorAll("#xnav [data-xp]"),function(b){b.classList.toggle("on",b.getAttribute("data-xp")===p&&(p!=="orders"||(b.getAttribute("data-m")==="c")===!!cmode))});
 if(p==="cats")drawCatPg();if(p==="orders"){drawOrders();syncOrders()}if(p==="acct")drawAcct()}
 document.getElementById("xnav").addEventListener("click",function(e){var b=e.target.closest("[data-xp]");if(b)showPg(b.getAttribute("data-xp"))});
 
@@ -1139,34 +1174,48 @@ var CKEY="kms_complaints",cmode=false,cPh="",CSL={New:"Complaint Placed",Accepte
 function cRead(){try{var a=JSON.parse(localStorage.getItem(CKEY)||"[]");return Array.isArray(a)?a:[]}catch(e){return[]}}
 function cWrite(a){try{localStorage.setItem(CKEY,JSON.stringify(a.slice(0,100)))}catch(e){}}
 function cMine(){var u=getUser();if(!u)return[];return cRead().filter(function(c){return t10(c.mobile)===u.m}).sort(function(a,b){return String(b.time).localeCompare(String(a.time))})}
-function cSeg(){return '<div class="cseg"><button data-cm="0"'+(cmode?'':' class="on"')+'>📦 Orders</button><button data-cm="1"'+(cmode?' class="on"':'')+'>🛠 Complaint</button></div>'}
+var segOpen=false;
+function cSeg(){return "";if(!segOpen)return '<div class="cseg"><button class="on" data-cop="1">'+(cmode?'🛠 Complaint':'📦 Orders')+' ▾</button></div>';return '<div class="cseg"><button data-cm="0"'+(cmode?'':' class="on"')+'>📦 Orders</button><button data-cm="1"'+(cmode?' class="on"':'')+'>🛠 Complaint</button></div>'}
 var _dO0=drawOrders;
-drawOrders=function(){var x=document.getElementById("xpo");if(!cmode){_dO0();x.insertAdjacentHTML("afterbegin",cSeg());return}drawC()};
+function navHi(){Array.prototype.forEach.call(document.querySelectorAll("#xnav [data-m]"),function(b){b.classList.toggle("on",curPg==="orders"&&(b.getAttribute("data-m")==="c")===cmode)})}
+drawOrders=function(){var x=document.getElementById("xpo");if(!cmode){_dO0();x.insertAdjacentHTML("afterbegin",cSeg());navHi();return}drawC();navHi()};
 function drawC(){var u=getUser(),x=document.getElementById("xpo"),h=cSeg()+'<div class="xbar"><span>My Complaints</span></div>';
 if(!u){x.innerHTML=h+'<div class="xemp"><div class="big">🔐</div>Complaint के लिए पहले Login कीजिए<button class="xbtn" data-xlogin="1">Login</button></div>';return}
-h+='<div style="padding:10px 12px"><button class="xbtn" data-cnew="1" style="margin:0">➕ नई Complaint दर्ज करें</button></div>';
+h+='<div style="padding:10px 12px"><button class="xbtn" data-cnew="1" style="margin:0">➕ नई Complaint दर्ज करें</button></div>';if(cDbg&&cMine().some(function(c){return !c.no}))h+='<div style="margin:0 12px 8px;padding:10px 12px;border-radius:12px;background:#fff3cd;color:#664d03;font-size:12px;font-weight:700;line-height:1.5;word-break:break-word">⚠ Number क्यों नहीं आया: '+esc(cDbg)+'<br><button class="xbtn" data-cretry="1" style="margin:8px 0 0;padding:8px">🔄 फिर कोशिश करें</button></div>';
 var a=cMine();if(!a.length)h+='<div class="xemp"><div class="big">🛠</div>अभी तक कोई Complaint नहीं</div>';
-a.forEach(function(c){var s=CSL[c.status]?c.status:"New";h+='<div class="ccd"><div class="cn">'+esc(c.no||"नंबर आ रहा है…")+'</div><div class="ct">'+esc(fdt(c.time))+'</div><div class="ci">'+esc(c.item)+'</div><div class="cp">⚠ '+esc(c.problem)+'</div>'+(c.thumb?'<img alt="" src="'+esc(c.thumb)+'">':'')+'<div><span class="ccs" style="background:'+CCOL[s]+'">'+CSL[s]+'</span></div></div>'});
+a.forEach(function(c){var s=CSL[c.status]?c.status:"New";h+='<div class="ccd"><div class="cn">'+esc(c.no||"नंबर आ रहा है…")+'</div><div class="ct">'+esc(fdt(c.time))+'</div><div class="ci">'+esc(c.item)+'</div>'+((c.address||c.pin)?'<div class="ct">📍 '+esc([c.address,c.city,c.pin].filter(Boolean).join(", "))+'</div>':'')+'<div class="cp">⚠ '+esc(c.problem)+'</div>'+(c.thumb?'<img alt="" src="'+esc(c.thumb)+'">':'')+'<div><span class="ccs" style="background:'+CCOL[s]+'">'+CSL[s]+'</span></div></div>'});
 x.innerHTML=h}
 function cResize(f,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var k=Math.min(1,520/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);cb(c.toDataURL("image/jpeg",.6))};im.src=r.result};r.readAsDataURL(f)}
 function cForm(){var u=getUser(),d=document.getElementById("xcf");if(!d){d=document.createElement("div");d.id="xcf";document.body.appendChild(d)}cPh="";
-d.innerHTML='<div class="sh"><h3>🛠 नई Complaint</h3><label>1. ग्राहक का नाम और पता</label><textarea id="cf1" rows="2" placeholder="नाम, पता"></textarea><label>2. मोबाइल नंबर</label><input type="tel" id="cf2" maxlength="10" inputmode="numeric" value="'+esc(u?u.m:"")+'"><label>3. आइटम का नाम</label><input type="text" id="cf3" placeholder="कौन सा आइटम?"><label>4. प्रोडक्ट में प्रॉब्लम</label><textarea id="cf4" rows="3" placeholder="क्या खराबी है?"></textarea><label>5. फोटो (ज़रूरी नहीं)</label><div class="pb"><button type="button" id="cfcb">📷 कैमरा</button><button type="button" id="cfgb">🖼 गैलरी</button></div><input type="file" accept="image/*" capture="environment" id="cfc" hidden><input type="file" accept="image/*" id="cfg" hidden><img id="cfp" alt="" style="display:none"><div id="cmsg"></div><div class="r"><button style="background:#eee;color:#222" id="cfx">बंद</button><button style="background:#e63c1f;color:#fff" id="cfs">Complaint भेजें</button></div></div>';
+var bu={};try{bu=JSON.parse(localStorage.getItem("kms_buyer")||"{}")||{}}catch(e){}
+cOl=myOrders();cSel=null;var op='<option value="">— पुराने ऑर्डर से चुनिए (ज़रूरी नहीं) —</option>';cOl.slice(0,30).forEach(function(o,i){op+='<option value="'+i+'">'+esc((o.no||"")+" • "+String(o.item||"").slice(0,40))+'</option>'});
+d.innerHTML='<div class="sh"><h3>🛠 नई Complaint</h3><label>📦 पुराने ऑर्डर से चुनिए (आइटम और पता अपने-आप भर जाएगा)</label><select id="cfo" style="width:100%;padding:12px;font-size:16px;border:1px solid #ccd;border-radius:10px;background:#fff;color:#111">'+op+'</select><label>1. ग्राहक का नाम</label><input type="text" id="cf1" placeholder="नाम" value="'+esc(bu.n||"")+'"><label>2. मोबाइल नंबर</label><input type="tel" id="cf2" maxlength="10" inputmode="numeric" value="'+esc(u?u.m:"")+'"><label>3. आइटम का नाम</label><input type="text" id="cf3" placeholder="कौन सा आइटम?"><label>4. पता (ऑर्डर वाला ही)</label><input type="text" id="cfa" placeholder="मकान नंबर / गली / मोहल्ला *" value="'+esc(bu.a||"")+'"><input type="text" id="cfc" placeholder="गाँव / शहर *" style="margin-top:8px" value="'+esc(bu.c||"")+'"><input type="tel" id="cfp" maxlength="6" inputmode="numeric" placeholder="पिनकोड * (6 अंक)" style="margin-top:8px" value="'+esc(bu.p||"")+'"><label>5. प्रोडक्ट में प्रॉब्लम</label><textarea id="cf4" rows="3" placeholder="क्या खराबी है?"></textarea><label>6. फोटो (ज़रूरी नहीं)</label><div class="pb"><button type="button" id="cfcb">📷 कैमरा</button><button type="button" id="cfgb">🖼 गैलरी</button></div><input type="file" accept="image/*" capture="environment" id="cfc2" hidden><input type="file" accept="image/*" id="cfg" hidden><img id="cfp2" alt="" style="display:none"><div id="cmsg"></div><div class="r"><button style="background:#eee;color:#222" id="cfx">बंद</button><button style="background:#e63c1f;color:#fff" id="cfs">Complaint भेजें</button></div></div>';
 d.classList.add("on");
-document.getElementById("cfcb").onclick=function(){document.getElementById("cfc").click()};document.getElementById("cfgb").onclick=function(){document.getElementById("cfg").click()};
-["cfc","cfg"].forEach(function(id){document.getElementById(id).onchange=function(){var f=this.files&&this.files[0];if(!f)return;cResize(f,function(u){cPh=u;var im=document.getElementById("cfp");im.src=u;im.style.display="block"})}});
+document.getElementById("cfcb").onclick=function(){document.getElementById("cfc2").click()};document.getElementById("cfgb").onclick=function(){document.getElementById("cfg").click()};
+["cfc2","cfg"].forEach(function(id){document.getElementById(id).onchange=function(){var f=this.files&&this.files[0];if(!f)return;cResize(f,function(u){cPh=u;var im=document.getElementById("cfp2");im.src=u;im.style.display="block"})}});
 document.getElementById("cfx").onclick=function(){d.classList.remove("on")};
+document.getElementById("cfo").onchange=function(){var o=cOl[this.value];cSel=o||null;if(!o)return;var g=function(i,x){document.getElementById(i).value=x||""};g("cf3",o.item);if(o.name)g("cf1",o.name);if(o.delivery==="घर"){g("cfa",o.address);g("cfc",o.city);g("cfp",o.pin)}};
 document.getElementById("cfs").onclick=function(){var v=function(i){return document.getElementById(i).value.trim()},m=document.getElementById("cmsg");
-if(!v("cf1")||v("cf2").replace(/\D/g,"").length!==10||!v("cf3")||!v("cf4")){m.textContent="⚠ नाम-पता, 10 अंक का मोबाइल, आइटम और प्रॉब्लम चारों भरिए";return}
-var c={id:"C"+Date.now().toString(36).toUpperCase(),time:new Date().toISOString(),status:"New",no:"",name:v("cf1"),mobile:v("cf2").replace(/\D/g,""),item:v("cf3"),problem:v("cf4"),thumb:cPh};
+if(!v("cf1")||v("cf2").replace(/\D/g,"").length!==10||!v("cf3")||!v("cfa")||!v("cfc")||!v("cf4")){m.textContent="⚠ नाम, 10 अंक का मोबाइल, आइटम, पता, गाँव/शहर और प्रॉब्लम भरिए";return}
+if(v("cfp").replace(/\D/g,"").length!==6){m.textContent="⚠ 6 अंक का पिनकोड लिखिए (इसी से डिलीवरी वाला तय होता है)";return}
+var c={id:"C"+Date.now().toString(36).toUpperCase(),time:new Date().toISOString(),status:"New",no:"",name:v("cf1"),mobile:v("cf2").replace(/\D/g,""),item:v("cf3"),problem:v("cf4"),thumb:cPh,address:v("cfa"),city:v("cfc"),pin:v("cfp").replace(/\D/g,""),sku:(cSel&&cSel.item===v("cf3")?cSel.sku||"":""),qty:(cSel&&cSel.item===v("cf3")?cSel.qty||"":""),orderno:(cSel&&cSel.item===v("cf3")?cSel.no||"":"")};
 var a=cRead();a.unshift(c);cWrite(a);d.classList.remove("on");cSend(c);drawC();alert("✅ Complaint दर्ज हो गई")}}
-function cSend(c){if(!COMPLAINT_URL||c.no)return;try{fetch(COMPLAINT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"add",c:c})}).then(function(r){return r.json()}).then(function(j){if(j&&j.no){var a=cRead();a.forEach(function(x){if(x.id===c.id)x.no=j.no});cWrite(a);if(curPg==="orders"&&cmode)drawC()}}).catch(function(){})}catch(e){}}
-function cSync(){var u=getUser();if(!u||!COMPLAINT_URL)return;cRead().forEach(function(c){if(!c.no)cSend(c)});
+var cBusy=false,cDbg="",cOl=[],cSel=null;
+function cSend(c){cSendAll()}
+function cSendAll(){if(cBusy||!COMPLAINT_URL)return;var q=cRead().filter(function(c){return !c.no}).sort(function(a,b){return (Date.parse(a.time)||0)-(Date.parse(b.time)||0)});if(!q.length){cDbg="";return}cBusy=true;
+function fail(m){cBusy=false;cDbg=m;if(curPg==="orders"&&cmode)drawC()}
+(function nx(i){if(i>=q.length){cBusy=false;cDbg="";if(curPg==="orders"&&cmode)drawC();return}var c=q[i];
+try{fetch(COMPLAINT_URL,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"add",c:c})}).then(function(r){var st=r.status;return r.text().then(function(t){return{st:st,t:t}})}).then(function(o){var j=null;try{j=JSON.parse(o.t)}catch(e){}
+if(!j)return fail("Server ने JSON नहीं दिया (HTTP "+o.st+"): "+String(o.t).replace(/<[^>]*>/g," ").replace(/\s+/g," ").slice(0,140)+" — Apps Script में New version Deploy और Access=Anyone, Execute as=Me रखिए");
+if(!j.ok||!j.no)return fail("Server का जवाब: "+String(o.t).slice(0,160)+" — इसमें number नहीं है, यानी Apps Script में पुराना code चल रहा है। नया KING_ALL_IN_ONE.gs → Deploy → New version");
+var a=cRead();a.forEach(function(x){if(x.id===c.id)x.no=j.no});cWrite(a);if(curPg==="orders"&&cmode)drawC();nx(i+1)}).catch(function(e){fail("Internet / Server तक नहीं पहुँचा: "+e)})}catch(e){fail("Error: "+e)}})(0)}
+function cSync(){var u=getUser();if(!u||!COMPLAINT_URL)return;cSendAll();
 try{fetch(COMPLAINT_URL+"?action=my&mobile="+u.m+"&t="+Date.now()).then(function(r){return r.json()}).then(function(j){var a=cRead(),by={},ch=false;a.forEach(function(c){by[c.id]=c});
 ((j&&j.complaints)||[]).forEach(function(r){var l=by[r.id];if(!l){a.push(r);ch=true;return}["no","status"].forEach(function(k){if(r[k]&&String(l[k]||"")!==String(r[k])){l[k]=r[k];ch=true}});if(!l.thumb&&r.thumb){l.thumb=r.thumb;ch=true}});
 if(ch){cWrite(a);if(curPg==="orders"&&cmode)drawC()}}).catch(function(){})}catch(e){}}
-document.getElementById("xpo").addEventListener("click",function(e){var m=e.target.closest("[data-cm]");if(m){cmode=m.getAttribute("data-cm")==="1";drawOrders();if(cmode)cSync();return}if(e.target.closest("[data-cnew]"))cForm()});
-document.getElementById("xnav").addEventListener("click",function(e){var b=e.target.closest("[data-xp]");if(b&&b.getAttribute("data-xp")==="orders"){cmode=true;setTimeout(cSync,50)}},true);
-var _ao0=window.afterOrder;window.afterOrder=function(o){cmode=false;if(_ao0)_ao0(o)};
+document.getElementById("xpo").addEventListener("click",function(e){var m=e.target.closest("[data-cm]");if(e.target.closest("[data-cop]")){segOpen=true;drawOrders();return}if(m){cmode=m.getAttribute("data-cm")==="1";segOpen=false;drawOrders();if(cmode)cSync();return}if(e.target.closest("[data-cretry]")){cDbg="कोशिश हो रही है…";drawC();cSendAll();return}if(e.target.closest("[data-cnew]"))cForm()});
+document.getElementById("xnav").addEventListener("click",function(e){var b=e.target.closest("[data-xp]");if(b&&b.getAttribute("data-xp")==="orders"){cmode=(b.getAttribute("data-m")!=="o");segOpen=false;if(cmode)setTimeout(cSync,50)}},true);
+var _ao0=window.afterOrder;window.afterOrder=function(o){cmode=false;segOpen=false;if(_ao0)_ao0(o)};
 setInterval(function(){if(!document.hidden&&curPg==="orders"&&cmode)cSync()},6000);
 
 /* ===== Back button: Buy -> Item -> List -> (Home) -> bahar. Ek Back = ek step ===== */
