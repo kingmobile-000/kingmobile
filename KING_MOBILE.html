@@ -1052,7 +1052,7 @@ arr.forEach(function(r){if(!r||!r.id)return;r.id=String(r.id);r.mobile=t10(r.mob
 if(!l){a.push(r);by[r.id]=r;ch=true;return}
 l.status=normSt(l.status);
 if(l._dirty){if(r.status===l.status){delete l._dirty;ch=true}return}
-["no","status","dboy","cancelby","upd"].forEach(function(k){if(r[k]!==undefined&&String(l[k]||"")!==String(r[k]||"")){l[k]=r[k];ch=true}});
+var was=l.status;["no","status","dboy","cancelby","upd"].forEach(function(k){if(r[k]!==undefined&&String(l[k]||"")!==String(r[k]||"")){l[k]=r[k];ch=true}});if(was!==l.status){hmark(l,l.status,r.upd);ch=true}if(mh(l,r))ch=true;
 if(!l.thumb&&r.thumb){l.thumb=r.thumb;ch=true}});
 if(offSweep(a))ch=true;
 if(ch)writeAll(a)}
@@ -1101,8 +1101,8 @@ var h='<div class="xbar"><button id="xodx" aria-label="वापस">←</button
 h+='<div class="xsec"><div class="xs2" style="font-size:13px">ऑर्डर नंबर</div><div style="font-size:22px;font-weight:900;color:#000">'+esc(o.no||"#"+o.id)+'</div><div class="xs2">'+esc(fdt(o.time))+'</div></div>';
 h+='<div class="xsec"><div class="xh2">📍 ऑर्डर की स्थिति</div>';
 if(s==="Cancelled"){h+='<div class="xbox r">❌ ऑर्डर रद्द हो गया<br><span style="font-weight:700;font-size:14px">'+(o.cancelby==="Customer"?'आपने यह ऑर्डर खुद रद्द किया था':'दुकान की तरफ़ से रद्द किया गया')+(o.upd?' · '+esc(fdt(o.upd)):'')+'</span></div>'}
-else{h+='<div class="xtk">';steps.forEach(function(t,i){var c=i<=ix?" on":"",cur=i===ix&&s!=="DelCancelled"?" cur":"",nx=i<ix?" nx":"";h+='<div class="xs'+c+cur+nx+'"><i></i>'+t+(i===ix&&s!=="DelCancelled"&&o.upd&&i>0?'<small>'+esc(fdt(o.upd))+'</small>':'')+'</div>'});
-if(s==="DelCancelled")h+='<div class="xs bad nx"><i></i>Delivery Cancelled'+(o.upd?'<small>'+esc(fdt(o.upd))+'</small>':'')+'</div>';
+else{h+='<div class="xtk">';steps.forEach(function(t,i){var c=i<=ix?" on":"",cur=i===ix&&s!=="DelCancelled"?" cur":"",nx=i<ix?" nx":"";h+='<div class="xs'+c+cur+nx+'"><i></i>'+t+(i<=ix?stepDt(o,["New","Confirmed","Shipped","OutForDelivery","Done"][i],i,i===ix&&s!=="DelCancelled"):'')+'</div>'});
+if(s==="DelCancelled"){var _t2=hget(o).DelCancelled||o.upd;h+='<div class="xs bad nx"><i></i>Delivery Cancelled'+(_t2?'<small>'+esc(fdt(_t2))+'</small>':'')+'</div>'}
 h+='</div>';
 if(s==="OutForDelivery"&&dm)h+='<div class="xbox b" style="margin-top:14px">🛵 आपका सामान लेकर आ रहे हैं<br><a href="tel:'+esc(dm)+'">📞 '+esc(dm)+'</a></div>';
 if(s==="Done")h+='<div class="xbox g" style="margin-top:14px">✅ डिलीवरी हो गई – धन्यवाद!</div>';
@@ -1170,7 +1170,7 @@ if(u){syncOrders();setInterval(function(){if(!document.hidden&&(curPg==="orders"
 
 /* ===== Complaint (नीचे के मेनू में) ===== */
 var COMPLAINT_URL=ORDER_URL;  /* wahi ek link (KING_ALL_IN_ONE) */
-var CKEY="kms_complaints",cmode=false,cPh="",CSL={New:"Complaint Received",Confirmed:"Complaint Confirmed",Shipped:"Shipped",OutForDelivery:"Out For Delivery",Done:"Delivery Done",DelCancelled:"Delivery Cancelled",Cancelled:"Complaint Cancelled"},CCOL={New:"#fff3e0;color:#b45309",Confirmed:"#e3effd;color:#0b4fa8",Shipped:"#ede7fb;color:#5b34b5",OutForDelivery:"#fff0d9;color:#a85a00",Done:"#e3f6e8;color:#0a5d24",DelCancelled:"#fde4e1;color:#b42410",Cancelled:"#fde4e1;color:#b42410"},cdId=null;
+var CKEY="kms_complaints",cmode=false,cPh="",CSL={New:"Complaint Received",ShopReceived:"Shop Received",Confirmed:"Complaint Confirmed",Shipped:"Shipped",OutForDelivery:"Out For Delivery",Done:"Delivery Done",DelCancelled:"Delivery Cancelled",Cancelled:"Complaint Cancelled"},CCOL={New:"#fff3e0;color:#b45309",ShopReceived:"#e3effd;color:#0b4fa8",Confirmed:"#e3effd;color:#0b4fa8",Shipped:"#ede7fb;color:#5b34b5",OutForDelivery:"#fff0d9;color:#a85a00",Done:"#e3f6e8;color:#0a5d24",DelCancelled:"#fde4e1;color:#b42410",Cancelled:"#fde4e1;color:#b42410"},cdId=null;
 function cRead(){try{var a=JSON.parse(localStorage.getItem(CKEY)||"[]");return Array.isArray(a)?a:[]}catch(e){return[]}}
 function cWrite(a){try{localStorage.setItem(CKEY,JSON.stringify(a.slice(0,100)))}catch(e){}}
 function cMine(){var u=getUser();if(!u)return[];return cRead().filter(function(c){return t10(c.mobile)===u.m}).sort(function(a,b){return String(b.time).localeCompare(String(a.time))})}
@@ -1211,7 +1211,7 @@ if(!j.ok||!j.no)return fail("Server का जवाब: "+String(o.t).slice(0,1
 var a=cRead();a.forEach(function(x){if(x.id===c.id)x.no=j.no});cWrite(a);if(curPg==="orders"&&cmode)drawC();nx(i+1)}).catch(function(e){fail("Internet / Server तक नहीं पहुँचा: "+e)})}catch(e){fail("Error: "+e)}})(0)}
 function cSync(){var u=getUser();if(!u||!COMPLAINT_URL)return;cSendAll();
 try{fetch(COMPLAINT_URL+"?action=my&mobile="+u.m+"&t="+Date.now()).then(function(r){return r.json()}).then(function(j){var a=cRead(),by={},ch=false;a.forEach(function(c){by[c.id]=c});
-((j&&j.complaints)||[]).forEach(function(r){var l=by[r.id];if(!l){a.push(r);ch=true;return}["no","status","billno","dboy","upd"].forEach(function(k){if(r[k]&&String(l[k]||"")!==String(r[k])){l[k]=r[k];ch=true}});if(!l.thumb&&r.thumb){l.thumb=r.thumb;ch=true}});
+((j&&j.complaints)||[]).forEach(function(r){var l=by[r.id];if(!l){a.push(r);ch=true;return}var was=l.status;["no","status","billno","dboy","upd"].forEach(function(k){if(r[k]&&String(l[k]||"")!==String(r[k])){l[k]=r[k];ch=true}});if(cNorm(was)!==cNorm(l.status)){hmark(l,cNorm(l.status),r.upd);ch=true}if(mh(l,r))ch=true;if(!l.thumb&&r.thumb){l.thumb=r.thumb;ch=true}});
 if(ch){cWrite(a);if(curPg==="orders"&&cmode)drawC();if(cdId)drawCd()}}).catch(function(){})}catch(e){}}
 document.getElementById("xpo").addEventListener("click",function(e){var m=e.target.closest("[data-cm]");if(e.target.closest("[data-cop]")){segOpen=true;drawOrders();return}if(m){cmode=m.getAttribute("data-cm")==="1";segOpen=false;drawOrders();if(cmode)cSync();return}if(e.target.closest("[data-cretry]")){cDbg="कोशिश हो रही है…";drawC();cSendAll();return}if(e.target.closest("[data-cnew]"))cForm()});
 document.getElementById("xnav").addEventListener("click",function(e){var b=e.target.closest("[data-xp]");if(b&&b.getAttribute("data-xp")==="orders"){cmode=(b.getAttribute("data-m")!=="o");segOpen=false;if(cmode)setTimeout(cSync,50)}},true);
@@ -1220,19 +1220,23 @@ setInterval(function(){if(!document.hidden&&((curPg==="orders"&&cmode)||cdId))cS
 
 
 /* ===== Complaint detail: Order jaise step-by-step (Received -> Confirmed -> Shipped -> Out For Delivery -> Delivery Done) ===== */
+function hget(o){var h=o&&o.hist;if(typeof h==="string"){try{h=JSON.parse(h)}catch(e){h=null}}return(h&&typeof h==="object")?h:{}}
+function hmark(o,s,ts){var h=hget(o);if(!h[s]){h[s]=ts||new Date().toISOString();o.hist=h}}
+function mh(l,r){var rh=hget(r),h=hget(l),c=false;for(var k in rh)if(!h[k]){h[k]=rh[k];c=true}if(c)l.hist=h;return c}
+function stepDt(o,key,i,cur){var t=i===0?o.time:hget(o)[key];if(!t&&cur&&o.upd&&i>0)t=o.upd;return t?'<small>'+esc(fdt(t))+'</small>':""}
 function cNorm(s){s=String(s==null?"":s).trim();if(s==="Accepted")s="Confirmed";if(s==="Work Done")s="Done";return CSL[s]?s:"New"}
 function openCd(id){cdId=id;odId=null;drawCd();var d=document.getElementById("xod");d.classList.add("on");d.scrollTop=0;cSync()}
 var _closeOd0=closeOd;closeOd=function(){cdId=null;_closeOd0()};
 function drawCd(){var c=null;cRead().forEach(function(x){if(String(x.id)===String(cdId))c=x});var d=document.getElementById("xod");if(!c){closeOd();return}
 var s=cNorm(c.status),dm=t10(c.dboy),m=t10(c.mobile);
-var ix={New:0,Confirmed:1,Shipped:2,OutForDelivery:3,Done:4,DelCancelled:3}[s];
-var steps=["Complaint Received","Complaint Confirmed","Shipped","Out For Delivery","Delivery Done"];
+var ix={New:0,ShopReceived:1,Confirmed:2,Shipped:3,OutForDelivery:4,Done:5,DelCancelled:4}[s];
+var steps=["Complaint Received","Shop Received","Complaint Confirmed","Shipped","Out For Delivery","Delivery Done"],CK2=["New","ShopReceived","Confirmed","Shipped","OutForDelivery","Done"];
 var h='<div class="xbar"><button id="xodx" aria-label="वापस">←</button><span>Complaint Details</span></div>';
 h+='<div class="xsec"><div class="xs2" style="font-size:13px">Complaint नंबर</div><div style="font-size:22px;font-weight:900;color:#000">'+esc(c.no||"नंबर आ रहा है…")+'</div><div class="xs2">'+esc(fdt(c.time))+'</div></div>';
 h+='<div class="xsec"><div class="xh2">📍 Complaint की स्थिति</div>';
 if(s==="Cancelled"){h+='<div class="xbox r">❌ Complaint रद्द हो गई'+(c.upd?'<br><span style="font-weight:700;font-size:14px">'+esc(fdt(c.upd))+'</span>':'')+'</div>'}
-else{h+='<div class="xtk">';steps.forEach(function(t,i){var k=i<=ix?" on":"",cur=i===ix&&s!=="DelCancelled"?" cur":"",nx=i<ix?" nx":"";h+='<div class="xs'+k+cur+nx+'"><i></i>'+t+(i===ix&&s!=="DelCancelled"&&c.upd&&i>0?'<small>'+esc(fdt(c.upd))+'</small>':'')+'</div>'});
-if(s==="DelCancelled")h+='<div class="xs bad nx"><i></i>Delivery Cancelled'+(c.upd?'<small>'+esc(fdt(c.upd))+'</small>':'')+'</div>';
+else{h+='<div class="xtk">';steps.forEach(function(t,i){var k=i<=ix?" on":"",cur=i===ix&&s!=="DelCancelled"?" cur":"",nx=i<ix?" nx":"";h+='<div class="xs'+k+cur+nx+'"><i></i>'+t+(i<=ix?stepDt(c,CK2[i],i,i===ix&&s!=="DelCancelled"):'')+'</div>'});
+if(s==="DelCancelled"){var _t=hget(c).DelCancelled||c.upd;h+='<div class="xs bad nx"><i></i>Delivery Cancelled'+(_t?'<small>'+esc(fdt(_t))+'</small>':'')+'</div>'}
 h+='</div>';
 if(s==="New")h+='<div class="xbox b" style="margin-top:14px">🛠 आपकी Complaint दुकान को मिल गई है – जल्द ही Confirm होगी</div>';
 if(s==="OutForDelivery"&&dm)h+='<div class="xbox b" style="margin-top:14px">🛵 आपका सामान लेकर आ रहे हैं<br><a href="tel:'+esc(dm)+'">📞 '+esc(dm)+'</a></div>';
