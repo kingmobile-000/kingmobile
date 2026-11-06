@@ -35,7 +35,7 @@ header button{background:rgba(255,255,255,.22);border:0;color:#fff;border-radius
 <div id="app"></div>
 <div id="ov"><div class="sh" id="shb"></div></div>
 <script>
-var URL_="https://script.google.com/macros/s/AKfycbwMqxsa0AeHvuvHRK2G7plFFXpAvDrLimyLgs4m6lvA6S5fmlX0yHtZsXCh_bZ7dFqK/exec";  // Orders wala /exec link (Order Check wala hi)
+var URL_="https://script.google.com/macros/s/AKfycbyHV3p2fZWAPaEH6p1xadJtm9TF00Ox8zA216NSzHUCxGxydcl6loAlmp4UZuzD7nsGbQ/exec";  // Orders wala /exec link (Order Check wala hi)
 var LOG_URL=URL_;   // wahi ek link (KING_ALL_IN_ONE)
 var MK="kms_boy_mobile",OK="kms_boy_ov",CK="kms_boy_cov",me="",all=[],ov={},cps=[],cov={},tab="out",last="";
 function t10(m){var d=String(m||"").replace(/\D/g,"");return d.length>10?d.slice(-10):d}
@@ -64,17 +64,18 @@ var a=mine(),out=a.filter(function(o){return st(o)==="OutForDelivery"}),dn=a.fil
 var L=tab==="out"?out:tab==="dn"?dn:cl;L.sort(function(x,y){return String(y.upd||y.time).localeCompare(String(x.upd||x.time))});
 var h='<div class="tabs"><button class="tb'+(tab==="out"?" on":"")+'" data-t="out">🛵 देने जाना है ('+out.length+')</button><button class="tb'+(tab==="dn"?" on":"")+'" data-t="dn">✔ पूरे हुए ('+dn.length+')</button><button class="tb'+(tab==="cmp"?" on":"")+'" data-t="cmp">🛠 Complaint ('+cact.length+')</button></div><div id="sync">'+esc(last)+'</div>';
 L.forEach(function(o){h+=(tab==="cmp"?cCard(o):card(o))});
-app.innerHTML=h+(L.length?"":'<div class="empty">'+(tab==="out"?"अभी आपके लिए कोई डिलीवरी नहीं है<br>(दुकान Out For Delivery करेगी तो यहाँ अपने आप आएगी)":tab==="dn"?"अभी कोई पूरी डिलीवरी नहीं":"अभी कोई Complaint नहीं<br>(ग्राहक की सारी Complaint यहाँ दिखेंगी)")+'</div>')}
-/* ===== Complaint: सारी Complaint हर डिलीवरी वाले के ID में दिखती हैं ===== */
+app.innerHTML=h+(L.length?"":'<div class="empty">'+(tab==="out"?"अभी आपके लिए कोई डिलीवरी नहीं है<br>(दुकान Out For Delivery करेगी तो यहाँ अपने आप आएगी)":tab==="dn"?"अभी कोई पूरी डिलीवरी नहीं":"अभी कोई Complaint नहीं<br>(आपके पिन कोड / एरिया की Complaint यहाँ अपने आप आएगी)")+'</div>')}
+/* ===== Complaint: पिन कोड के हिसाब से सिर्फ़ उसी डिलीवरी वाले के ID में दिखती है ===== */
 var CSL2={New:"Complaint Placed",Accepted:"Complaint Accepted",Shipped:"Shipped",OutForDelivery:"Out For Delivery",Done:"Delivery Done",DelCancelled:"Delivery Cancelled",Cancelled:"Complaint Cancelled"};
 function cst(c){var s=String((cov[c.id]||c.status)||"").trim();if(s==="Work Done")s="Done";return CSL2[s]?s:"New"}
 function cFin(c){var s=c.status;return s==="Done"||s==="DelCancelled"||s==="Cancelled"}
-function cAll(){return cps.map(function(c){var o={};for(var k in c)o[k]=c[k];o.status=cst(c);return o})}
+function cAll(){return cps.filter(function(c){return t10(c.dboy)===me}).map(function(c){var o={};for(var k in c)o[k]=c[k];o.status=cst(c);return o})}
+function cadr(c){return(c.address||c.pin)?[c.address,c.city,c.pin].filter(Boolean).join(", "):""}
 function cCard(c){var s=c.status,m=t10(c.mobile),id=esc(c.id);
 var h='<div class="oc"><div class="oh"><span>'+esc(c.no||"#"+c.id)+'</span><span class="st '+({OutForDelivery:"o",Done:"d",New:"n",Accepted:"n",Shipped:"s"}[s]||"x")+'">'+esc(CSL2[s])+'</span></div>';
 h+='<div class="sec"><div class="sl">🛠 Complaint</div><div class="kv"><span>आइटम</span><span>'+esc(c.item)+'</span></div><div class="kv"><span>प्रॉब्लम</span><span>'+esc(c.problem)+'</span></div>'+(c.thumb?'<div class="th" style="width:100%;height:auto;max-height:220px;margin-top:8px"><img alt="" src="'+esc(c.thumb)+'"></div>':'')+'</div>';
-h+='<div class="sec"><div class="sl">👤 ग्राहक</div><div class="kv"><span>नाम / पता</span><span>'+esc(c.name)+'</span></div><div class="kv"><span>मोबाइल</span><span>'+esc(m)+'</span></div>'+(c.billno?'<div class="kv"><span>Bill No.</span><span>'+esc(c.billno)+'</span></div>':'')
-+'<div class="cb"><a class="ca" href="tel:'+esc(m)+'">📞 कॉल</a><a class="cw" target="_blank" href="https://wa.me/91'+esc(m)+'">💬 WhatsApp</a></div></div>';
+h+='<div class="sec"><div class="sl">👤 ग्राहक</div><div class="kv"><span>नाम</span><span>'+esc(c.name)+'</span></div>'+(cadr(c)?'<div class="kv"><span>पता</span><span>'+esc(cadr(c))+'</span></div>':'')+'<div class="kv"><span>मोबाइल</span><span>'+esc(m)+'</span></div>'+(c.billno?'<div class="kv"><span>Bill No.</span><span>'+esc(c.billno)+'</span></div>':'')
++'<div class="cb"><a class="ca" href="tel:'+esc(m)+'">📞 कॉल</a><a class="cw" target="_blank" href="https://wa.me/91'+esc(m)+'">💬 WhatsApp</a>'+(cadr(c)?'<a class="cm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(cadr(c))+'">📍 Map</a>':'')+'</div></div>';
 if(s==="OutForDelivery")h+='<div class="ab"><button class="b2" data-cs="Done" data-id="'+id+'">✅ Delivery Done</button><button class="b3" data-cs="DelCancelled" data-id="'+id+'">❌ Cancel Delivery</button></div>';
 return h+'</div>'}
 function fetchC(){if(!me||!LOG_URL)return;fetch(LOG_URL+(LOG_URL.indexOf("?")<0?"?":"&")+"action=list&t="+Date.now()).then(function(r){return r.json()}).then(function(j){cps=(j&&j.complaints)||[];
