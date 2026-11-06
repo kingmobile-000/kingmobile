@@ -28,7 +28,7 @@ var done={},cur="";
 function mk(t){var h=SRC[t];SUB[t].forEach(function(s){h=h.replace(s[0],function(){return s[1]})});
  var f=document.createElement("iframe");f.id="f_"+t;f.srcdoc=h;document.getElementById("wrap").appendChild(f);done[t]=1}
 function show(t){
- if(t==="admin"&&ADMIN_PIN&&!sessionStorage.getItem("king_adm")){var p=prompt("Order Check PIN:");if(p!==ADMIN_PIN){if(p!==null)alert("❌ गलत PIN");return}try{sessionStorage.setItem("king_adm","1")}catch(e){}}
+ 
  if(!done[t])mk(t);cur=t;
  [].forEach.call(document.querySelectorAll("iframe"),function(f){f.classList.toggle("on",f.id==="f_"+t)});
  [].forEach.call(document.querySelectorAll("#bar button"),function(b){b.classList.toggle("on",b.dataset.t===t)})}
