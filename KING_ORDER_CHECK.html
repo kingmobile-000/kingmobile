@@ -289,6 +289,8 @@ function cpost(o){var u=getCUrl();if(!u)return;try{fetch(u,{method:"POST",mode:"
 function cfind(id){for(var i=0;i<comps.length;i++)if(String(comps[i].id)===id)return comps[i]}
 function cfetch(){var u=getCUrl();if(!u)return;fetch(u+(u.indexOf("?")<0?"?":"&")+"action=list&t="+Date.now()).then(function(r){return r.json()}).then(function(j){var by={},ch=false;comps.forEach(function(c){by[c.id]=c});
 ((j&&j.complaints)||[]).forEach(function(r){r.id=String(r.id);r.mobile=tel10(r.mobile);r.status=cns(r.status);var l=by[r.id];if(!l){comps.push(r);by[r.id]=r;ch=true;return}
+var _ro={New:0,ShopReceived:1,Confirmed:2,Shipped:3,OutForDelivery:4,Done:5};
+if(r.status==="New"&&_ro[l.status]>0&&hget(l)[l.status]){/* server abhi New dikha raha hai - shop ka kiya status wapas New na ho; server par dobara bhejo */ if(!l._rp||Date.now()-l._rp>30000){l._rp=Date.now();cpost({action:"status",id:l.id,status:l.status,dboy:l.dboy||"",hist:JSON.stringify(hget(l))})} if(r.billno&&String(l.billno)!==String(r.billno)){l.billno=r.billno;ch=true} return}
 if(l._dirty){if(r.status===l.status||Date.now()-Number(l._dirty)>20000){delete l._dirty;ch=true;if(r.status===l.status)return}else return}
 var was=l.status;["no","status","billno","name","mobile","item","problem","time","upd","dboy","address","city","pin"].forEach(function(k){if(r[k]!==undefined&&r[k]!==""&&String(l[k])!==String(r[k])){l[k]=r[k];ch=true}});if(was!==l.status){hmark(l,l.status,r.upd||"");ch=true}if(mh(l,r))ch=true;if(!l.thumb&&r.thumb){l.thumb=r.thumb;ch=true}});
 if(ch)sv(LC,comps);cBoys(function(){cAssign();if(!typing())render()})}).catch(function(){})}
