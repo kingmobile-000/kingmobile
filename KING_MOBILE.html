@@ -502,7 +502,7 @@ function effRate(r){var n=parseFloat(String(r==null?"":r).replace(/,/g,""));retu
 function mkStr(o){return(o.MRate!==undefined&&o.MRate!==null&&o.MRate!=="")?o.MRate:o.Rate}
 function offLbl(){var c=offRs();return c>0?"ऑफर ₹"+fmtN(c)+" की छूट":""}
 /* ===== माल की सिंक: KING_MOBILE.html वाली वही Google Sheet (Items) -> यह पेज ===== */
-var GAS="https://script.google.com/macros/s/AKfycbwBaBcqvnFqmrTE3KpZwab6BUMxeMfmU6q5v0wrZcDQMH4rNyZhxlVtqUFVzKA4Lx0q/exec";
+var GAS="https://script.google.com/macros/s/AKfycbyHV3p2fZWAPaEH6p1xadJtm9TF00Ox8zA216NSzHUCxGxydcl6loAlmp4UZuzD7nsGbQ/exec";
 var ITEM_POLL_MS=30000;   /* कितने मिलीसेकंड में माल देखना है (30000 = 30 सेकंड) */
 var itemV=null,itemBusy=false,itemFails=0,itemNext=0;
 function itKey(o){return String(o.Item==null?"":o.Item).trim().toLowerCase()+"|"+String(o.SKU==null?"":o.SKU).trim().toLowerCase()}
@@ -530,7 +530,7 @@ return changed}
 function itTick(){
 if(document.hidden||itemBusy||!GAS||Date.now()<itemNext||navigator.onLine===false)return;
 itemBusy=true;
-try{fetch(GAS+"?t="+Date.now()).then(function(r){return r.json()}).then(function(d){
+try{fetch(GAS+"?action=items&t="+Date.now()).then(function(r){return r.json()}).then(function(d){
 if(!d||!d.ok||!d.items||!d.items.length||d.v===itemV||itOverlay()){itemBusy=false;itemFails=0;return}
 itApply(d.items.map(norm));itemV=d.v;itemBusy=false;itemFails=0
 }).catch(function(){itemBusy=false;itemFails++;itemNext=Date.now()+Math.min(60000,5000*itemFails)})}catch(e){itemBusy=false}}
