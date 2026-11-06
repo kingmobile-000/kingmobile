@@ -299,6 +299,9 @@ function cInTab(c,t){var s=cns(c.status);if(t==="Cancelled")return s==="Cancelle
 function ctrk(c,s){var L=["Complaint Received","Shop Received","Complaint Confirmed","Shipped","Out For Delivery","Delivery Done"],KC=["New","ShopReceived","Confirmed","Shipped","OutForDelivery","Done"],ix={New:0,ShopReceived:1,Confirmed:2,Shipped:3,OutForDelivery:4,Done:5,DelCancelled:4,Cancelled:-1}[s],h="",dm=tel10(c.dboy);
 if(s!=="Cancelled"){h='<div class="tk">';L.forEach(function(t,i){var k=i<=ix?" on":"",key=KC[i],bd=false;if(s==="DelCancelled"&&i===5){k=" bad";t="Delivery Cancelled";key="DelCancelled";bd=true}h+='<div class="t'+k+'">'+t+((i<=ix||bd)?hdt(c,key,i,i===ix||bd):"")+'</div>'});h+='</div>'}
 var dl=dm?' – 🛵 डिलीवरी वाला: '+boyTxt(dm):'';
+var bk=hget(c).BoyOk;
+if(dm&&s==="New"&&!bk)h+='<div class="nt b">⏳ 🛵 डिलीवरी वाले के OK का इंतज़ार: '+boyTxt(dm)+'</div>';
+if(dm&&bk&&s!=="Cancelled")h+='<div class="nt g">✅ Complaint Received – 🛵 डिलीवरी वाले ने आइटम/प्रोडक्ट ले लिया: '+boyTxt(dm)+' <small>('+esc(fshort(bk))+')</small></div>';
 if(dm&&(s==="New"||s==="ShopReceived"||s==="Confirmed"||s==="Shipped"))h+='<div class="nt b">🛵 Complaint लेने वाला (इस पिन कोड का): '+boyTxt(dm)+'</div>';
 if(s==="Cancelled")h+='<div class="nt r">❌ Complaint Cancelled'+(dm?' – 🛵 '+boyTxt(dm):'')+'</div>';
 if(s==="OutForDelivery"&&dm)h+='<div class="nt b">🛵 डिलीवरी वाला: '+boyTxt(dm)+'</div>';
