@@ -66,13 +66,13 @@ var h='<div class="tabs"><button class="tb'+(tab==="out"?" on":"")+'" data-t="ou
 L.forEach(function(o){h+=(tab==="cmp"?cCard(o):card(o))});
 app.innerHTML=h+(L.length?"":'<div class="empty">'+(tab==="out"?"अभी आपके लिए कोई डिलीवरी नहीं है<br>(दुकान Out For Delivery करेगी तो यहाँ अपने आप आएगी)":tab==="dn"?"अभी कोई पूरी डिलीवरी नहीं":"अभी कोई Complaint नहीं<br>(आपके पिन कोड / एरिया की Complaint यहाँ अपने आप आएगी)")+'</div>')}
 /* ===== Complaint: पिन कोड के हिसाब से सिर्फ़ उसी डिलीवरी वाले के ID में दिखती है ===== */
-var CSL2={New:"Complaint Placed",Accepted:"Complaint Accepted",Shipped:"Shipped",OutForDelivery:"Out For Delivery",Done:"Delivery Done",DelCancelled:"Delivery Cancelled",Cancelled:"Complaint Cancelled"};
-function cst(c){var s=String((cov[c.id]||c.status)||"").trim();if(s==="Work Done")s="Done";return CSL2[s]?s:"New"}
+var CSL2={New:"Complaint Received",Confirmed:"Complaint Confirmed",Shipped:"Shipped",OutForDelivery:"Out For Delivery",Done:"Delivery Done",DelCancelled:"Delivery Cancelled",Cancelled:"Complaint Cancelled"};
+function cst(c){var s=String((cov[c.id]||c.status)||"").trim();if(s==="Work Done")s="Done";if(s==="Accepted")s="Confirmed";return CSL2[s]?s:"New"}
 function cFin(c){var s=c.status;return s==="Done"||s==="DelCancelled"||s==="Cancelled"}
 function cAll(){return cps.filter(function(c){return t10(c.dboy)===me}).map(function(c){var o={};for(var k in c)o[k]=c[k];o.status=cst(c);return o})}
 function cadr(c){return(c.address||c.pin)?[c.address,c.city,c.pin].filter(Boolean).join(", "):""}
 function cCard(c){var s=c.status,m=t10(c.mobile),id=esc(c.id);
-var h='<div class="oc"><div class="oh"><span>'+esc(c.no||"#"+c.id)+'</span><span class="st '+({OutForDelivery:"o",Done:"d",New:"n",Accepted:"n",Shipped:"s"}[s]||"x")+'">'+esc(CSL2[s])+'</span></div>';
+var h='<div class="oc"><div class="oh"><span>'+esc(c.no||"#"+c.id)+'</span><span class="st '+({OutForDelivery:"o",Done:"d",New:"n",Confirmed:"n",Shipped:"s"}[s]||"x")+'">'+esc(CSL2[s])+'</span></div>';
 h+='<div class="sec"><div class="sl">🛠 Complaint</div><div class="kv"><span>आइटम</span><span>'+esc(c.item)+'</span></div><div class="kv"><span>प्रॉब्लम</span><span>'+esc(c.problem)+'</span></div>'+(c.thumb?'<div class="th" style="width:100%;height:auto;max-height:220px;margin-top:8px"><img alt="" src="'+esc(c.thumb)+'"></div>':'')+'</div>';
 h+='<div class="sec"><div class="sl">👤 ग्राहक</div><div class="kv"><span>नाम</span><span>'+esc(c.name)+'</span></div>'+(cadr(c)?'<div class="kv"><span>पता</span><span>'+esc(cadr(c))+'</span></div>':'')+'<div class="kv"><span>मोबाइल</span><span>'+esc(m)+'</span></div>'+(c.billno?'<div class="kv"><span>Bill No.</span><span>'+esc(c.billno)+'</span></div>':'')
 +'<div class="cb"><a class="ca" href="tel:'+esc(m)+'">📞 कॉल</a><a class="cw" target="_blank" href="https://wa.me/91'+esc(m)+'">💬 WhatsApp</a>'+(cadr(c)?'<a class="cm" target="_blank" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(cadr(c))+'">📍 Map</a>':'')+'</div></div>';

@@ -1170,7 +1170,7 @@ if(u){syncOrders();setInterval(function(){if(!document.hidden&&(curPg==="orders"
 
 /* ===== Complaint (नीचे के मेनू में) ===== */
 var COMPLAINT_URL=ORDER_URL;  /* wahi ek link (KING_ALL_IN_ONE) */
-var CKEY="kms_complaints",cmode=false,cPh="",CSL={New:"Complaint Placed",Accepted:"Complaint Accepted",Done:"Work Done",Cancelled:"Cancelled"},CCOL={New:"#fff3e0;color:#b45309",Accepted:"#e3effd;color:#0b4fa8",Done:"#e3f6e8;color:#0a5d24",Cancelled:"#fde4e1;color:#b42410"};
+var CKEY="kms_complaints",cmode=false,cPh="",CSL={New:"Complaint Received",Confirmed:"Complaint Confirmed",Shipped:"Shipped",OutForDelivery:"Out For Delivery",Done:"Delivery Done",DelCancelled:"Delivery Cancelled",Cancelled:"Complaint Cancelled"},CCOL={New:"#fff3e0;color:#b45309",Confirmed:"#e3effd;color:#0b4fa8",Shipped:"#ede7fb;color:#5b34b5",OutForDelivery:"#fff0d9;color:#a85a00",Done:"#e3f6e8;color:#0a5d24",DelCancelled:"#fde4e1;color:#b42410",Cancelled:"#fde4e1;color:#b42410"},cdId=null;
 function cRead(){try{var a=JSON.parse(localStorage.getItem(CKEY)||"[]");return Array.isArray(a)?a:[]}catch(e){return[]}}
 function cWrite(a){try{localStorage.setItem(CKEY,JSON.stringify(a.slice(0,100)))}catch(e){}}
 function cMine(){var u=getUser();if(!u)return[];return cRead().filter(function(c){return t10(c.mobile)===u.m}).sort(function(a,b){return String(b.time).localeCompare(String(a.time))})}
@@ -1183,7 +1183,7 @@ function drawC(){var u=getUser(),x=document.getElementById("xpo"),h=cSeg()+'<div
 if(!u){x.innerHTML=h+'<div class="xemp"><div class="big">🔐</div>Complaint के लिए पहले Login कीजिए<button class="xbtn" data-xlogin="1">Login</button></div>';return}
 h+='<div style="padding:10px 12px"><button class="xbtn" data-cnew="1" style="margin:0">➕ नई Complaint दर्ज करें</button></div>';if(cDbg&&cMine().some(function(c){return !c.no}))h+='<div style="margin:0 12px 8px;padding:10px 12px;border-radius:12px;background:#fff3cd;color:#664d03;font-size:12px;font-weight:700;line-height:1.5;word-break:break-word">⚠ Number क्यों नहीं आया: '+esc(cDbg)+'<br><button class="xbtn" data-cretry="1" style="margin:8px 0 0;padding:8px">🔄 फिर कोशिश करें</button></div>';
 var a=cMine();if(!a.length)h+='<div class="xemp"><div class="big">🛠</div>अभी तक कोई Complaint नहीं</div>';
-a.forEach(function(c){var s=CSL[c.status]?c.status:"New";h+='<div class="ccd"><div class="cn">'+esc(c.no||"नंबर आ रहा है…")+'</div><div class="ct">'+esc(fdt(c.time))+'</div><div class="ci">'+esc(c.item)+'</div>'+((c.address||c.pin)?'<div class="ct">📍 '+esc([c.address,c.city,c.pin].filter(Boolean).join(", "))+'</div>':'')+'<div class="cp">⚠ '+esc(c.problem)+'</div>'+(c.thumb?'<img alt="" src="'+esc(c.thumb)+'">':'')+'<div><span class="ccs" style="background:'+CCOL[s]+'">'+CSL[s]+'</span></div></div>'});
+a.forEach(function(c){var s=cNorm(c.status);h+='<div class="ccd" data-cd="'+esc(c.id)+'" style="cursor:pointer;position:relative"><div class="cn">'+esc(c.no||"नंबर आ रहा है…")+'</div><div class="ct">'+esc(fdt(c.time))+'</div><div class="ci">'+esc(c.item)+'</div>'+((c.address||c.pin)?'<div class="ct">📍 '+esc([c.address,c.city,c.pin].filter(Boolean).join(", "))+'</div>':'')+'<div class="cp">⚠ '+esc(c.problem)+'</div>'+(c.thumb?'<img alt="" src="'+esc(c.thumb)+'">':'')+'<div><span class="ccs" style="background:'+CCOL[s]+'">'+CSL[s]+'</span><span style="float:right;font-size:24px;line-height:1;color:#999">›</span></div></div>'});
 x.innerHTML=h}
 function cResize(f,cb){var r=new FileReader();r.onload=function(){var im=new Image();im.onload=function(){var k=Math.min(1,520/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext("2d").drawImage(im,0,0,c.width,c.height);cb(c.toDataURL("image/jpeg",.6))};im.src=r.result};r.readAsDataURL(f)}
 function cForm(){var u=getUser(),d=document.getElementById("xcf");if(!d){d=document.createElement("div");d.id="xcf";document.body.appendChild(d)}cPh="";
@@ -1211,12 +1211,51 @@ if(!j.ok||!j.no)return fail("Server का जवाब: "+String(o.t).slice(0,1
 var a=cRead();a.forEach(function(x){if(x.id===c.id)x.no=j.no});cWrite(a);if(curPg==="orders"&&cmode)drawC();nx(i+1)}).catch(function(e){fail("Internet / Server तक नहीं पहुँचा: "+e)})}catch(e){fail("Error: "+e)}})(0)}
 function cSync(){var u=getUser();if(!u||!COMPLAINT_URL)return;cSendAll();
 try{fetch(COMPLAINT_URL+"?action=my&mobile="+u.m+"&t="+Date.now()).then(function(r){return r.json()}).then(function(j){var a=cRead(),by={},ch=false;a.forEach(function(c){by[c.id]=c});
-((j&&j.complaints)||[]).forEach(function(r){var l=by[r.id];if(!l){a.push(r);ch=true;return}["no","status"].forEach(function(k){if(r[k]&&String(l[k]||"")!==String(r[k])){l[k]=r[k];ch=true}});if(!l.thumb&&r.thumb){l.thumb=r.thumb;ch=true}});
-if(ch){cWrite(a);if(curPg==="orders"&&cmode)drawC()}}).catch(function(){})}catch(e){}}
+((j&&j.complaints)||[]).forEach(function(r){var l=by[r.id];if(!l){a.push(r);ch=true;return}["no","status","billno","dboy","upd"].forEach(function(k){if(r[k]&&String(l[k]||"")!==String(r[k])){l[k]=r[k];ch=true}});if(!l.thumb&&r.thumb){l.thumb=r.thumb;ch=true}});
+if(ch){cWrite(a);if(curPg==="orders"&&cmode)drawC();if(cdId)drawCd()}}).catch(function(){})}catch(e){}}
 document.getElementById("xpo").addEventListener("click",function(e){var m=e.target.closest("[data-cm]");if(e.target.closest("[data-cop]")){segOpen=true;drawOrders();return}if(m){cmode=m.getAttribute("data-cm")==="1";segOpen=false;drawOrders();if(cmode)cSync();return}if(e.target.closest("[data-cretry]")){cDbg="कोशिश हो रही है…";drawC();cSendAll();return}if(e.target.closest("[data-cnew]"))cForm()});
 document.getElementById("xnav").addEventListener("click",function(e){var b=e.target.closest("[data-xp]");if(b&&b.getAttribute("data-xp")==="orders"){cmode=(b.getAttribute("data-m")!=="o");segOpen=false;if(cmode)setTimeout(cSync,50)}},true);
 var _ao0=window.afterOrder;window.afterOrder=function(o){cmode=false;segOpen=false;if(_ao0)_ao0(o)};
-setInterval(function(){if(!document.hidden&&curPg==="orders"&&cmode)cSync()},6000);
+setInterval(function(){if(!document.hidden&&((curPg==="orders"&&cmode)||cdId))cSync()},6000);
+
+
+/* ===== Complaint detail: Order jaise step-by-step (Received -> Confirmed -> Shipped -> Out For Delivery -> Delivery Done) ===== */
+function cNorm(s){s=String(s==null?"":s).trim();if(s==="Accepted")s="Confirmed";if(s==="Work Done")s="Done";return CSL[s]?s:"New"}
+function openCd(id){cdId=id;odId=null;drawCd();var d=document.getElementById("xod");d.classList.add("on");d.scrollTop=0;cSync()}
+var _closeOd0=closeOd;closeOd=function(){cdId=null;_closeOd0()};
+function drawCd(){var c=null;cRead().forEach(function(x){if(String(x.id)===String(cdId))c=x});var d=document.getElementById("xod");if(!c){closeOd();return}
+var s=cNorm(c.status),dm=t10(c.dboy),m=t10(c.mobile);
+var ix={New:0,Confirmed:1,Shipped:2,OutForDelivery:3,Done:4,DelCancelled:3}[s];
+var steps=["Complaint Received","Complaint Confirmed","Shipped","Out For Delivery","Delivery Done"];
+var h='<div class="xbar"><button id="xodx" aria-label="वापस">←</button><span>Complaint Details</span></div>';
+h+='<div class="xsec"><div class="xs2" style="font-size:13px">Complaint नंबर</div><div style="font-size:22px;font-weight:900;color:#000">'+esc(c.no||"नंबर आ रहा है…")+'</div><div class="xs2">'+esc(fdt(c.time))+'</div></div>';
+h+='<div class="xsec"><div class="xh2">📍 Complaint की स्थिति</div>';
+if(s==="Cancelled"){h+='<div class="xbox r">❌ Complaint रद्द हो गई'+(c.upd?'<br><span style="font-weight:700;font-size:14px">'+esc(fdt(c.upd))+'</span>':'')+'</div>'}
+else{h+='<div class="xtk">';steps.forEach(function(t,i){var k=i<=ix?" on":"",cur=i===ix&&s!=="DelCancelled"?" cur":"",nx=i<ix?" nx":"";h+='<div class="xs'+k+cur+nx+'"><i></i>'+t+(i===ix&&s!=="DelCancelled"&&c.upd&&i>0?'<small>'+esc(fdt(c.upd))+'</small>':'')+'</div>'});
+if(s==="DelCancelled")h+='<div class="xs bad nx"><i></i>Delivery Cancelled'+(c.upd?'<small>'+esc(fdt(c.upd))+'</small>':'')+'</div>';
+h+='</div>';
+if(s==="New")h+='<div class="xbox b" style="margin-top:14px">🛠 आपकी Complaint दुकान को मिल गई है – जल्द ही Confirm होगी</div>';
+if(s==="OutForDelivery"&&dm)h+='<div class="xbox b" style="margin-top:14px">🛵 आपका सामान लेकर आ रहे हैं<br><a href="tel:'+esc(dm)+'">📞 '+esc(dm)+'</a></div>';
+if(s==="Done")h+='<div class="xbox g" style="margin-top:14px">✅ Delivery हो गई – धन्यवाद!</div>';
+if(s==="DelCancelled")h+='<div class="xbox r" style="margin-top:14px">❌ Delivery रद्द हो गई<br><span style="font-weight:700;font-size:14px">कृपया दुकान से बात कीजिए</span></div>'}
+h+='</div>';
+h+='<div class="xsec"><div class="xh2">🛠 Complaint की पूरी जानकारी</div><div class="xkv"><span>आइटम</span><span>'+esc(c.item)+'</span></div>'+(c.orderno?'<div class="xkv"><span>ऑर्डर</span><span>'+esc(c.orderno)+'</span></div>':'')+'<div class="xkv"><span>प्रॉब्लम</span><span>'+esc(c.problem)+'</span></div>'+(c.thumb?'<img alt="" style="width:100%;max-height:240px;object-fit:contain;border-radius:10px;margin-top:8px;background:#eceef1" src="'+esc(c.thumb)+'">':'')+'</div>';
+h+='<div class="xsec"><div class="xh2">👤 आपकी जानकारी</div><div class="xkv"><span>नाम</span><span>'+esc(c.name)+'</span></div><div class="xkv"><span>मोबाइल</span><span>'+esc(m)+'</span></div>'+((c.address||c.pin)?'<div class="xkv"><span>पता</span><span>'+esc([c.address,c.city,c.pin].filter(Boolean).join(", "))+'</span></div>':'')+(c.billno?'<div class="xkv"><span>Bill No.</span><span>'+esc(c.billno)+'</span></div>':'')+'</div>';
+h+='<div class="xsec"><div class="xh2">🏪 KING MOBILE SHOP</div><div class="xrow" style="margin-top:0"><a class="xa" href="tel:9558222519">📞 कॉल करें</a><a class="xw" target="_blank" href="https://wa.me/919558222519">💬 WhatsApp</a></div></div>';
+d.innerHTML=h}
+document.getElementById("xpo").addEventListener("click",function(e){var c=e.target.closest("[data-cd]");if(c)openCd(c.getAttribute("data-cd"))});
+
+/* ===== Search: result hamesha bilkul saamne (upar scroll reset) ===== */
+document.getElementById("q").addEventListener("input",function(){window.scrollTo(0,0);try{document.documentElement.scrollTop=0;document.body.scrollTop=0}catch(e){}});
+
+/* ===== Scroll lock: Orders / Categories / Account / Detail khule ho to peeche ka Home list hilna nahi chahiye ===== */
+(function(){var st=document.createElement("style");st.textContent=".xpg,#xod,#dt,#by,#xcf,#xlg,#ps,#sk,#md,#xok,#pv{overscroll-behavior:contain}";document.head.appendChild(st);
+var OVL=".xpg.on,#xod.on,#dt.on,#by.on,#xcf.on,#xlg.on,#ps.on,#sk.on,#md.on,#xok.on,#pv.on";
+document.addEventListener("touchmove",function(e){if(e.touches&&e.touches.length>1)return;var any=document.querySelector(OVL);if(!any)return;
+var el=e.target,inOv=false;while(el&&el.nodeType===1&&el!==document.body){if(el.matches&&el.matches(OVL))inOv=true;
+var cs=getComputedStyle(el);if(((cs.overflowY==="auto"||cs.overflowY==="scroll")&&el.scrollHeight>el.clientHeight+1)||((cs.overflowX==="auto"||cs.overflowX==="scroll")&&el.scrollWidth>el.clientWidth+1)){if(inOv||el.matches(OVL)||any.contains(el))return}
+el=el.parentNode}
+e.preventDefault()},{passive:false})})();
 
 /* ===== Back button: Buy -> Item -> List -> (Home) -> bahar. Ek Back = ek step ===== */
 function kbStep(){
