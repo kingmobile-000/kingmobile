@@ -93,7 +93,9 @@ function fetchC(){if(!me||!LOG_URL)return;fetch(LOG_URL+(LOG_URL.indexOf("?")<0?
 cps.forEach(function(c){c.id=String(c.id);var rs=String(c.status||"").trim();if(rs==="Work Done")rs="Done";if(cov[c.id]&&rs===cov[c.id])delete cov[c.id]});lset(CK,cov);cps.forEach(function(c){if(rv[c.id]&&hget(c).BoyOk)delete rv[c.id]});lset(RK,rv);render()}).catch(function(){})}
 function recvC(id){var c=null;cps.forEach(function(x){if(String(x.id)===id)c=x});if(!c)return;
 ask("📦 सामान मिल गया? OK करने पर हर जगह Complaint Received दिखेगी ("+(c.no||"")+")",function(){var t=new Date().toISOString();rv[id]=t;lset(RK,rv);
-try{fetch(LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"status",id:id,dboy:me,hist:JSON.stringify({BoyOk:t})})}).catch(function(){})}catch(e){}render();setTimeout(fetchC,4000)})}
+var hh=hget(c);hh.BoyOk=t;c.hist=JSON.stringify(hh);
+function sendOk(){try{fetch(LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"status",id:id,status:cst(c),dboy:me,hist:JSON.stringify(hh)})}).catch(function(){})}catch(e){}}
+sendOk();setTimeout(sendOk,5000);render();setTimeout(fetchC,4000)})}
 function fetchB(){if(!me||!URL_)return;fetch(URL_+(URL_.indexOf("?")<0?"?":"&")+"action=boy&mobile="+me+"&t="+Date.now()).then(function(r){return r.json()}).then(function(j){if(j&&j.ok){boy=j.found?j.boy:null;lset(BK,{m:me,b:boy});render()}}).catch(function(){})}
 function setC(id,s){var c=null;cps.forEach(function(x){if(String(x.id)===id)c=x});if(!c)return;
 ask(s==="Done"?"✅ Delivery Done करें? ("+(c.no||"")+")":"❌ Delivery Cancel करें? ("+(c.no||"")+")",function(){
