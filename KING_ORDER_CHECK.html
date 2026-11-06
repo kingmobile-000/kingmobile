@@ -315,13 +315,13 @@ if(s==="Done"||s==="DelCancelled"||s==="Cancelled")return h+'</div>';
 function B(k,st,t){return '<button class="'+k+'" data-cs="'+st+'" data-id="'+id+'">'+t+'</button>'}
 var a='<div class="ab">';
 if(s==="New")a+=B("c1","ShopReceived","🏪 Shop Received")+B("c3","Cancelled","✖ Cancel");
-else if(s==="ShopReceived")a+=B("c1","Confirmed","✔ Complaint Confirmed")+B("c3","Cancelled","✖ Cancel");
+else if(s==="ShopReceived")a+=(String(c.billno||"").trim()?B("c1","Confirmed","✔ Complaint Confirmed"):'<div class="nt b" style="flex:1 1 100%">🧾 पहले MUKESH_KUMAR में बिल बनाइए – बिल बनने और 🔄 रिफ्रेश के बाद "Complaint Confirmed" बटन आएगा</div>')+B("c3","Cancelled","✖ Cancel");
 else if(s==="Confirmed")a+=B("b5","Shipped","📦 Shipped")+B("c3","Cancelled","✖ Cancel");
 else if(s==="Shipped")a+=B("b6","OutForDelivery","🛵 Out For Delivery")+B("c3","Cancelled","✖ Cancel");
 else if(s==="OutForDelivery"){var dm=dd[c.id]!==undefined?dd[c.id]:(c.dboy||""),ok=tel10(dm).length===10;a+=dlBox(c,id,dm)+'<div class="dbtn" style="display:'+(ok?"flex":"none")+'">'+B("b2","Done","✅ Done Delivery")+B("b3","DelCancelled","❌ Cancel Delivery")+'</div>'}
 return h+a+'</div></div>'}
 function cSet(id,st){var c=cfind(id);if(!c)return;
-if(st!=="Cancelled"&&!String(c.billno||"").trim()){alert("❌ Error: "+(c.no||"")+" ka bill अभी MUKESH_KUMAR से नहीं बना है।\n\nपहले बिल बनाइए, तब तक यह Complaint \"Complaint Received\" ही रहेगी।\n(बिल बनाने के बाद 🔄 रिफ्रेश करके फिर दबाइए)");return}
+if(st!=="Cancelled"&&st!=="ShopReceived"&&!String(c.billno||"").trim()){alert("❌ Error: "+(c.no||"")+" ka bill अभी MUKESH_KUMAR से नहीं बना है।\n\nपहले बिल बनाइए, तब तक यह Complaint \"Shop Received\" ही रहेगी।\n(बिल बनाने के बाद 🔄 रिफ्रेश करके फिर दबाइए)");return}
 var m="";if(st==="Done"||st==="DelCancelled"){m=tel10(dd[id]!==undefined?dd[id]:c.dboy);if(m.length!==10){alert("पहले डिलीवरी वाला चुनिए");return}}
 var q={ShopReceived:"🏪 Shop Received करें? (",Confirmed:"✔ Complaint Confirm करें? (",Shipped:"📦 Shipped करें? (",OutForDelivery:"🛵 Out For Delivery करें? (",Done:"✅ Delivery Done करें? (",DelCancelled:"❌ Delivery Cancel करें? ("}[st];
 function go(){c.status=st;if(m)c.dboy=m;if(st==="OutForDelivery"&&tel10(c.dboy).length!==10){var sg=boyForOrder(c);if(sg)c.dboy=sg.mobile}
