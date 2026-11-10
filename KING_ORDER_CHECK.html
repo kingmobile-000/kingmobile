@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>KING ORDER CHECK</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -41,8 +41,10 @@ header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#c62d12
 .ab button{flex:1;min-width:84px;padding:11px 6px;border-radius:10px;border:0;font-size:14px;font-weight:900}
 .b1{background:#2563eb;color:#fff}.b2{background:#16a34a;color:#fff}.b3{background:#fde4e1;color:#b42410}.b4{background:#eee;color:#333}
 .empty{text-align:center;color:#666;padding:50px 20px;font-weight:700;line-height:1.7}
-#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20;align-items:flex-end;justify-content:center;padding:10px}#ov.on{display:flex}
-.sh{background:#fff;width:100%;max-width:460px;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;max-height:92vh;overflow:auto}
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20;align-items:flex-end;justify-content:center;padding:10px;overscroll-behavior:contain}#ov.on{display:flex}
+html:has(#ov.on),body:has(#ov.on){overflow:hidden}
+.kbd .cbar{display:none}
+.sh{background:#fff;width:100%;max-width:460px;border-radius:16px;padding:14px;display:flex;flex-direction:column;gap:10px;max-height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}
 .sh h3{margin:0;font-size:17px}.sh p{margin:0;font-size:13px;color:#444;line-height:1.5}
 .sh input,.sh textarea{width:100%;padding:12px;font-size:15px;border:1px solid #ccd;border-radius:10px;background:#fff;color:#111;font-family:inherit}
 .sh textarea{min-height:190px}
@@ -90,6 +92,7 @@ header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#c62d12
 #ar .arc{margin-top:8px;border:0;background:#eef0f3;color:#333;font-weight:900;border-radius:10px;padding:9px 12px;font-size:13px}
 #mt{display:flex;gap:8px;padding:2px 10px 8px}#mt button{flex:1;padding:10px 4px;border:0;border-radius:12px;font-size:15px;font-weight:900;background:rgba(255,255,255,.25);color:#fff}#mt{display:none!important}#mt.one button:not(.on){display:none}#mt button.on{background:#16a34a;color:#fff;box-shadow:0 0 0 2px #fff inset}
 </style>
+<style id="noanchor">/* Scroll jagah par rahe: browser list ko apne aap upar-neeche na khiske */html,body,#list,#app,.xpg,#xod,#dt,#by,.sh{overflow-anchor:none}</style>
 </head>
 <body>
 <header>
@@ -106,7 +109,7 @@ header{position:sticky;top:0;z-index:5;background:linear-gradient(180deg,#c62d12
 <div id="ov"><div class="sh" id="shb"></div></div>
 
 <script>
-var DEFAULT_URL="https://script.google.com/macros/s/AKfycbyHV3p2fZWAPaEH6p1xadJtm9TF00Ox8zA216NSzHUCxGxydcl6loAlmp4UZuzD7nsGbQ/exec";            // यहाँ Google Apps Script (Web App) का /exec लिंक डाल सकते हैं (या ⚙ से डालें)
+var DEFAULT_URL="https://script.google.com/macros/s/AKfycbyXU3_vq3Unj2Hk_B44z3h8xegq-ht6ElrFitU_kslTi4iJxkFvZ3ZXV9ye8bP9cId3/exec";            // यहाँ Google Apps Script (Web App) का /exec लिंक डाल सकते हैं (या ⚙ से डालें)
 var SRC="kms_orders",LK="kms_orders_page",UK="kms_order_url";
 var DEFAULT_PIN="1234",BUK="kms_boys_url",BPK="kms_boys_pin",BCK="kms_boys_cache",boys=[];  /* Delivery_Boys_Code.gs का /exec लिंक (या ⚙ से डालें) */
 try{boys=JSON.parse(localStorage.getItem(BCK)||"[]")||[]}catch(e){boys=[]}
@@ -214,8 +217,9 @@ if(a>0&&(s==="Cancelled"||s==="DelCancelled")&&String(o.offerref)!=="1"){o.offer
 function find(id){for(var i=0;i<orders.length;i++)if(String(orders[i].id)===id)return orders[i]}
 function askYes(msg,yes,label){openSheet('<h3>'+esc(msg)+'</h3><div class="r"><button class="no" id="ayn">नहीं</button><button class="ok" id="ayy">'+esc(label||"हाँ, पक्का")+'</button></div>');
 document.getElementById("ayn").onclick=closeSheet;document.getElementById("ayy").onclick=function(){closeSheet();yes()}}
+var STANDALONE=!(function(){try{return !!(window.frameElement&&/^f_(cust|admin|del)$/.test(window.frameElement.id))}catch(e){return false}})();   /* index.html ke andar nahi (alag file akeli khuli) -> password wali jagah chup-chaap band: click par kuch nahi hota */
 function hsh(x){var h=5381;for(var i=0;i<x.length;i++)h=((h<<5)+h+x.charCodeAt(i))|0;return String(h)}
-function askPw(msg,ok){openSheet('<h3>'+esc(msg)+'</h3><input type="password" inputmode="numeric" id="apw" placeholder="पासवर्ड डालिए" autocomplete="off"><div id="msg"></div><div class="r"><button class="no" id="apn">बंद</button><button class="ok" id="apy">रद्द करें</button></div>');
+function askPw(msg,ok){if(STANDALONE)return;openSheet('<h3>'+esc(msg)+'</h3><input type="password" inputmode="numeric" id="apw" placeholder="पासवर्ड डालिए" autocomplete="off"><div id="msg"></div><div class="r"><button class="no" id="apn">बंद</button><button class="ok" id="apy">रद्द करें</button></div>');
 setTimeout(function(){var e=document.getElementById("apw");if(e)e.focus()},60);
 document.getElementById("apn").onclick=closeSheet;
 document.getElementById("apy").onclick=function(){if(hsh(document.getElementById("apw").value.trim())!=="536364552"){document.getElementById("msg").textContent="⚠ गलत पासवर्ड";return}closeSheet();ok()}}
@@ -302,7 +306,7 @@ function cInTab(c,t){var s=cns(c.status);if(t==="Cancelled")return s==="Cancelle
 function ctrk(c,s){var L=["Complaint Received","Shop Received","Complaint Confirmed","Shipped","Out For Delivery","Delivery Done"],KC=["New","ShopReceived","Confirmed","Shipped","OutForDelivery","Done"],ix={New:0,ShopReceived:1,Confirmed:2,Shipped:3,OutForDelivery:4,Done:5,DelCancelled:4,Cancelled:-1}[s],h="",dm=tel10(c.dboy);if(s==="New"&&dm.length===10&&!hget(c).BoyOk)ix=-1;
 if(s!=="Cancelled"){h='<div class="tk">';L.forEach(function(t,i){var k=i<=ix?" on":"",key=KC[i],bd=false;if(s==="DelCancelled"&&i===5){k=" bad";t="Delivery Cancelled";key="DelCancelled";bd=true}h+='<div class="t'+k+'">'+t+((i<=ix||bd)?(i===0&&hget(c).BoyOk?'<small>'+esc(fshort(hget(c).BoyOk))+'</small>':hdt(c,key,i,i===ix||bd)):"")+'</div>'});h+='</div>'}
 var dl=dm?' – 🛵 डिलीवरी वाला: '+boyTxt(dm):'';
-if(s==="New"&&dm)h+=hget(c).BoyOk?'<div class="nt g">📦 सामान ले लिया (Complaint Received) – '+boyTxt(dm)+'</div>':'<div class="nt r">⏳ डिलीवरी वाले का OK बाकी (सामान लेना है): '+boyTxt(dm)+'</div>';
+if(s==="New"&&dm)h+=hget(c).BoyOk?'<div class="nt g">📦 Complaint Received ✔ – '+esc(c.no||("#"+c.id))+' का सामान डिलीवरी वाले ने ले लिया<br>🛵 '+boyTxt(dm)+' • '+esc(fshort(hget(c).BoyOk))+'<br>👉 सामान दुकान पर आ जाए तो नीचे <b>Shop Received</b> दबाइए</div>':'<div class="nt r">⏳ डिलीवरी वाले का OK बाकी (सामान लेना है): '+boyTxt(dm)+'</div>';
 if(dm&&(s==="ShopReceived"||s==="Confirmed"||s==="Shipped"))h+='<div class="nt b">🛵 Complaint लेने वाला (इस पिन कोड का): '+boyTxt(dm)+'</div>';
 if(s==="Cancelled")h+='<div class="nt r">❌ Complaint Cancelled'+(dm?' – 🛵 '+boyTxt(dm):'')+'</div>';
 if(s==="OutForDelivery"&&dm)h+='<div class="nt b">🛵 डिलीवरी वाला: '+boyTxt(dm)+'</div>';
@@ -337,15 +341,15 @@ var h="";CTABS.forEach(function(T){var k=comps.filter(function(c){return cInTab(
 var q=document.getElementById("q").value.trim().toLowerCase(),o="";
 comps.filter(function(c){return cInTab(c,tab)&&(!q||[c.no,c.id,c.name,c.mobile,c.item,c.problem].join(" ").toLowerCase().indexOf(q)>=0)}).sort(function(a,b){return String(b.time).localeCompare(String(a.time))}).forEach(function(c){o+=cCard(c)});
 document.getElementById("list").innerHTML=o||'<div class="empty">कोई Complaint नहीं मिली<br>(ग्राहक की Complaint यहाँ अपने आप आएगी)</div>'};
-document.getElementById("bc").onclick=function(){if(cmode)return;cmode=true;tab="New";cfetch();render();window.scrollTo(0,0)};
-document.getElementById("bo2").onclick=function(){if(!cmode)return;cmode=false;tab="New";render();window.scrollTo(0,0)};
+document.getElementById("bc").onclick=function(){if(cmode)return;cmode=true;tab="New";cfetch();render()};
+document.getElementById("bo2").onclick=function(){if(!cmode)return;cmode=false;tab="New";render()};
 document.getElementById("mo").onclick=function(){document.getElementById("bo2").onclick()};document.getElementById("mc").onclick=function(){document.getElementById("bc").onclick()};
 document.getElementById("list").addEventListener("click",function(e){var b=e.target.closest("[data-cs]");if(b)cSet(b.getAttribute("data-id"),b.getAttribute("data-cs"))});
 comps=ld(LC);comps.forEach(function(c){c.status=cns(c.status)});
 var _br=document.getElementById("br").onclick;document.getElementById("br").onclick=function(){_br();cfetch()};
 var _bs=document.getElementById("bs").onclick;document.getElementById("bs").onclick=function(){_bs();var sh=document.getElementById("shb"),r=sh.querySelector(".r");
 var us=document.getElementById("us"),_us=us.onclick;us.onclick=function(){var e=document.getElementById("cu2");if(e)try{localStorage.setItem(CUK,e.value.trim())}catch(x){}_us();cfetch()}};
-cfetch();if(getPin()&&bok())bfetch(function(ok){if(ok&&!typing()&&!document.getElementById("bfn"))render()});render();setInterval(function(){if(getCUrl()&&!document.hidden)cfetch()},20000);
+cfetch();if(getPin()&&bok())bfetch(function(ok){if(ok&&!typing()&&!document.getElementById("bfn"))render()});render();setInterval(function(){if(getCUrl()&&!document.hidden)cfetch()},8000);
 
 /* ===== 🛵 Delivery Boys (नंबर + एरिया/गाँव) ===== */
 function nz(s){return String(s==null?"":s).toLowerCase().replace(/\s+/g," ").trim()}
@@ -462,6 +466,30 @@ var _rA=render;render=function(){_rA();arNote()};
 var mtOpen=true,mtEl=document.getElementById("mt");
 function mtApply(){mtEl.classList.toggle("one",!mtOpen)}
 mtEl.addEventListener("click",function(e){if(!e.target.closest("button"))return;if(!mtOpen){e.stopImmediatePropagation();mtOpen=true;mtApply();return}setTimeout(function(){mtOpen=false;mtApply()},0)},true);
+</script>
+<script>
+/* Keyboard khulne par screen chhoti ho jati hai -> neeche ka menu/bar chhupa do, taki form ko poori jagah mile */
+(function(){var bases={},r=document.documentElement;
+function f(){var h=window.innerHeight,w=window.innerWidth;if(!(bases[w]>=h))bases[w]=h;r.classList.toggle("kbd",bases[w]-h>140)}
+f();window.addEventListener("resize",f)})();
+</script>
+<script id="scrollkeep">
+/* ===== Scroll yaad rakho: har tab me jahan chhoda wahin rahe; auto-refresh par bhi list upar-neeche na hile ===== */
+(function(){
+var pos={},lastKey=null,hold=false;
+function Y(){return window.pageYOffset||document.documentElement.scrollTop||0}
+function key(){return ((typeof cmode!=="undefined"&&cmode)?"C:":"O:")+tab}
+window.addEventListener("scroll",function(){if(!hold&&lastKey!==null)pos[lastKey]=Y()},{passive:true});
+if(typeof render!=="function")return;
+var r0=render;
+render=function(){var k=key(),y0=Y(),changed=(lastKey!==null&&k!==lastKey);
+if(lastKey!==null&&!changed)pos[k]=y0;
+hold=true;var r;try{r=r0.apply(this,arguments)}finally{lastKey=k}
+var to=changed?(pos[k]||0):y0;
+try{window.scrollTo(0,to)}catch(e){}
+requestAnimationFrame(function(){try{window.scrollTo(0,to)}catch(e){}hold=false});
+return r};
+})();
 </script>
 </body>
 </html>

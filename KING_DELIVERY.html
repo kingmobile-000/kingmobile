@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="hi"><head><meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>KING DELIVERY</title>
 <style>
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -27,15 +27,17 @@ header button{background:rgba(255,255,255,.22);border:0;color:#fff;border-radius
 #lg{padding:40px 20px;max-width:420px;margin:0 auto;text-align:center}#lg h2{margin:0 0 6px}#lg p{color:#444;font-weight:700;margin:0 0 16px}
 #lg input{width:100%;padding:15px;font-size:20px;font-weight:800;border:2px solid #0f766e;border-radius:12px;text-align:center;letter-spacing:1px}
 #lg button{width:100%;margin-top:12px;padding:15px;font-size:17px;font-weight:900;border:0;border-radius:12px;background:#0f766e;color:#fff}#lm{color:#c0160c;font-weight:800;font-size:13px;margin-top:8px}
-#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20;align-items:flex-end;justify-content:center;padding:10px}#ov.on{display:flex}
-.sh{background:#fff;width:100%;max-width:460px;border-radius:16px;padding:14px}.sh h3{margin:0 0 12px;font-size:17px}.sh .r{display:flex;gap:8px}.sh .r button{flex:1;padding:13px;font-size:16px;font-weight:900;border-radius:12px;border:0}
+#ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:20;align-items:flex-end;justify-content:center;padding:10px;overscroll-behavior:contain}#ov.on{display:flex}
+html:has(#ov.on),body:has(#ov.on){overflow:hidden}
+.sh{background:#fff;width:100%;max-width:460px;border-radius:16px;padding:14px;max-height:100%;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;touch-action:pan-y;padding-bottom:calc(14px + env(safe-area-inset-bottom,0px))}.sh h3{margin:0 0 12px;font-size:17px}.sh .r{display:flex;gap:8px}.sh .r button{flex:1;padding:13px;font-size:16px;font-weight:900;border-radius:12px;border:0}
 .st.n{background:#fff3e0;color:#b45309}.st.s{background:#ede7fb;color:#5b2fb0}.tb{font-size:12px;padding:10px 4px;line-height:1.25}
-</style></head><body>
+</style><style id="noanchor">/* Scroll jagah par rahe: browser list ko apne aap upar-neeche na khiske */html,body,#list,#app,.xpg,#xod,#dt,#by,.sh{overflow-anchor:none}</style>
+</head><body>
 <header><div><b>🛵 KING DELIVERY</b><br><span id="who"></span></div><div><button id="br">🔄</button> <button id="bo">Logout</button></div></header>
 <div id="app"></div>
 <div id="ov"><div class="sh" id="shb"></div></div>
 <script>
-var URL_="https://script.google.com/macros/s/AKfycbyHV3p2fZWAPaEH6p1xadJtm9TF00Ox8zA216NSzHUCxGxydcl6loAlmp4UZuzD7nsGbQ/exec";  // Orders wala /exec link (Order Check wala hi)
+var URL_="https://script.google.com/macros/s/AKfycbyXU3_vq3Unj2Hk_B44z3h8xegq-ht6ElrFitU_kslTi4iJxkFvZ3ZXV9ye8bP9cId3/exec";  // Orders wala /exec link (Order Check wala hi)
 var LOG_URL=URL_;   // wahi ek link (KING_ALL_IN_ONE)
 var MK="kms_boy_mobile",OK="kms_boy_ov",CK="kms_boy_cov",me="",all=[],ov={},cps=[],cov={},tab="out",last="",BK="kms_boy_info",RK="kms_boy_rv",boy=null,rv={};
 function t10(m){var d=String(m||"").replace(/\D/g,"");return d.length>10?d.slice(-10):d}
@@ -90,12 +92,16 @@ if(s==="New"){if(cRecv(c))h+='<div class="sec"><div class="sl" style="color:#0a5
 if(s==="OutForDelivery")h+='<div class="ab"><button class="b2" data-cs="Done" data-id="'+id+'">✅ Delivery Done</button><button class="b3" data-cs="DelCancelled" data-id="'+id+'">❌ Cancel Delivery</button></div>';
 return h+'</div>'}
 function fetchC(){if(!me||!LOG_URL)return;fetch(LOG_URL+(LOG_URL.indexOf("?")<0?"?":"&")+"action=list&t="+Date.now()).then(function(r){return r.json()}).then(function(j){cps=(j&&j.complaints)||[];
-cps.forEach(function(c){c.id=String(c.id);var rs=String(c.status||"").trim();if(rs==="Work Done")rs="Done";if(cov[c.id]&&rs===cov[c.id])delete cov[c.id]});lset(CK,cov);cps.forEach(function(c){if(rv[c.id]&&hget(c).BoyOk)delete rv[c.id]});lset(RK,rv);render()}).catch(function(){})}
+cps.forEach(function(c){c.id=String(c.id);var rs=String(c.status||"").trim();if(rs==="Work Done")rs="Done";if(cov[c.id]&&rs===cov[c.id])delete cov[c.id]});lset(CK,cov);cps.forEach(function(c){if(rv[c.id]&&hget(c).BoyOk)delete rv[c.id]});lset(RK,rv);
+var pend=0;cps.forEach(function(c){if(rv[c.id]&&!hget(c).BoyOk){pend++;if(!rvT[c.id]||Date.now()-rvT[c.id]>15000){rvT[c.id]=Date.now();sendRv(c.id,rv[c.id])}}});
+if(pend)last="⚠ OK दुकान तक पहुँचाया जा रहा है ("+pend+") – इंटरनेट चालू रखिए";render()}).catch(function(){})}
+var rvT={};
+function sendRv(id,t){try{fetch(LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"received",id:id,dboy:me,time:t})}).catch(function(){})}catch(e){}}
 function recvC(id){var c=null;cps.forEach(function(x){if(String(x.id)===id)c=x});if(!c)return;
 ask("📦 सामान मिल गया? OK करने पर हर जगह Complaint Received दिखेगी ("+(c.no||"")+")",function(){var t=new Date().toISOString();rv[id]=t;lset(RK,rv);
 var hh=hget(c);hh.BoyOk=t;c.hist=JSON.stringify(hh);
 function sendOk(){try{fetch(LOG_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify({action:"received",id:id,dboy:me,time:t})}).catch(function(){})}catch(e){}}
-sendOk();render();setTimeout(fetchC,2500)})}
+rvT[id]=Date.now();sendRv(id,t);render();setTimeout(fetchC,2500);setTimeout(fetchC,7000)})}
 function fetchB(){if(!me||!URL_)return;fetch(URL_+(URL_.indexOf("?")<0?"?":"&")+"action=boy&mobile="+me+"&t="+Date.now()).then(function(r){return r.json()}).then(function(j){if(j&&j.ok){boy=j.found?j.boy:null;lset(BK,{m:me,b:boy});render()}}).catch(function(){})}
 function setC(id,s){var c=null;cps.forEach(function(x){if(String(x.id)===id)c=x});if(!c)return;
 ask(s==="Done"?"✅ Delivery Done करें? ("+(c.no||"")+")":"❌ Delivery Cancel करें? ("+(c.no||"")+")",function(){
@@ -115,6 +121,7 @@ document.getElementById("br").onclick=fetchAll;
 document.getElementById("bo").onclick=function(){ask("Logout करें?",function(){me="";boy=null;try{localStorage.removeItem(MK)}catch(e){}all=[];render()})};
 me=t10(lget(MK,""));ov=lget(OK,{});cov=lget(CK,{});rv=lget(RK,{});var _bi=lget(BK,null);if(_bi&&_bi.m===me)boy=_bi.b;render();fetchAll();
 setInterval(function(){if(me&&!document.hidden)fetchAll()},10000);
+setInterval(function(){if(me&&!document.hidden)fetchC()},6000);
 
 function kbStep(){var o=document.getElementById("ov");if(o&&o.classList.contains("on")){o.classList.remove("on");return true}
 if(me&&tab!=="out"){tab="out";render();return true}return false}
@@ -134,4 +141,28 @@ if(did){armed=false;clearTimeout(tm);guard();return}
 armed=true;toast("बाहर निकलने के लिए एक बार और Back दबाइए");
 clearTimeout(tm);tm=setTimeout(function(){armed=false;guard()},2500)});
 })();
-</script></body></html>
+</script><script>
+/* Keyboard khulne par screen chhoti ho jati hai -> neeche ka menu/bar chhupa do, taki form ko poori jagah mile */
+(function(){var bases={},r=document.documentElement;
+function f(){var h=window.innerHeight,w=window.innerWidth;if(!(bases[w]>=h))bases[w]=h;r.classList.toggle("kbd",bases[w]-h>140)}
+f();window.addEventListener("resize",f)})();
+</script>
+<script id="scrollkeep">
+/* ===== Scroll yaad rakho: har tab me jahan chhoda wahin rahe; auto-refresh par bhi list upar-neeche na hile ===== */
+(function(){
+var pos={},lastKey=null,hold=false;
+function Y(){return window.pageYOffset||document.documentElement.scrollTop||0}
+function key(){return (me||"")+":"+tab}
+window.addEventListener("scroll",function(){if(!hold&&lastKey!==null)pos[lastKey]=Y()},{passive:true});
+if(typeof render!=="function")return;
+var r0=render;
+render=function(){var k=key(),y0=Y(),changed=(lastKey!==null&&k!==lastKey);
+if(lastKey!==null&&!changed)pos[k]=y0;
+hold=true;var r;try{r=r0.apply(this,arguments)}finally{lastKey=k}
+var to=changed?(pos[k]||0):y0;
+try{window.scrollTo(0,to)}catch(e){}
+requestAnimationFrame(function(){try{window.scrollTo(0,to)}catch(e){}hold=false});
+return r};
+})();
+</script>
+</body></html>
