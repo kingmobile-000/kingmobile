@@ -91,12 +91,21 @@ html:has(#ov.on),body:has(#ov.on){overflow:hidden}
 #ar .arn{font-size:13px;font-weight:800;color:#0a7a2f;margin-top:8px}
 #ar .arc{margin-top:8px;border:0;background:#eef0f3;color:#333;font-weight:900;border-radius:10px;padding:9px 12px;font-size:13px}
 #mt{display:flex;gap:8px;padding:2px 10px 8px}#mt button{flex:1;padding:10px 4px;border:0;border-radius:12px;font-size:15px;font-weight:900;background:rgba(255,255,255,.25);color:#fff}#mt{display:none!important}#mt.one button:not(.on){display:none}#mt button.on{background:#16a34a;color:#fff;box-shadow:0 0 0 2px #fff inset}
+
+.cbar button{font-size:14px;padding:13px 2px}
+.cul{cursor:pointer}.cul:active{background:#fafafa}
+.cun{font-size:18px;font-weight:900;color:#000;word-break:break-word}.cum{font-size:15px;font-weight:800;color:#0b57d0;margin-top:2px}
+.cus{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.cs{font-size:13px;font-weight:900;border-radius:999px;padding:4px 10px}
+.cs.x{background:#fde4e1;color:#b42410}.cs.d{background:#e3f6e8;color:#0a5d24}.cs.p{background:#fff3e0;color:#b45309}.cs.b{background:#b42410;color:#fff}.cs.r{background:#fff3e0;color:#b45309;border:1px solid #f5c58a}
+.cuo2{margin-top:8px;font-size:13px;font-weight:800;color:#555}
+.cub{border:0;background:#eef0f3;color:#222;border-radius:10px;padding:9px 14px;font-size:15px;font-weight:900;margin-bottom:10px}
+.cuht{padding:8px 14px;font-size:13px;font-weight:800;color:#555}
 </style>
 <style id="noanchor">/* Scroll jagah par rahe: browser list ko apne aap upar-neeche na khiske */html,body,#list,#app,.xpg,#xod,#dt,#by,.sh{overflow-anchor:none}</style>
 </head>
 <body>
 <header>
-<div class="h1"><b>👑 KING ORDER CHECK</b><div style="display:flex;gap:6px"><button id="bd">🛵</button><button id="bp">📋 पेस्ट</button><button id="br">🔄</button><button id="bs">⚙</button></div></div>
+<div class="h1"><b>👑 KING ORDER CHECK</b><div style="display:flex;gap:6px"><button id="bd">🛵</button><button id="bp" style="display:none">📋 पेस्ट</button><button id="br">🔄</button><button id="bs" style="display:none">⚙</button></div></div>
 <div class="sw">🔍<input type="search" id="q" placeholder="नाम / मोबाइल / आइटम / ऑर्डर नंबर खोजें"></div>
 <div id="mt" class=""><button id="mo" class="on">📦 Orders (0)</button><button id="mc">🛠 Complaints (0)</button></div>
 </header>
@@ -105,7 +114,7 @@ html:has(#ov.on),body:has(#ov.on){overflow:hidden}
 <div id="sync"></div>
 <div id="list"></div>
 
-<div class="cbar"><button id="bo2" class="on">📦 Orders (0)</button><button id="bc">🛠 Complaint (0)</button></div>
+<div class="cbar"><button id="bo2" class="on">📦 Orders (0)</button><button id="bc">🛠 Complaint (0)</button><button id="bcu">👥 All Customers</button></div>
 <div id="ov"><div class="sh" id="shb"></div></div>
 
 <script>
@@ -180,7 +189,7 @@ h+=dlBox(o,id,dm)
 return h}
 function card(o){
 var M=num(o.mrate),R=num(o.rate),im=o.thumb?'<img src="'+esc(o.thumb)+'" alt="">':'📦';
-var h='<div class="oc"><div class="oh"><div><div class="oid">'+(o.no?esc(o.no):'#'+esc(o.id)+(getUrl()?' <span style="font-size:11px;color:#888">(नंबर आ रहा है…)</span>':''))+'</div><div class="otm">'+esc(fmt(o.time))+'</div></div><span class="st '+stCls(ns(o.status))+'">'+esc(SL[ns(o.status)]||o.status)+'</span></div>'+trk(o);
+var h='<div class="oc"><div class="oh"><div><div class="oid">'+(o.no?esc(o.no):'#'+esc(o.id)+(getUrl()?' <span style="font-size:11px;color:#888">(नंबर आ रहा है…)</span>':''))+'</div><div class="otm">'+esc(fmt(o.time))+'</div></div><span class="st '+stCls(ns(o.status))+'">'+esc(SL[ns(o.status)]||o.status)+'</span></div>'+trk(o)+(typeof kmRisk==='function'?kmRisk(o):'');
 h+='<div class="sec"><div class="sl">🛒 आइटम की पूरी जानकारी</div><div class="it"><div class="th">'+im+'</div><div><div class="in">'+esc(o.item)+'</div><div class="pr">'+(M!==null?'<span class="pm">'+inr(M)+'</span>':'')+(R!==null?'<span class="pg">'+inr(R)+'</span>':'')+'</div>';
 h+='<div class="ch">'+(o.sku!==""&&o.sku!=null?'<span class="cp">SKU: '+esc(o.sku)+'</span>':'')+(o.warranty?'<span class="cp w">🛡 '+esc(o.warranty)+'</span>':'')+(o.stock?'<span class="cp">Stock: '+esc(o.stock)+'</span>':'')+'<span class="cp">मात्रा: '+esc(o.qty||1)+'</span></div></div></div>';
 var T=(o.total!==""&&o.total!=null)?num(o.total):(R!==null?R*(num(o.qty)||1):null),OF=num(o.offer)||0,RF=String(o.offerref)==="1";
@@ -466,6 +475,88 @@ var _rA=render;render=function(){_rA();arNote()};
 var mtOpen=true,mtEl=document.getElementById("mt");
 function mtApply(){mtEl.classList.toggle("one",!mtOpen)}
 mtEl.addEventListener("click",function(e){if(!e.target.closest("button"))return;if(!mtOpen){e.stopImmediatePropagation();mtOpen=true;mtApply();return}setTimeout(function(){mtOpen=false;mtApply()},0)},true);
+</script>
+<script id="custall">
+/* ===== 👥 All Customers + ब्लॉक नियम ===== */
+var custMode=false,custSel="";
+
+function kmCls(o){var s=ns(o.status);if(s==="Done")return"d";if(s==="DelCancelled")return"x2";if(s==="Cancelled")return o.cancelby==="Shop"?"xs":"x1";return"p"}
+/* ग्राहक का रिकॉर्ड: Done / Cancel / डिलीवरी पर Cancel / Pending गिनकर ब्लॉक तय करता है
+   - लगातार (बीच में Done न आए) ग्राहक-रद्द + डिलीवरी-रद्द की सीमा = 5
+   - अगर कभी 2 डिलीवरी (डिलीवरी वाला घर पहुँचने के बाद) रद्द हो चुकी हों तो सीमा 3
+   - कुल 3 डिलीवरी-रद्द पर सीधा ब्लॉक */
+function kmStat0(list){var a=list.slice().sort(function(x,y){return new Date(x.time)-new Date(y.time)});
+var st={done:0,cancel:0,delc:0,shop:0,pend:0,streak:0,limit:5,blocked:false,risky:false,total:a.length};
+a.forEach(function(o){var c=kmCls(o);if(c==="d"){st.done++;st.streak=0}else if(c==="x1"){st.cancel++;st.streak++}else if(c==="x2"){st.delc++;st.streak++}else if(c==="xs"){st.shop++}else st.pend++});
+st.limit=st.delc>=2?3:5;st.blocked=(st.streak>=st.limit)||st.delc>=3;st.risky=st.streak>=3;return st}
+
+/* ===== ID ON/OFF button: ब्लॉक हटाना / लगाना ===== */ var KMOV="kms_idov_all"; function ovAll(){try{return JSON.parse(localStorage.getItem(KMOV)||"{}")||{}}catch(e){return{}}} function ovGet(m){return ovAll()[m]||null} function ovSet(m,s){var a=ovAll(),t=Date.now();a[m]={s:s,t:t};try{localStorage.setItem(KMOV,JSON.stringify(a))}catch(e){}try{var q={action:"idblock",mobile:m,state:s,t:t};if(typeof bok==="function"&&bok())bpost(q);else post(q)}catch(e){}} (function(){var J=Response.prototype.json;Response.prototype.json=function(){return J.apply(this,arguments).then(function(j){try{if(j&&j.idblocks&&typeof j.idblocks==="object"){var a=ovAll(),ch=false;Object.keys(j.idblocks).forEach(function(m){var r=j.idblocks[m];if(r&&r.s&&(!a[m]||Number(r.t)>Number(a[m].t))){a[m]={s:r.s,t:Number(r.t)||0};ch=true}});if(ch){localStorage.setItem(KMOV,JSON.stringify(a));if(typeof custMode!=="undefined"&&custMode&&typeof render==="function")render()}}}catch(e){}return j})}})(); function kmStat(list){var st=kmStat0(list);if(!list.length)return st;var m=tel10(list[0].mobile),ov=ovGet(m);if(!ov)return st; if(ov.s==="off"){st.blocked=true;st.manual=true;return st} var p=list.filter(function(o){return new Date(o.time).getTime()>ov.t}),sd=false,nc=0;p.forEach(function(o){var c=kmCls(o);if(c==="d")sd=true;else if(c==="x1"||c==="x2")nc++}); var b=sd?kmStat0(p).blocked:nc>0;st.blocked=b;st.risky=false;st.ovOn=true;if(!sd){st.streak=nc;st.limit=1}return st} function kmTog(m,st){var on=!st.blocked;return '<div class="idw"><button type="button" class="idt '+(on?"on":"off")+'" data-idt="'+m+'">ID '+(on?"ON ✅":"OFF 🚫")+'</button><small>'+(on?(st.ovOn?"दोबारा रद्द हुआ तो ID फिर ब्लॉक":"बंद करने के लिए दबाइए"):"चालू करने के लिए दबाइए")+'</small></div>'} function kmToggle(m){var st=kmStat(orders.filter(function(o){return tel10(o.mobile)===m}));if(st.blocked){if(confirm("इस ग्राहक की ID चालू (ON) करें?\nअगर इसके बाद इसका कोई ऑर्डर रद्द हुआ तो ID फिर से ब्लॉक हो जाएगी।"))ovSet(m,"on")}else{if(confirm("इस ग्राहक की ID बंद (OFF / ब्लॉक) करें?"))ovSet(m,"off")}render()} (function(){var s=document.createElement("style");s.textContent=".idw{display:flex;align-items:center;gap:8px;margin:8px 0 0}.idt{border:0;border-radius:20px;padding:7px 16px;font-weight:900;font-size:13px;font-family:inherit;color:#fff}.idt.on{background:#16a34a}.idt.off{background:#dc2626}.idw small{font-size:11px;color:#666;font-weight:700}";document.head.appendChild(s)})(); function kmRisk(o){var m=tel10(o.mobile);if(!m)return"";var t=new Date(o.time).getTime();if(isNaN(t))return"";
+var pr=orders.filter(function(x){return x!==o&&tel10(x.mobile)===m&&new Date(x.time).getTime()<t});var s=kmStat(pr);
+if(s.blocked)return'<div class="nt r">🚫 ग्राहक रिस्की – ID ब्लॉक सीमा पार (पिछले '+s.streak+' ऑर्डर लगातार रद्द)</div>';
+if(s.risky)return'<div class="nt r">⚠ ग्राहक रिस्की – पिछले '+s.streak+' ऑर्डर लगातार रद्द</div>';return""}
+function kmGroups(){var g={};orders.forEach(function(o){var m=tel10(o.mobile);if(!m)return;(g[m]=g[m]||[]).push(o)});
+return Object.keys(g).map(function(m){var l=g[m],lt=l.slice().sort(function(a,b){return new Date(b.time)-new Date(a.time)})[0];return{m:m,name:String(lt.name||"").split(",")[0],list:l,st:kmStat(l),last:lt.time}}).sort(function(a,b){return new Date(b.last)-new Date(a.last)})}
+function kmChips(s){var c=s.cancel+s.delc+s.shop;
+return'<div class="cus"><span class="cs x">❌ Cancel Order '+c+'</span><span class="cs d">✅ Done Order '+s.done+'</span><span class="cs p">⏳ Pending Order '+s.pend+'</span>'+(s.blocked?'<span class="cs b">🚫 ID Block</span>':s.risky?'<span class="cs r">⚠ Risky</span>':'')+'</div>'}
+function kmWhy(o){var s=ns(o.status),dm=tel10(o.dboy);
+if(s==="Done")return"✅ डिलीवरी हो गई"+(dm?" • 🛵 "+boyTxt(dm):"");
+if(s==="DelCancelled")return"❌ डिलीवरी पर रद्द (डिलीवरी वाला घर पहुँचा)"+(dm?" • 🛵 "+boyTxt(dm):"");
+if(s==="Cancelled")return o.cancelby==="Shop"?"❌ दुकान की तरफ़ से रद्द":"❌ ग्राहक ने खुद रद्द किया";
+return"⏳ "+(SL[s]||s)}
+function kmOrd(o){var T=(o.total!==""&&o.total!=null)?num(o.total):null;
+return'<div class="oc"><div class="oh"><div><div class="oid">'+esc(o.no||"#"+o.id)+'</div><div class="otm">'+esc(fmt(o.time))+'</div></div><span class="st '+stCls(ns(o.status))+'">'+esc(SL[ns(o.status)]||o.status)+'</span></div><div class="sec"><div class="sl">🛒 क्या मँगवाया</div><div class="in">'+esc(o.item)+'</div><div class="ch"><span class="cp">मात्रा: '+esc(o.qty||1)+'</span>'+(T!==null?'<span class="cp w">'+inr(T)+'</span>':'')+'<span class="cp">'+(o.delivery==="घर"?"🚚 घर पर":"🏪 दुकान से")+'</span><span class="cp">'+esc(o.payment||"—")+'</span></div><div class="kv" style="margin-top:8px"><span>स्थिति</span><span>'+kmWhy(o)+'</span></div></div></div>'}
+function drawCust(){var q=document.getElementById("q").value.trim().toLowerCase(),G=kmGroups(),h="";
+if(custSel){var g=null;G.forEach(function(x){if(x.m===custSel)g=x});
+ if(!g){custSel="";drawCust();return}
+ var s=g.st,L=g.list.slice().sort(function(a,b){return new Date(b.time)-new Date(a.time)});
+ h+='<div class="oc"><div class="sec"><button class="cub" data-cuback="1">← सभी ग्राहक</button><div class="cun">👤 '+esc(g.name||"—")+'</div><div class="cum"><a class="tl" href="tel:'+esc(g.m)+'">📞 '+esc(g.m)+'</a></div>'+kmChips(s)+kmTog(g.m,s)
+  +(s.delc?'<div class="cuo2">🛵 डिलीवरी पर रद्द: '+s.delc+'</div>':'')
+  +(s.blocked?'<div class="nt r" style="margin:8px 0 0">🚫 यह ID ब्लॉक है – नया ऑर्डर बुक नहीं कर सकता (लगातार रद्द '+s.streak+', सीमा '+s.limit+')</div>':s.risky?'<div class="nt r" style="margin:8px 0 0">⚠ ग्राहक रिस्की – लगातार '+s.streak+' रद्द (सीमा '+s.limit+')</div>':'')
+  +'<div class="cb"><a class="ca" href="tel:'+esc(g.m)+'">📞 कॉल करें</a><a class="cw" target="_blank" href="https://wa.me/91'+esc(g.m)+'">💬 WhatsApp</a></div></div></div>'
+  +'<div class="cuht">📜 पूरी हिस्ट्री – कुल '+L.length+' ऑर्डर (नया ऊपर)</div>';
+ L.forEach(function(o){h+=kmOrd(o)})}
+else{var A=G.filter(function(x){return !q||(x.name+" "+x.m).toLowerCase().indexOf(q)>=0});
+ h+='<div class="cuht">👥 कुल ग्राहक: '+A.length+' – किसी पर क्लिक करके उसकी पूरी हिस्ट्री देखिए</div>';
+ A.forEach(function(x){h+='<div class="oc cul" data-cu="'+esc(x.m)+'"><div class="sec"><div class="cun">👤 '+esc(x.name||"—")+'</div><div class="cum">📞 '+esc(x.m)+'</div>'+kmChips(x.st)+kmTog(x.m,x.st)+'<div class="cuo2">पूरी हिस्ट्री देखें ›</div></div></div>'});
+ if(!A.length)h+='<div class="empty">कोई ग्राहक नहीं मिला<br>(जिसने ऑर्डर किया वही यहाँ आएगा)</div>'}
+document.getElementById("list").innerHTML=h;
+document.getElementById("bo2").className="";document.getElementById("bc").className="";document.getElementById("bcu").className="on"}
+var _rC=render;render=function(){var on=custMode;document.getElementById("tabs").style.display=on?"none":"";document.getElementById("ar").style.display=on?"none":"";
+if(on){drawCust();return}document.getElementById("bcu").className="";_rC()};
+document.getElementById("bcu").onclick=function(){custMode=true;custSel="";render();window.scrollTo(0,0)};
+["bo2","bc"].forEach(function(id){document.getElementById(id).addEventListener("click",function(){if(custMode){custMode=false;custSel="";render()}},true)});
+document.getElementById("q").addEventListener("input",function(){if(custMode)render()});
+document.getElementById("list").addEventListener("click",function(e){if(!custMode)return;
+var tg=e.target.closest("[data-idt]");if(tg){e.preventDefault();kmToggle(tg.getAttribute("data-idt"));return}
+var b=e.target.closest("[data-cuback]");if(b){custSel="";render();setTimeout(function(){window.scrollTo(0,0)},60);return}
+var c=e.target.closest("[data-cu]");if(c&&!e.target.closest("a")){custSel=c.getAttribute("data-cu");render();setTimeout(function(){window.scrollTo(0,0)},60)}});
+render();
+</script>
+<script id="kbback">
+function kbTab(){try{return window.parent!==window&&typeof parent.kbTabBack==="function"&&!!parent.kbTabBack()}catch(e){return false}}
+function kbStep(){
+var o=document.getElementById("ov");if(o&&o.classList.contains("on")){closeSheet();return true}
+if(custMode&&custSel){custSel="";render();setTimeout(function(){window.scrollTo(0,0)},60);return true}
+if(custMode){custMode=false;custSel="";render();return true}
+if(cmode){document.getElementById("bo2").onclick();return true}
+var q=document.getElementById("q");if(q.value.trim()!==""){q.value="";render();return true}
+if(tab!=="New"){tab="New";render();return true}
+return kbTab()}
+/* ===== Back button: ek step peeche; main page par 2 baar Back dabane par bahar ===== */
+(function(){
+var armed=false,tm=null,on=false;
+function toast(t){var e=document.getElementById("kbToast");if(!e){e=document.createElement("div");e.id="kbToast";e.style.cssText="position:fixed;left:50%;bottom:84px;transform:translateX(-50%);background:rgba(20,20,20,.92);color:#fff;padding:10px 16px;border-radius:999px;font:700 14px system-ui,sans-serif;z-index:2147483647;max-width:90%;text-align:center;opacity:0;transition:opacity .2s;pointer-events:none";document.body.appendChild(e)}e.textContent=t;e.style.opacity="1";clearTimeout(e._t);e._t=setTimeout(function(){e.style.opacity="0"},2200)}
+function guard(){try{history.pushState({kb:"guard"},"")}catch(x){}}
+function start(){if(on)return;on=true;try{var s=history.state;if(!(s&&s.kb))history.replaceState({kb:"base"},"");if(!(s&&s.kb==="guard"))guard()}catch(x){}}
+["click","pointerup","touchend","keydown"].forEach(function(ev){window.addEventListener(ev,function(){start();if(armed){armed=false;clearTimeout(tm);guard()}},true)});
+window.addEventListener("popstate",function(ev){
+var s=ev.state;if(s&&s.kb==="guard")return;
+if(!on)return;
+var did=false;try{did=!!kbStep()}catch(x){}
+if(did){armed=false;clearTimeout(tm);guard();return}
+armed=true;toast("बाहर निकलने के लिए एक बार और Back दबाइए");
+clearTimeout(tm);tm=setTimeout(function(){armed=false;guard()},2500)});
+})();
 </script>
 <script>
 /* Keyboard khulne par screen chhoti ho jati hai -> neeche ka menu/bar chhupa do, taki form ko poori jagah mile */
