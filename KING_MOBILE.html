@@ -485,6 +485,7 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 <div id="tg" role="button">👑 KING MOBILE SHOP</div>
 <div id="wlc"></div>
 </header>
+<div id="kaddr">📍 Husainganj, Sagun Nagar, Naher ke pass</div>
 <div id="sbar"><button id="mbtn" type="button" aria-label="Menu">☰</button><div class="sw"><span>🔍</span><input type="search" id="q" placeholder="Search item" autocomplete="off"></div></div>
 <div id="ap"></div>
 <div id="catw"><div id="cats"></div></div>
@@ -505,7 +506,7 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 <div id="bysum"></div>
 <div class="bysec"><div class="byh">मात्रा (Quantity)</div><div class="byq"><button data-bq="-1">−</button><b id="byqv">1</b><button data-bq="1">+</button></div></div>
 <div class="bysec"><div class="byh">पेमेंट कैसे करेंगे?</div>
-<div class="byc2"><button data-bp="Cash" id="bpCash" class="on"><i class="rd"></i><span>💵 Cash on Delivery<small>माल मिलने पर नकद दीजिए</small></span></button><button type="button" id="bpUPI" class="bpoff" disabled><i class="rd"></i><span>📲 Online Payment (UPI / QR)<small>⛔ ऑनलाइन बुक अभी बंद है</small></span></button></div><div id="byqr" style="display:none"></div></div>
+<div class="byc2"><button data-bp="Cash" id="bpCash" class="on"><i class="rd"></i><span>💵 Cash on Delivery<small>माल मिलने पर नकद दीजिए</small></span></button><button data-bp="UPI" id="bpUPI"><i class="rd"></i><span>📲 Online Payment (UPI / QR)<small>⛔ ऑनलाइन बुक अभी बंद है</small></span></button></div><div id="byqr" style="display:none"></div></div>
 <div class="bysec"><div class="byh">आपकी जानकारी</div>
 <input type="text" id="byn" placeholder="आपका पूरा नाम *" autocomplete="name">
 <input type="text" id="bym" inputmode="numeric" maxlength="14" placeholder="मोबाइल नंबर * (10 अंक)" autocomplete="tel"></div>
@@ -517,7 +518,6 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 <div id="bywarn" style="background:#fff3e0;color:#b45309;font-weight:800;font-size:13px;line-height:1.5;padding:8px 14px">⚠ ध्यान दें: अगर आप आइटम बुक करके बार-बार कैंसल करेंगे, तो आपकी ID ब्लॉक हो जाएगी।</div>
 <div id="byerr"></div>
 <div id="byfoot"><div id="byft"></div><button id="bysend">✅ Order Now</button></div></div>
-<style>#bpUPI.bpoff{opacity:.6;background:#f1f1f1!important;border-color:#d4d4d4!important;pointer-events:none}#bpUPI.bpoff small{color:#dc2626!important;font-weight:800}</style>
 <style>#sbar{display:flex;align-items:center;gap:8px}#sbar .sw{flex:1;min-width:0}#mbtn{flex:none;width:46px;height:46px;border:0;border-radius:12px;background:#fff;color:#e63c1f;font-size:26px;line-height:1;font-weight:900;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.2)}#mdr{display:none;position:fixed;left:0;right:0;top:0;bottom:0;z-index:90;background:rgba(0,0,0,.5)}#mdr.on{display:block}#mdp{position:absolute;left:0;top:0;bottom:0;width:78%;max-width:320px;background:#fff;box-shadow:2px 0 16px rgba(0,0,0,.3);overflow-y:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}#mdh{background:#ff4a18;color:#fff;font-weight:900;font-size:18px;padding:20px 16px}.mdi{display:flex;align-items:center;gap:14px;width:100%;border:0;border-bottom:1px solid #eee;background:#fff;padding:15px 18px;font-size:16px;font-weight:700;color:#222;text-align:left}.mdi i{font-style:normal;font-size:22px;width:30px;text-align:center}.mdi.upd{color:#16a34a}</style><div id="mdr"><div id="mdp"><div id="mdh">👑 KING MOBILE SHOP</div><div id="mdl"></div></div></div><script>var UPDATE_URL="https://drive.google.com/drive/folders/1XvPxzH5MZMsKMbXW0FvKE6ld-l0FFKIx";(function(){var $=function(i){return document.getElementById(i)};function nav(s){var e=document.querySelector('#xnav '+s);if(e)e.click()}function upd(){var U=UPDATE_URL;try{var s=localStorage.getItem('kms_update_url');if(s)U=s}catch(e){}if(!U){alert('Update का लिंक अभी नहीं डाला गया है। दुकान से संपर्क कीजिए: 9558222519');return}var p=U.indexOf('://'),sc=p>0?U.slice(0,p).toLowerCase():'';if(/Android/i.test(navigator.userAgent||'')&&(sc==='https'||sc==='http')){var it='intent://'+U.slice(p+3)+'#Intent;scheme='+sc+';package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(U)+';end';try{(window.top||window).location.href=it;return}catch(e){}try{location.href=it;return}catch(e){}}var w=null;try{w=window.open(U,'_blank')}catch(e){}if(!w)location.href=U}function items(){var a=$('xnl');return[['🏠','Home',function(){nav('[data-xp=home]')}],['🗂️','Categories',function(){nav('[data-xp=cats]')}],['📦','Orders',function(){nav('[data-xp=orders][data-m=o]')}],['📞','Call 9558222519',function(){var c=$('ctc');if(c)c.click();else location.href='tel:9558222519'}],['🛠️','Complaint',function(){nav('[data-xp=orders][data-m=c]')}],['👤',(a&&a.textContent)||'Account',function(){nav('[data-xp=acct]')}],['⬇️','App Update',upd,1]]}function shut(){var d=$('mdr');if(d)d.classList.remove('on')}function openM(){var d=$('mdr'),l=$('mdl');if(!d||!l)return;l.innerHTML='';items().forEach(function(it){var b=document.createElement('button');b.type='button';b.className='mdi'+(it[3]?' upd':'');var i=document.createElement('i');i.textContent=it[0];var t=document.createElement('span');t.textContent=it[1];b.appendChild(i);b.appendChild(t);b.onclick=function(){shut();setTimeout(it[2],60)};l.appendChild(b)});d.classList.add('on')}document.addEventListener('click',function(e){var t=e.target;if(!t||!t.closest)return;if(t.closest('#mbtn')){openM();return}if(t.id==='mdr')shut()})})();</script><nav id="xnav"><button data-xp="home" class="on"><i>🏠</i>Home</button><button data-xp="cats"><i>🗂️</i>Categories</button><button data-xp="orders" data-m="o"><i>📦</i>Orders</button><a class="ctn" id="ctc" href="tel:9558222519" aria-label="Call 9558222519"><i>📞</i>9558222519</a><button data-xp="orders" data-m="c"><i>🛠️</i>Complaint</button><button data-xp="acct"><i>👤</i><span id="xnl">Login</span></button></nav>
 <div class="xpg" id="xpc"></div><div class="xpg" id="xpo"></div><div class="xpg" id="xpa"></div>
 <div id="xod"></div><div id="xlg"></div><div id="xok"></div>
@@ -1502,10 +1502,10 @@ document.getElementById("byx").addEventListener("click",closeBuy);
 document.getElementById("by").addEventListener("click",function(e){
 var q=e.target.closest("[data-bq]");if(q){byQ=Math.max(1,Math.min(99,byQ+Number(q.getAttribute("data-bq"))));drawBy();return}
 var d=e.target.closest("[data-bd]");if(d){byD=d.getAttribute("data-bd");drawBy();return}
-var p=e.target.closest("[data-bp]");if(p){if(p.getAttribute("data-bp")==="UPI")return;byP=p.getAttribute("data-bp");drawBy();return}
+var p=e.target.closest("[data-bp]");if(p){byP=p.getAttribute("data-bp");drawBy();return}
 if(e.target.closest("#bysend")){confirmBuy()}});
 /* Order Now -> pehle confirm box: "<login naam>, aap ye order book kar rahe hain" + Done -> tab order book */
-function confirmBuy(){byP="Cash";var o=items[byI];if(!o)return;var u=getUser();
+function confirmBuy(){var o=items[byI];if(!o)return;var u=getUser();
 var n=document.getElementById("byn").value.trim(),m=document.getElementById("bym").value.replace(/\D/g,"");if(m.length>10)m=m.slice(-10);
 var a=document.getElementById("bya").value.trim(),c=document.getElementById("byc").value.trim(),pc=document.getElementById("byp").value.replace(/\D/g,"");
 if(!n||m.length!==10||(byD==="home"&&(!a||!c||pc.length!==6))){sendBuy();return}
@@ -1940,6 +1940,106 @@ var x=document.createElement("button");x.type="button";x.className="xbk";x.setAt
 ids.forEach(function(i){var p=document.getElementById(i);if(p)new MutationObserver(fix).observe(p,{childList:true,subtree:true})});
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".xbk");if(!b)return;e.preventDefault();var h=document.querySelector('#xnav [data-xp="home"]');if(h)h.click();try{window.scrollTo(0,0)}catch(x){}});
 fix()})();
+</script>
+<style id="kfix">
+/* ===== Header: upar ki khali patti hatao, KING MOBILE logo seedha aur poora dikhe ===== */
+:root{padding-top:0!important}
+header{position:relative!important;margin:0!important;padding:6px 14px 8px!important;height:auto!important;min-height:0!important;overflow:visible!important;display:flow-root!important}
+#tg{display:block!important;width:fit-content!important;max-width:calc(100% - 4px)!important;margin:0 auto!important;position:relative!important;z-index:1;transform:none!important;animation:none!important;font-style:normal!important}
+#sbar{top:0!important}
+/* ===== Online band: QR ke upar-neeche likha rahe ===== */
+#bpUPI small{color:#dc2626!important;font-weight:800}
+.kmcl{margin:10px 0;background:#fde4e1;color:#b42410;border:2px solid #dc2626;border-radius:10px;padding:10px;text-align:center;font-weight:900;font-size:16px;line-height:1.5}
+#byqr.kcl .qrn,#byqr.kcl .qra,#byqr.kcl #byu,#byqr.kcl .qro,#byqr.kcl .qru{display:none!important}
+/* ===== Photo: sirf photo dikhe (Flipkart jaisa) ===== */
+#pv .row{display:none!important}
+#pv.own .row{display:flex!important}
+#pvz{position:absolute;top:calc(10px + env(safe-area-inset-top,0px));right:12px;width:42px;height:42px;border-radius:50%;border:0;background:rgba(255,255,255,.22);color:#fff;font-size:22px;line-height:1;padding:0;z-index:3}
+</style>
+<script id="kfix2">
+(function(){
+var MSG="\uD83D\uDEAB \u0911\u0928\u0932\u093E\u0907\u0928 \u092C\u0941\u0915 \u0905\u092D\u0940 \u092C\u0902\u0926 \u0939\u0948";
+window.KM_ONLINE_CLOSED=true;   /* true = Online band (QR dikhega, order nahi jayega) | false = Online chalu */
+/* ---------- 1) Online dabane par QR + upar/neeche "band hai", aage nahi badhna ---------- */
+var _dq=drawQR;
+drawQR=function(R,q){
+  if(window.KM_ONLINE_CLOSED&&byP==="UPI"){pendFail=true}   /* order number na bane */
+  _dq.apply(this,arguments);
+  var e=document.getElementById("byqr");if(!e)return;
+  e.classList.remove("kcl");
+  if(!window.KM_ONLINE_CLOSED||byP!=="UPI")return;
+  var im=e.querySelector(".qri");if(!im)return;
+  var mk=function(){var d=document.createElement("div");d.className="kmcl";d.textContent=MSG;return d};
+  im.parentNode.insertBefore(mk(),im);im.parentNode.insertBefore(mk(),im.nextSibling);
+  e.classList.add("kcl")};
+function blockUpi(){var er=document.getElementById("byerr");if(er)er.textContent=MSG+" \u2014 Cash on Delivery \u091A\u0941\u0928\u093F\u090F";
+  var c=document.getElementById("bpCash");if(c&&c.scrollIntoView){try{c.scrollIntoView({block:"center",behavior:"smooth"})}catch(x){}}}
+var _cb=confirmBuy,_sb=sendBuy;
+confirmBuy=function(){if(window.KM_ONLINE_CLOSED&&byP==="UPI"){blockUpi();return}if(kGoneBy())return;return _cb.apply(this,arguments)};
+sendBuy=function(){if(window.KM_ONLINE_CLOSED&&byP==="UPI"){blockUpi();return}if(kGoneBy())return;return _sb.apply(this,arguments)};
+var _dby=drawBy;
+drawBy=function(){byI=kFixI(kBy,byI);var r=_dby.apply(this,arguments);
+  var er=document.getElementById("byerr");if(er&&byP!=="UPI"&&er.textContent.indexOf("\u092C\u0902\u0926")>=0&&er.textContent.indexOf("\u0911\u0928\u0932\u093E\u0907\u0928")>=0)er.textContent="";
+  var sb=document.getElementById("bysend");if(sb)sb.style.opacity=(window.KM_ONLINE_CLOSED&&byP==="UPI")?".5":"";return r};
+/* ---------- 2) Item ka page / order page tab tak band na ho jab tak aap Back na dabayen ----------
+   (item list har 1 second me refresh hota hai; index badal jaane par pehle item wala page chupchap band ho jata tha,
+    phir order page se Back karte hi seedha "bahar nikalne" ka sandesh aa jata tha) */
+var kDt={i:-1,k:null,gone:false},kBy={i:-1,k:null,gone:false};
+function kKey(o){try{return itKey(o)}catch(e){return null}}
+function kFixI(st,idx){
+  if(idx<0){st.i=-1;st.k=null;st.gone=false;return idx}
+  if(idx!==st.i){st.i=idx;st.k=items[idx]?kKey(items[idx]):null;st.gone=false;return idx}
+  var o=items[idx];if(o&&kKey(o)===st.k){st.gone=false;return idx}
+  if(st.k!==null){for(var j=0;j<items.length;j++){if(kKey(items[j])===st.k){st.i=j;st.gone=false;return j}}}
+  st.gone=true;return idx}
+function kGoneBy(){byI=kFixI(kBy,byI);if(kBy.gone){var er=document.getElementById("byerr");if(er)er.textContent="\u26A0 \u092F\u0939 \u0906\u0907\u091F\u092E \u0905\u092C \u0909\u092A\u0932\u092C\u094D\u0927 \u0928\u0939\u0940\u0902 \u0939\u0948";return true}return false}
+function kRst(st){st.i=-1;st.k=null;st.gone=false}
+var _od=openDt;openDt=function(){kRst(kDt);return _od.apply(this,arguments)};
+var _cd=closeDt;closeDt=function(){kRst(kDt);return _cd.apply(this,arguments)};
+var _ob=openBuy;openBuy=function(){kRst(kBy);return _ob.apply(this,arguments)};
+var _cbuy=closeBuy;closeBuy=function(){kRst(kBy);return _cbuy.apply(this,arguments)};
+var _dd=drawDt;
+drawDt=function(){dtI=kFixI(kDt,dtI);if(dtI>=0&&kDt.gone)return;return _dd.apply(this,arguments)};
+var _rn=render;
+render=function(){var r=_rn.apply(this,arguments);try{if(byI>=0)byI=kFixI(kBy,byI)}catch(e){}return r};
+/* ---------- 3) Photo: sirf photo, Flipkart jaisa ---------- */
+function pvInit(){
+  var pv=document.getElementById("pv");if(!pv||pv.querySelector("#pvz"))return;
+  var x=document.createElement("button");x.id="pvz";x.type="button";x.textContent="\u2715";x.setAttribute("aria-label","\u092C\u0902\u0926 \u0915\u0930\u0947\u0902");
+  x.onclick=function(e){e.stopPropagation();hidePhoto()};pv.appendChild(x);
+  pv.addEventListener("click",function(e){var t=e.target;if(t===pv||(t.classList&&t.classList.contains("pvm")))hidePhoto()});
+  var im=document.getElementById("pvi"),tm=null;
+  if(im){im.addEventListener("contextmenu",function(e){e.preventDefault()});
+    im.addEventListener("touchstart",function(){clearTimeout(tm);tm=setTimeout(function(){pv.classList.toggle("own")},900)},{passive:true});
+    ["touchend","touchmove","touchcancel"].forEach(function(n){im.addEventListener(n,function(){clearTimeout(tm)},{passive:true})})}}
+var _hp=hidePhoto;hidePhoto=function(){var pv=document.getElementById("pv");if(pv)pv.classList.remove("own");return _hp.apply(this,arguments)};
+var _dpv=drawPv;drawPv=function(){var r=_dpv.apply(this,arguments);var n=document.getElementById("pvn");
+  if(n){var t=n.textContent.replace(/\s*\uD83D\uDCCC.*$/,"");n.textContent=t;n.style.display=/^\s*1\s*\/\s*1\s*$/.test(t)?"none":""}return r};
+pvInit();
+/* ---------- 4) Header: upar ki bachi hui khali patti ho to khinch lo ---------- */
+function kTop(){return;var h=document.querySelector("header");if(!h||document.body.classList.contains("srch"))return;
+  h.style.marginTop="";var t=h.getBoundingClientRect().top+(window.pageYOffset||0);if(t>8)h.style.marginTop=(8-t)+"px"}
+[0,300,1200,3000].forEach(function(ms){setTimeout(kTop,ms)});
+window.addEventListener("resize",kTop);window.addEventListener("orientationchange",kTop);
+})();
+</script>
+<style id="kaddrcss">
+#kaddr{display:block;position:relative;z-index:3;background:#fff;color:#1a1c20;text-align:center;font-weight:800;font-size:15px;line-height:1.3;padding:8px 12px;margin:0;border-top:1px solid #e3e6ea;border-bottom:1px solid #e3e6ea}
+body.srch #kaddr{display:none!important}
+header{margin-top:0!important;overflow:visible!important;position:relative!important;z-index:4}
+html.apk #sbar{position:relative!important;top:auto!important}
+</style>
+<script id="kaddrjs">
+(function(){
+var ua=navigator.userAgent||"";
+if(/; wv\)|Version\/\d+\.\d+.*Chrome/i.test(ua))document.documentElement.classList.add("apk");
+function fixH(){var h=document.querySelector("header"),t=document.getElementById("tg");if(!h||!t)return;
+h.style.marginTop="0";h.style.minHeight="";
+var need=t.getBoundingClientRect().bottom-h.getBoundingClientRect().top+10;
+if(need>h.offsetHeight)h.style.minHeight=need+"px"}
+[0,200,600,1500,3000].forEach(function(ms){setTimeout(fixH,ms)});
+window.addEventListener("load",fixH);window.addEventListener("resize",fixH);window.addEventListener("orientationchange",fixH);
+})();
 </script>
 </body>
 </html>
