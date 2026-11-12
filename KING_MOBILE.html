@@ -504,19 +504,20 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 <div id="by"><div id="byb"><button id="byx" aria-label="वापस">←</button><span>ऑर्डर की जानकारी</span></div>
 <div id="bysum"></div>
 <div class="bysec"><div class="byh">मात्रा (Quantity)</div><div class="byq"><button data-bq="-1">−</button><b id="byqv">1</b><button data-bq="1">+</button></div></div>
+<div class="bysec"><div class="byh">पेमेंट कैसे करेंगे?</div>
+<div class="byc2"><button data-bp="Cash" id="bpCash" class="on"><i class="rd"></i><span>💵 Cash on Delivery<small>माल मिलने पर नकद दीजिए</small></span></button><button type="button" id="bpUPI" class="bpoff" disabled><i class="rd"></i><span>📲 Online Payment (UPI / QR)<small>⛔ ऑनलाइन बुक अभी बंद है</small></span></button></div><div id="byqr" style="display:none"></div></div>
 <div class="bysec"><div class="byh">आपकी जानकारी</div>
 <input type="text" id="byn" placeholder="आपका पूरा नाम *" autocomplete="name">
 <input type="text" id="bym" inputmode="numeric" maxlength="14" placeholder="मोबाइल नंबर * (10 अंक)" autocomplete="tel"></div>
 <div class="bysec"><div class="byh">🚚 घर पर डिलीवरी</div>
 <div id="byaddr"><div class="byh" style="font-size:14px">📍 पूरा पता भरिए</div><input type="text" id="bya" placeholder="मकान नंबर / गली / मोहल्ला *" autocomplete="street-address"><input type="text" id="byk" placeholder="लैंडमार्क (जैसे मंदिर, स्कूल के पास)"><div class="row"><input type="text" id="byc" placeholder="गाँव / शहर *"><input type="text" id="byd" placeholder="जिला"></div><div class="row"><input type="text" id="bys" placeholder="राज्य"><input type="text" id="byp" inputmode="numeric" maxlength="6" placeholder="पिनकोड *"></div></div></div>
-<div class="bysec"><div class="byh">पेमेंट कैसे करेंगे?</div>
-<div class="byc2"><button data-bp="Cash" id="bpCash" class="on"><i class="rd"></i><span>💵 Cash on Delivery<small>माल मिलने पर नकद दीजिए</small></span></button><button data-bp="UPI" id="bpUPI"><i class="rd"></i><span>📲 Online Payment (UPI / QR)<small>QR स्कैन करके या UPI ऐप से पेमेंट कीजिए</small></span></button></div><div id="byqr" style="display:none"></div>
-<input type="text" id="byt" placeholder="कुछ और बताना हो तो लिखिए (वैकल्पिक)"></div>
+<div class="bysec"><input type="text" id="byt" placeholder="कुछ और बताना हो तो लिखिए (वैकल्पिक)"></div>
 <div class="bysec" id="byno" style="display:none"></div>
 <div class="bysec" id="bypd"></div>
 <div id="bywarn" style="background:#fff3e0;color:#b45309;font-weight:800;font-size:13px;line-height:1.5;padding:8px 14px">⚠ ध्यान दें: अगर आप आइटम बुक करके बार-बार कैंसल करेंगे, तो आपकी ID ब्लॉक हो जाएगी।</div>
 <div id="byerr"></div>
 <div id="byfoot"><div id="byft"></div><button id="bysend">✅ Order Now</button></div></div>
+<style>#bpUPI.bpoff{opacity:.6;background:#f1f1f1!important;border-color:#d4d4d4!important;pointer-events:none}#bpUPI.bpoff small{color:#dc2626!important;font-weight:800}</style>
 <style>#sbar{display:flex;align-items:center;gap:8px}#sbar .sw{flex:1;min-width:0}#mbtn{flex:none;width:46px;height:46px;border:0;border-radius:12px;background:#fff;color:#e63c1f;font-size:26px;line-height:1;font-weight:900;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.2)}#mdr{display:none;position:fixed;left:0;right:0;top:0;bottom:0;z-index:90;background:rgba(0,0,0,.5)}#mdr.on{display:block}#mdp{position:absolute;left:0;top:0;bottom:0;width:78%;max-width:320px;background:#fff;box-shadow:2px 0 16px rgba(0,0,0,.3);overflow-y:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}#mdh{background:#ff4a18;color:#fff;font-weight:900;font-size:18px;padding:20px 16px}.mdi{display:flex;align-items:center;gap:14px;width:100%;border:0;border-bottom:1px solid #eee;background:#fff;padding:15px 18px;font-size:16px;font-weight:700;color:#222;text-align:left}.mdi i{font-style:normal;font-size:22px;width:30px;text-align:center}.mdi.upd{color:#16a34a}</style><div id="mdr"><div id="mdp"><div id="mdh">👑 KING MOBILE SHOP</div><div id="mdl"></div></div></div><script>var UPDATE_URL="https://drive.google.com/drive/folders/1XvPxzH5MZMsKMbXW0FvKE6ld-l0FFKIx";(function(){var $=function(i){return document.getElementById(i)};function nav(s){var e=document.querySelector('#xnav '+s);if(e)e.click()}function upd(){var U=UPDATE_URL;try{var s=localStorage.getItem('kms_update_url');if(s)U=s}catch(e){}if(!U){alert('Update का लिंक अभी नहीं डाला गया है। दुकान से संपर्क कीजिए: 9558222519');return}var p=U.indexOf('://'),sc=p>0?U.slice(0,p).toLowerCase():'';if(/Android/i.test(navigator.userAgent||'')&&(sc==='https'||sc==='http')){var it='intent://'+U.slice(p+3)+'#Intent;scheme='+sc+';package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(U)+';end';try{(window.top||window).location.href=it;return}catch(e){}try{location.href=it;return}catch(e){}}var w=null;try{w=window.open(U,'_blank')}catch(e){}if(!w)location.href=U}function items(){var a=$('xnl');return[['🏠','Home',function(){nav('[data-xp=home]')}],['🗂️','Categories',function(){nav('[data-xp=cats]')}],['📦','Orders',function(){nav('[data-xp=orders][data-m=o]')}],['📞','Call 9558222519',function(){var c=$('ctc');if(c)c.click();else location.href='tel:9558222519'}],['🛠️','Complaint',function(){nav('[data-xp=orders][data-m=c]')}],['👤',(a&&a.textContent)||'Account',function(){nav('[data-xp=acct]')}],['⬇️','App Update',upd,1]]}function shut(){var d=$('mdr');if(d)d.classList.remove('on')}function openM(){var d=$('mdr'),l=$('mdl');if(!d||!l)return;l.innerHTML='';items().forEach(function(it){var b=document.createElement('button');b.type='button';b.className='mdi'+(it[3]?' upd':'');var i=document.createElement('i');i.textContent=it[0];var t=document.createElement('span');t.textContent=it[1];b.appendChild(i);b.appendChild(t);b.onclick=function(){shut();setTimeout(it[2],60)};l.appendChild(b)});d.classList.add('on')}document.addEventListener('click',function(e){var t=e.target;if(!t||!t.closest)return;if(t.closest('#mbtn')){openM();return}if(t.id==='mdr')shut()})})();</script><nav id="xnav"><button data-xp="home" class="on"><i>🏠</i>Home</button><button data-xp="cats"><i>🗂️</i>Categories</button><button data-xp="orders" data-m="o"><i>📦</i>Orders</button><a class="ctn" id="ctc" href="tel:9558222519" aria-label="Call 9558222519"><i>📞</i>9558222519</a><button data-xp="orders" data-m="c"><i>🛠️</i>Complaint</button><button data-xp="acct"><i>👤</i><span id="xnl">Login</span></button></nav>
 <div class="xpg" id="xpc"></div><div class="xpg" id="xpo"></div><div class="xpg" id="xpa"></div>
 <div id="xod"></div><div id="xlg"></div><div id="xok"></div>
@@ -1501,10 +1502,10 @@ document.getElementById("byx").addEventListener("click",closeBuy);
 document.getElementById("by").addEventListener("click",function(e){
 var q=e.target.closest("[data-bq]");if(q){byQ=Math.max(1,Math.min(99,byQ+Number(q.getAttribute("data-bq"))));drawBy();return}
 var d=e.target.closest("[data-bd]");if(d){byD=d.getAttribute("data-bd");drawBy();return}
-var p=e.target.closest("[data-bp]");if(p){byP=p.getAttribute("data-bp");drawBy();return}
+var p=e.target.closest("[data-bp]");if(p){if(p.getAttribute("data-bp")==="UPI")return;byP=p.getAttribute("data-bp");drawBy();return}
 if(e.target.closest("#bysend")){confirmBuy()}});
 /* Order Now -> pehle confirm box: "<login naam>, aap ye order book kar rahe hain" + Done -> tab order book */
-function confirmBuy(){var o=items[byI];if(!o)return;var u=getUser();
+function confirmBuy(){byP="Cash";var o=items[byI];if(!o)return;var u=getUser();
 var n=document.getElementById("byn").value.trim(),m=document.getElementById("bym").value.replace(/\D/g,"");if(m.length>10)m=m.slice(-10);
 var a=document.getElementById("bya").value.trim(),c=document.getElementById("byc").value.trim(),pc=document.getElementById("byp").value.replace(/\D/g,"");
 if(!n||m.length!==10||(byD==="home"&&(!a||!c||pc.length!==6))){sendBuy();return}
@@ -1867,9 +1868,11 @@ function Y(){return window.pageYOffset||document.documentElement.scrollTop||0}
 function ovOn(){try{return !!document.querySelector(OVL)}catch(e){return false}}
 var homeY=Y();
 /* Home ka scroll: koi bhi page/popup khula ho to peeche ka Home hilna nahi chahiye */
-window.addEventListener("scroll",function(){if(ovOn()){if(Math.abs(Y()-homeY)>1)window.scrollTo(0,homeY)}else homeY=Y()},{passive:true});
+window.addEventListener("scroll",function(){if(ovOn()){if(Math.abs(Y()-homeY)>1)window.scrollTo(0,homeY)}else if(!window.__kRl)homeY=Y()},{passive:true});
+/* Item/Order/Page band hote hi agar Home upar (0) pahunch gaya ho to wapas wahin le jao jahan the */
+var wasOv=false;setInterval(function(){var o=ovOn();if(wasOv&&!o&&Y()<2&&homeY>50){try{window.scrollTo(0,homeY)}catch(e){}}wasOv=o},120);
 /* Home list dobara bane (sync/refresh) to bhi jagah wahi rahe */
-if(typeof render==="function"){var r0=render;render=function(){var y0=ovOn()?homeY:Y();var r=r0.apply(this,arguments);try{if(Math.abs(Y()-y0)>1)window.scrollTo(0,y0)}catch(e){}return r}}
+if(typeof render==="function"){var r0=render;render=function(){var y0=ovOn()?homeY:Y(),L=document.getElementById("list"),hh=L?L.offsetHeight:0;window.__kRl=(window.__kRl||0)+1;if(L&&hh>0)L.style.minHeight=hh+"px";var r;try{r=r0.apply(this,arguments)}finally{try{if(Math.abs(Y()-y0)>1)window.scrollTo(0,y0)}catch(e){}setTimeout(function(){window.__kRl=Math.max(0,(window.__kRl||1)-1);if(L&&!window.__kRl)L.style.minHeight=""},1500)}return r}}
 /* Categories / Orders / Complaint / Account ka apna scroll */
 var pos={},curKey=null;
 function elOf(k){return document.getElementById(k==="cats"?"xpc":k==="acct"?"xpa":"xpo")}
