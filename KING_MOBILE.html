@@ -5,7 +5,7 @@
 /* KING LOGIN KEEPER: login ko browser ke localStorage ke alawa cookie + IndexedDB me bhi rakhta hai.
    Browser localStorage saaf kar de to login apne-aap wapas aa jata hai. Logout dabane par sab hat jata hai. */
 (function(){
-var K=["kms_user","kms_orders","kms_buyer","kms_boy_mobile","kms_boy_info","kms_idov","kms_idov_all"],CK=["kms_user","kms_boy_mobile","kms_boy_info"],LS=null;
+var K=["kms_user","kms_orders","kms_buyer","kms_boy_mobile","kms_boy_info","kms_boy_tok","kms_idov","kms_idov_all","kms_update_url"],CK=["kms_user","kms_boy_mobile","kms_boy_info","kms_boy_tok","kms_update_url"],LS=null;
 try{LS=window.localStorage}catch(e){return}
 var S=Storage.prototype,_s=S.setItem,_r=S.removeItem,db=null,pend=[],seen={};
 function ckGet(n){try{var m=document.cookie.match(new RegExp("(?:^|; )"+n+"=([^;]*)"));return m?decodeURIComponent(m[1]):null}catch(e){return null}}
@@ -469,6 +469,15 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 #bysend{flex:1;width:auto!important;border-radius:4px!important;padding:14px 8px!important;font-size:17px!important}
 </style>
 <style id="ordph">#xpo .xi:has(img),#xod .xi:has(img){cursor:zoom-in}#pv.tmp #pvf,#pv.tmp #pvr,#pv.tmp #pvd{display:none!important}#pv .pvm img{max-width:100%;max-height:70vh;object-fit:contain}</style>
+<style id="knonav">
+/* नीचे का मेन्यू (Home/Categories/Orders/Call/Complaint/Login) हटाया – सब कुछ ऊपर के ☰ मेन्यू में है */
+#xnav{display:none!important}
+.xpg{bottom:0!important}
+#list{padding-bottom:24px!important}
+#xcf .sh{padding-bottom:calc(16px + env(safe-area-inset-bottom,0px))!important}
+.xpg .xbar{gap:6px!important}
+.xpg .xbar>.xbk{flex:none;width:40px;height:40px;margin-left:-8px;border:0;background:none;color:#fff;font-size:28px;line-height:1;padding:0}
+</style>
 </head>
 <body>
 <div id="kld"><div class="klr" id="klr"></div><div id="klw"></div><div class="kls"></div><div class="klt" id="klt">डेटा आ रहा है…</div><div class="klm" id="klm"></div><button id="klb" type="button">फिर कोशिश करें</button></div>
@@ -476,7 +485,7 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 <div id="tg" role="button">👑 KING MOBILE SHOP</div>
 <div id="wlc"></div>
 </header>
-<div id="sbar"><div class="sw"><span>🔍</span><input type="search" id="q" placeholder="Search item" autocomplete="off"></div></div>
+<div id="sbar"><button id="mbtn" type="button" aria-label="Menu">☰</button><div class="sw"><span>🔍</span><input type="search" id="q" placeholder="Search item" autocomplete="off"></div></div>
 <div id="ap"></div>
 <div id="catw"><div id="cats"></div></div>
 <div id="hm"><div id="bnr" style="display:none"><div class="b0"></div><div class="b1"></div><div class="b2"></div><div class="b3"></div></div><div id="cb"></div><div id="sg"><span>Suggested For You</span><i>➜</i></div></div>
@@ -508,7 +517,7 @@ header{margin-bottom:0!important;padding-bottom:4px!important}
 <div id="bywarn" style="background:#fff3e0;color:#b45309;font-weight:800;font-size:13px;line-height:1.5;padding:8px 14px">⚠ ध्यान दें: अगर आप आइटम बुक करके बार-बार कैंसल करेंगे, तो आपकी ID ब्लॉक हो जाएगी।</div>
 <div id="byerr"></div>
 <div id="byfoot"><div id="byft"></div><button id="bysend">✅ Order Now</button></div></div>
-<nav id="xnav"><button data-xp="home" class="on"><i>🏠</i>Home</button><button data-xp="cats"><i>🗂️</i>Categories</button><button data-xp="orders" data-m="o"><i>📦</i>Orders</button><a class="ctn" id="ctc" href="tel:9558222519" aria-label="Call 9558222519"><i>📞</i>9558222519</a><button data-xp="orders" data-m="c"><i>🛠️</i>Complaint</button><button data-xp="acct"><i>👤</i><span id="xnl">Login</span></button></nav>
+<style>#sbar{display:flex;align-items:center;gap:8px}#sbar .sw{flex:1;min-width:0}#mbtn{flex:none;width:46px;height:46px;border:0;border-radius:12px;background:#fff;color:#e63c1f;font-size:26px;line-height:1;font-weight:900;display:flex;align-items:center;justify-content:center;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.2)}#mdr{display:none;position:fixed;left:0;right:0;top:0;bottom:0;z-index:90;background:rgba(0,0,0,.5)}#mdr.on{display:block}#mdp{position:absolute;left:0;top:0;bottom:0;width:78%;max-width:320px;background:#fff;box-shadow:2px 0 16px rgba(0,0,0,.3);overflow-y:auto;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}#mdh{background:#ff4a18;color:#fff;font-weight:900;font-size:18px;padding:20px 16px}.mdi{display:flex;align-items:center;gap:14px;width:100%;border:0;border-bottom:1px solid #eee;background:#fff;padding:15px 18px;font-size:16px;font-weight:700;color:#222;text-align:left}.mdi i{font-style:normal;font-size:22px;width:30px;text-align:center}.mdi.upd{color:#16a34a}</style><div id="mdr"><div id="mdp"><div id="mdh">👑 KING MOBILE SHOP</div><div id="mdl"></div></div></div><script>var UPDATE_URL="";(function(){var $=function(i){return document.getElementById(i)};function nav(s){var e=document.querySelector('#xnav '+s);if(e)e.click()}function upd(){var U=UPDATE_URL;try{var s=localStorage.getItem('kms_update_url');if(s)U=s}catch(e){}if(!U){alert('Update का लिंक अभी नहीं डाला गया है। दुकान से संपर्क कीजिए: 9558222519');return}var p=U.indexOf('://'),sc=p>0?U.slice(0,p).toLowerCase():'';if(/Android/i.test(navigator.userAgent||'')&&(sc==='https'||sc==='http')){var it='intent://'+U.slice(p+3)+'#Intent;scheme='+sc+';package=com.android.chrome;S.browser_fallback_url='+encodeURIComponent(U)+';end';try{(window.top||window).location.href=it;return}catch(e){}try{location.href=it;return}catch(e){}}var w=null;try{w=window.open(U,'_blank')}catch(e){}if(!w)location.href=U}function items(){var a=$('xnl');return[['🏠','Home',function(){nav('[data-xp=home]')}],['🗂️','Categories',function(){nav('[data-xp=cats]')}],['📦','Orders',function(){nav('[data-xp=orders][data-m=o]')}],['📞','Call 9558222519',function(){var c=$('ctc');if(c)c.click();else location.href='tel:9558222519'}],['🛠️','Complaint',function(){nav('[data-xp=orders][data-m=c]')}],['👤',(a&&a.textContent)||'Account',function(){nav('[data-xp=acct]')}],['⬇️','App Update',upd,1]]}function shut(){var d=$('mdr');if(d)d.classList.remove('on')}function openM(){var d=$('mdr'),l=$('mdl');if(!d||!l)return;l.innerHTML='';items().forEach(function(it){var b=document.createElement('button');b.type='button';b.className='mdi'+(it[3]?' upd':'');var i=document.createElement('i');i.textContent=it[0];var t=document.createElement('span');t.textContent=it[1];b.appendChild(i);b.appendChild(t);b.onclick=function(){shut();setTimeout(it[2],60)};l.appendChild(b)});d.classList.add('on')}document.addEventListener('click',function(e){var t=e.target;if(!t||!t.closest)return;if(t.closest('#mbtn')){openM();return}if(t.id==='mdr')shut()})})();</script><nav id="xnav"><button data-xp="home" class="on"><i>🏠</i>Home</button><button data-xp="cats"><i>🗂️</i>Categories</button><button data-xp="orders" data-m="o"><i>📦</i>Orders</button><a class="ctn" id="ctc" href="tel:9558222519" aria-label="Call 9558222519"><i>📞</i>9558222519</a><button data-xp="orders" data-m="c"><i>🛠️</i>Complaint</button><button data-xp="acct"><i>👤</i><span id="xnl">Login</span></button></nav>
 <div class="xpg" id="xpc"></div><div class="xpg" id="xpo"></div><div class="xpg" id="xpa"></div>
 <div id="xod"></div><div id="xlg"></div><div id="xok"></div>
 <div id="md"><div class="mb"><div id="mm"></div><input type="password" id="mi"><div class="row"><button class="p" id="mo">OK</button><button id="mc">रद्द करें</button></div></div></div>
@@ -1661,7 +1670,7 @@ if(b.getAttribute("data-xa")==="in"){if(u){ask("आप पहले से Login
 if(!u){ask("आप Login नहीं हैं",function(){},true);return}
 if(confirm("क्या आप Logout करना चाहते हैं?")){setUser(null);pendingBuy=null;drawAcct();drawOrders()}});
 var OTP_URL="https://helium-unbeaten-progeny.ngrok-free.dev"; /* WhatsApp OTP server ka link. Khali = OTP band */
-function kotp(o){var box=o.box,m=o.mobile,wait=0,tm=null;
+var SKMSG='इस नंबर से दूसरे फ़ोन पर Login हुआ है, इसलिए यहाँ से Logout हो गया है। दोबारा Login कीजिए।';function skgo(){try{if(!OTP_URL)return;var cu=(typeof getUser==='function'),u=cu?getUser():null,mm=cu?(u&&u.m):me,tk=cu?((u&&u.t)||''):(localStorage.getItem('kms_boy_tok')||'');if(!mm)return;fetch(OTP_URL+'/check-session',{method:'POST',headers:{'Content-Type':'application/json','ngrok-skip-browser-warning':'1'},body:JSON.stringify({role:cu?'cust':'del',mobile:mm,token:tk})}).then(function(r){return r.json()}).then(function(j){if(!(j&&j.ok&&j.valid===false))return;if(cu){setUser(null);pendingBuy=null;try{drawAcct();drawOrders()}catch(e){}}else{me='';boy=null;try{localStorage.removeItem(MK);localStorage.removeItem('kms_boy_tok')}catch(e){}all=[];render()}alert(SKMSG)}).catch(function(){})}catch(e){}}setTimeout(skgo,2500);setInterval(skgo,60000);document.addEventListener('visibilitychange',function(){if(!document.hidden)skgo()});function kotp(o){var box=o.box,m=o.mobile,wait=0,tm=null;
 function stop(){if(tm){clearInterval(tm);tm=null}}
 function api(p,b){return fetch(OTP_URL+p,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"1"},body:JSON.stringify(b)}).then(function(r){return r.json()})}
 function cancel(){stop();if(o.onCancel)o.onCancel()}
@@ -1673,7 +1682,7 @@ function ask(msg){stop();box.innerHTML=head('आपके नंबर <b>+91 '+
 var r=document.getElementById("kotr");function tick(){r.disabled=wait>0;r.textContent=wait>0?"दोबारा भेजें ("+wait+")":"दोबारा भेजें";if(wait>0)wait--}
 tick();tm=setInterval(tick,1000);r.onclick=send;
 document.getElementById("kotv").onclick=function(){var c=document.getElementById("kotc").value.replace(/\D/g,"");if(c.length!==6){ask("6 अंक का कोड लिखिए");return}
-api("/verify-otp",{mobile:m,code:c}).then(function(j){if(j&&j.ok){stop();o.onOk()}else ask((j&&j.error)||"गलत कोड")}).catch(function(){ask("सर्वर से जुड़ नहीं पाए")})};
+api("/verify-otp",{mobile:m,code:c,role:(typeof getUser==='function'?'cust':'del')}).then(function(j){if(j&&j.ok){stop();o.onOk(j.token)}else ask((j&&j.error)||"गलत कोड")}).catch(function(){ask("सर्वर से जुड़ नहीं पाए")})};
 setTimeout(function(){var i=document.getElementById("kotc");if(i)i.focus()},50)}
 function send(){stop();box.innerHTML=head('कोड भेज रहे हैं…')+foot();bindC();
 api("/send-otp",{mobile:m}).then(function(j){if(j&&j.ok){wait=30;ask()}else err((j&&j.error)||"कोड नहीं भेज पाए")}).catch(function(){err("Login का समय सुबह 08 बजे से रात 08 बजे तक है। कृपया इसी समय Login कीजिए। धन्यवाद। अधिक जानकारी के लिए संपर्क कीजिए: 9558222519")})}
@@ -1688,7 +1697,7 @@ if(e.target===this||e.target.closest("#xlcl")){pendingBuy=null;closeLogin();retu
 if(e.target.closest("#xlok")){var n=document.getElementById("xln").value.trim(),m=t10(document.getElementById("xlm").value),er=document.getElementById("xle");
 if(n.length<2){er.textContent="⚠ कृपया अपना नाम लिखिए";return}
 if(m.length!==10){er.textContent="⚠ मोबाइल नंबर 10 अंक का होना चाहिए";return}
-var fin=function(){setUser({n:n,m:m});closeLogin();drawAcct();if(curPg==="orders")drawOrders();syncOrders(); if(pendingBuy!==null){var i=pendingBuy;pendingBuy=null;openBuy(i)}};if(!OTP_URL){fin();return}kotp({box:document.getElementById("xlg"),mobile:m,pre:'<div class="xsh">',post:"</div>",bc:"xbtn",gc:"xbtn g",cid:"xlcl",onOk:fin})}});
+var fin=function(tk){setUser({n:n,m:m,t:tk||''});closeLogin();drawAcct();if(curPg==="orders")drawOrders();syncOrders(); if(pendingBuy!==null){var i=pendingBuy;pendingBuy=null;openBuy(i)}};if(!OTP_URL){fin();return}kotp({box:document.getElementById("xlg"),mobile:m,pre:'<div class="xsh">',post:"</div>",bc:"xbtn",gc:"xbtn g",cid:"xlcl",onOk:fin})}});
 function applyUserToBuy(){var u=getUser(),mi=document.getElementById("bym"),ni=document.getElementById("byn");
 if(u){ni.value=u.n||ni.value;mi.value=u.m;mi.readOnly=true}else mi.readOnly=false}
 
@@ -1917,6 +1926,17 @@ var kmPass=0,_kmCB=confirmBuy,_kmSB=sendBuy,_kmOB=openBuy;
 confirmBuy=function(){if(Date.now()-kmPass<90000){return _kmCB()}kmGateAll(kmMobiles(),function(){kmPass=Date.now();_kmCB()})};
 sendBuy=function(){if(Date.now()-kmPass<90000){kmPass=0;return _kmSB()}kmGateAll(kmMobiles(),function(){kmPass=0;_kmSB()})};
 openBuy=function(i){var u=getUser();if(u&&u.m&&kmLocalBlocked(t10(u.m))){kmShowBlock();try{syncOrders()}catch(e){}return}_kmOB(i)};
+</script>
+<script id="kback">
+/* Categories / Orders / Login पेज में ← वापस (Home) बटन */
+(function(){var ids=["xpc","xpo","xpa"];
+function fix(){ids.forEach(function(i){var p=document.getElementById(i);if(!p)return;
+Array.prototype.forEach.call(p.querySelectorAll(".xbar"),function(b){
+if(b.querySelector(":scope>.xbk")||b.querySelector(":scope>button"))return;
+var x=document.createElement("button");x.type="button";x.className="xbk";x.setAttribute("aria-label","वापस");x.textContent="\u2190";b.insertBefore(x,b.firstChild)})})}
+ids.forEach(function(i){var p=document.getElementById(i);if(p)new MutationObserver(fix).observe(p,{childList:true,subtree:true})});
+document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".xbk");if(!b)return;e.preventDefault();var h=document.querySelector('#xnav [data-xp="home"]');if(h)h.click();try{window.scrollTo(0,0)}catch(x){}});
+fix()})();
 </script>
 </body>
 </html>
