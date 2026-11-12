@@ -81,11 +81,11 @@ function cancel(){stop();if(o.onCancel)o.onCancel()}
 function head(t){return o.pre+'<h3 style="margin:0 0 8px">💬 WhatsApp कोड</h3><p>'+t+'</p>'}
 function foot(){return '<button class="'+o.gc+'" id="'+o.cid+'" type="button">रद्द करें</button>'+o.post}
 function bindC(){var c=document.getElementById(o.cid);if(c)c.onclick=cancel}
-function err(msg){stop();box.innerHTML=head('<span style="color:#c00">⚠ '+msg+'</span>')+'<button class="'+o.bc+'" id="kotr" type="button">दोबारा कोशिश</button>'+foot();bindC();document.getElementById("kotr").onclick=send}
-function ask(msg){stop();box.innerHTML=head('आपके नंबर <b>+91 '+m+'</b> पर WhatsApp से 5 अंक का कोड भेजा गया है')+'<input type="text" id="kotc" inputmode="numeric" maxlength="5" placeholder="5 अंक का कोड" autocomplete="one-time-code"><div style="color:#c00;min-height:20px;font-size:13px;margin:6px 0">'+(msg||"")+'</div><button class="'+o.bc+'" id="kotv" type="button">कोड जाँचिए</button><button class="'+o.gc+'" id="kotr" type="button"></button>'+foot();bindC();
+function err(msg){msg=String(msg).replace(/[0-9]{10}/g,function(n){return '<a href=tel:'+n+' style=color:#0a58ca;font-weight:800;text-decoration:underline>'+n+'</a>'});stop();box.innerHTML=head('<span style="color:#c00">⚠ '+msg+'</span>')+'<button class="'+o.bc+'" id="kotr" type="button">दोबारा कोशिश</button>'+foot();bindC();document.getElementById("kotr").onclick=send}
+function ask(msg){stop();box.innerHTML=head('आपके नंबर <b>+91 '+m+'</b> पर WhatsApp से 6 अंक का कोड भेजा गया है')+'<input type="text" id="kotc" inputmode="numeric" maxlength="6" placeholder="6 अंक का कोड" autocomplete="one-time-code"><div style="color:#c00;min-height:20px;font-size:13px;margin:6px 0">'+(msg||"")+'</div><button class="'+o.bc+'" id="kotv" type="button">कोड जाँचिए</button><button class="'+o.gc+'" id="kotr" type="button"></button>'+foot();bindC();
 var r=document.getElementById("kotr");function tick(){r.disabled=wait>0;r.textContent=wait>0?"दोबारा भेजें ("+wait+")":"दोबारा भेजें";if(wait>0)wait--}
 tick();tm=setInterval(tick,1000);r.onclick=send;
-document.getElementById("kotv").onclick=function(){var c=document.getElementById("kotc").value.replace(/\D/g,"");if(c.length!==5){ask("5 अंक का कोड लिखिए");return}
+document.getElementById("kotv").onclick=function(){var c=document.getElementById("kotc").value.replace(/\D/g,"");if(c.length!==6){ask("6 अंक का कोड लिखिए");return}
 api("/verify-otp",{mobile:m,code:c}).then(function(j){if(j&&j.ok){stop();o.onOk()}else ask((j&&j.error)||"गलत कोड")}).catch(function(){ask("सर्वर से जुड़ नहीं पाए")})};
 setTimeout(function(){var i=document.getElementById("kotc");if(i)i.focus()},50)}
 function send(){stop();box.innerHTML=head('कोड भेज रहे हैं…')+foot();bindC();
