@@ -1,5 +1,38 @@
 <!DOCTYPE html>
-<html lang="hi"><head><meta charset="utf-8">
+<html lang="hi"><head>
+<script>
+/* KING LOGIN KEEPER: login ko browser ke localStorage ke alawa cookie + IndexedDB me bhi rakhta hai.
+   Browser localStorage saaf kar de to login apne-aap wapas aa jata hai. Logout dabane par sab hat jata hai. */
+(function(){
+var K=["kms_user","kms_orders","kms_buyer","kms_boy_mobile","kms_boy_info"],CK=["kms_user","kms_boy_mobile","kms_boy_info"],LS=null;
+try{LS=window.localStorage}catch(e){return}
+var S=Storage.prototype,_s=S.setItem,_r=S.removeItem,db=null,pend=[],seen={};
+function ckGet(n){try{var m=document.cookie.match(new RegExp("(?:^|; )"+n+"=([^;]*)"));return m?decodeURIComponent(m[1]):null}catch(e){return null}}
+function ckSet(n,v){try{document.cookie=n+"="+(v==null?"":encodeURIComponent(v))+"; max-age="+(v==null?0:63072000)+"; path=/; SameSite=Lax"}catch(e){}}
+function idb(cb){if(db)return cb(db);try{var q=indexedDB.open("king_keep",1);q.onupgradeneeded=function(){q.result.createObjectStore("kv")};q.onsuccess=function(){db=q.result;cb(db)};q.onerror=function(){cb(null)}}catch(e){cb(null)}}
+function idbPut(k,v){idb(function(d){if(!d)return;try{var t=d.transaction("kv","readwrite").objectStore("kv");if(v==null)t["delete"](k);else t.put(v,k)}catch(e){}})}
+function idbGet(k,cb){idb(function(d){if(!d)return cb(null);try{var r=d.transaction("kv").objectStore("kv").get(k);r.onsuccess=function(){cb(r.result==null?null:r.result)};r.onerror=function(){cb(null)}}catch(e){cb(null)}})}
+function mirror(k,v){if(K.indexOf(k)<0)return;idbPut(k,v);if(CK.indexOf(k)>-1)ckSet(k,v)}
+S.setItem=function(k,v){_s.apply(this,arguments);if(this===LS)mirror(k,String(v))};
+S.removeItem=function(k){_r.apply(this,arguments);if(this===LS)mirror(k,null)};
+/* 1) shuru me: agar localStorage khali hai to cookie se turant wapas lao */
+CK.forEach(function(k){try{if(LS.getItem(k)==null){var c=ckGet(k);if(c){_s.call(LS,k,c)}}}catch(e){}});
+/* 2) IndexedDB se baaki (orders wagairah) wapas lao; kuch wapas aaya to page ek baar refresh */
+var left=K.length,rest=0;
+K.forEach(function(k){try{if(LS.getItem(k)!=null){left--;return}}catch(e){left--;return}
+ idbGet(k,function(v){if(v!=null){try{_s.call(LS,k,v);rest++}catch(e){}}if(--left===0&&rest){try{if(!sessionStorage.getItem("kk_r")){sessionStorage.setItem("kk_r","1");location.reload()}}catch(e){}}})});
+if(left===0&&false){}
+/* 3) har 3 second me jaanch: kuch badla ho (iframe me bhi) to backup update, logout ho to backup hata do */
+function tick(){K.forEach(function(k){var v=null;try{v=LS.getItem(k)}catch(e){}
+ if(v!=null){if(seen[k]!==v){seen[k]=v;mirror(k,v)}}else if(seen[k]!=null){seen[k]=null;mirror(k,null)}})}
+setInterval(tick,3000);setTimeout(tick,500);
+document.addEventListener("visibilitychange",function(){if(document.hidden)tick()});
+window.addEventListener("pagehide",tick);
+/* 4) browser ko bolo ki is site ka data na hataye */
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+})();
+</script>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,interactive-widget=resizes-content">
 <title>KING DELIVERY</title>
 <style>
@@ -43,7 +76,7 @@ var MK="kms_boy_mobile",OK="kms_boy_ov",CK="kms_boy_cov",me="",all=[],ov={},cps=
 var OTP_URL="https://helium-unbeaten-progeny.ngrok-free.dev"; /* WhatsApp OTP server ka link. Khali = OTP band */
 function kotp(o){var box=o.box,m=o.mobile,wait=0,tm=null;
 function stop(){if(tm){clearInterval(tm);tm=null}}
-function api(p,b){return fetch(OTP_URL+p,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}).then(function(r){return r.json()})}
+function api(p,b){return fetch(OTP_URL+p,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"1"},body:JSON.stringify(b)}).then(function(r){return r.json()})}
 function cancel(){stop();if(o.onCancel)o.onCancel()}
 function head(t){return o.pre+'<h3 style="margin:0 0 8px">💬 WhatsApp कोड</h3><p>'+t+'</p>'}
 function foot(){return '<button class="'+o.gc+'" id="'+o.cid+'" type="button">रद्द करें</button>'+o.post}
@@ -56,7 +89,7 @@ document.getElementById("kotv").onclick=function(){var c=document.getElementById
 api("/verify-otp",{mobile:m,code:c}).then(function(j){if(j&&j.ok){stop();o.onOk()}else ask((j&&j.error)||"गलत कोड")}).catch(function(){ask("सर्वर से जुड़ नहीं पाए")})};
 setTimeout(function(){var i=document.getElementById("kotc");if(i)i.focus()},50)}
 function send(){stop();box.innerHTML=head('कोड भेज रहे हैं…')+foot();bindC();
-api("/send-otp",{mobile:m}).then(function(j){if(j&&j.ok){wait=30;ask()}else err((j&&j.error)||"कोड नहीं भेज पाए")}).catch(function(){err("सर्वर से जुड़ नहीं पाए। इंटरनेट जाँचिए")})}
+api("/send-otp",{mobile:m}).then(function(j){if(j&&j.ok){wait=30;ask()}else err((j&&j.error)||"कोड नहीं भेज पाए")}).catch(function(){err("Login का समय सुबह 08 बजे से रात 08 बजे तक है। कृपया इसी समय Login कीजिए। धन्यवाद। अधिक जानकारी के लिए संपर्क कीजिए: 9558222519")})}
 send()}
 function t10(m){var d=String(m||"").replace(/\D/g,"");return d.length>10?d.slice(-10):d}
 function esc(s){return String(s==null?"":s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}

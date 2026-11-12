@@ -1,6 +1,39 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
+<script>
+/* KING LOGIN KEEPER: login ko browser ke localStorage ke alawa cookie + IndexedDB me bhi rakhta hai.
+   Browser localStorage saaf kar de to login apne-aap wapas aa jata hai. Logout dabane par sab hat jata hai. */
+(function(){
+var K=["kms_user","kms_orders","kms_buyer","kms_boy_mobile","kms_boy_info","kms_idov","kms_idov_all"],CK=["kms_user","kms_boy_mobile","kms_boy_info"],LS=null;
+try{LS=window.localStorage}catch(e){return}
+var S=Storage.prototype,_s=S.setItem,_r=S.removeItem,db=null,pend=[],seen={};
+function ckGet(n){try{var m=document.cookie.match(new RegExp("(?:^|; )"+n+"=([^;]*)"));return m?decodeURIComponent(m[1]):null}catch(e){return null}}
+function ckSet(n,v){try{document.cookie=n+"="+(v==null?"":encodeURIComponent(v))+"; max-age="+(v==null?0:63072000)+"; path=/; SameSite=Lax"}catch(e){}}
+function idb(cb){if(db)return cb(db);try{var q=indexedDB.open("king_keep",1);q.onupgradeneeded=function(){q.result.createObjectStore("kv")};q.onsuccess=function(){db=q.result;cb(db)};q.onerror=function(){cb(null)}}catch(e){cb(null)}}
+function idbPut(k,v){idb(function(d){if(!d)return;try{var t=d.transaction("kv","readwrite").objectStore("kv");if(v==null)t["delete"](k);else t.put(v,k)}catch(e){}})}
+function idbGet(k,cb){idb(function(d){if(!d)return cb(null);try{var r=d.transaction("kv").objectStore("kv").get(k);r.onsuccess=function(){cb(r.result==null?null:r.result)};r.onerror=function(){cb(null)}}catch(e){cb(null)}})}
+function mirror(k,v){if(K.indexOf(k)<0)return;idbPut(k,v);if(CK.indexOf(k)>-1)ckSet(k,v)}
+S.setItem=function(k,v){_s.apply(this,arguments);if(this===LS)mirror(k,String(v))};
+S.removeItem=function(k){_r.apply(this,arguments);if(this===LS)mirror(k,null)};
+/* 1) shuru me: agar localStorage khali hai to cookie se turant wapas lao */
+CK.forEach(function(k){try{if(LS.getItem(k)==null){var c=ckGet(k);if(c){_s.call(LS,k,c)}}}catch(e){}});
+/* 2) IndexedDB se baaki (orders wagairah) wapas lao; kuch wapas aaya to page ek baar refresh */
+var left=K.length,rest=0;
+K.forEach(function(k){try{if(LS.getItem(k)!=null){left--;return}}catch(e){left--;return}
+ idbGet(k,function(v){if(v!=null){try{_s.call(LS,k,v);rest++}catch(e){}}if(--left===0&&rest){try{if(!sessionStorage.getItem("kk_r")){sessionStorage.setItem("kk_r","1");location.reload()}}catch(e){}}})});
+if(left===0&&false){}
+/* 3) har 3 second me jaanch: kuch badla ho (iframe me bhi) to backup update, logout ho to backup hata do */
+function tick(){K.forEach(function(k){var v=null;try{v=LS.getItem(k)}catch(e){}
+ if(v!=null){if(seen[k]!==v){seen[k]=v;mirror(k,v)}}else if(seen[k]!=null){seen[k]=null;mirror(k,null)}})}
+setInterval(tick,3000);setTimeout(tick,500);
+document.addEventListener("visibilitychange",function(){if(document.hidden)tick()});
+window.addEventListener("pagehide",tick);
+/* 4) browser ko bolo ki is site ka data na hataye */
+try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
+})();
+</script>
+
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <title>KING MOBILE</title>
@@ -1630,7 +1663,7 @@ if(confirm("क्या आप Logout करना चाहते हैं?")
 var OTP_URL="https://helium-unbeaten-progeny.ngrok-free.dev"; /* WhatsApp OTP server ka link. Khali = OTP band */
 function kotp(o){var box=o.box,m=o.mobile,wait=0,tm=null;
 function stop(){if(tm){clearInterval(tm);tm=null}}
-function api(p,b){return fetch(OTP_URL+p,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(b)}).then(function(r){return r.json()})}
+function api(p,b){return fetch(OTP_URL+p,{method:"POST",headers:{"Content-Type":"application/json","ngrok-skip-browser-warning":"1"},body:JSON.stringify(b)}).then(function(r){return r.json()})}
 function cancel(){stop();if(o.onCancel)o.onCancel()}
 function head(t){return o.pre+'<h3 style="margin:0 0 8px">💬 WhatsApp कोड</h3><p>'+t+'</p>'}
 function foot(){return '<button class="'+o.gc+'" id="'+o.cid+'" type="button">रद्द करें</button>'+o.post}
@@ -1643,7 +1676,7 @@ document.getElementById("kotv").onclick=function(){var c=document.getElementById
 api("/verify-otp",{mobile:m,code:c}).then(function(j){if(j&&j.ok){stop();o.onOk()}else ask((j&&j.error)||"गलत कोड")}).catch(function(){ask("सर्वर से जुड़ नहीं पाए")})};
 setTimeout(function(){var i=document.getElementById("kotc");if(i)i.focus()},50)}
 function send(){stop();box.innerHTML=head('कोड भेज रहे हैं…')+foot();bindC();
-api("/send-otp",{mobile:m}).then(function(j){if(j&&j.ok){wait=30;ask()}else err((j&&j.error)||"कोड नहीं भेज पाए")}).catch(function(){err("सर्वर से जुड़ नहीं पाए। इंटरनेट जाँचिए")})}
+api("/send-otp",{mobile:m}).then(function(j){if(j&&j.ok){wait=30;ask()}else err((j&&j.error)||"कोड नहीं भेज पाए")}).catch(function(){err("Login का समय सुबह 08 बजे से रात 08 बजे तक है। कृपया इसी समय Login कीजिए। धन्यवाद। अधिक जानकारी के लिए संपर्क कीजिए: 9558222519")})}
 send()}
 function openLogin(msg){var d=document.getElementById("xlg");
 d.innerHTML='<div class="xsh"><h3>🔐 Login</h3><p>'+esc(msg||"अपना नाम और मोबाइल नंबर डालिए। एक बार Login करने के बाद इस फ़ोन पर हमेशा Login रहेगा।")+'</p><input type="text" id="xln" placeholder="आपका पूरा नाम *" autocomplete="name"><input type="text" id="xlm" inputmode="numeric" maxlength="14" placeholder="मोबाइल नंबर * (10 अंक)" autocomplete="tel"><div id="xle"></div><button class="xbtn" id="xlok">Login करें</button><button class="xbtn g" id="xlcl">रद्द करें</button></div>';
@@ -1861,12 +1894,12 @@ function kmCls(o){var s=normSt(o.status);if(s==="Done")return"d";if(s==="DelCanc
    - लगातार (बीच में Done न आए) ग्राहक-रद्द + डिलीवरी-रद्द की सीमा = 5
    - अगर कभी 2 डिलीवरी (डिलीवरी वाला घर पहुँचने के बाद) रद्द हो चुकी हों तो सीमा 3
    - कुल 3 डिलीवरी-रद्द पर सीधा ब्लॉक */
-function kmStat(list){var a=list.slice().sort(function(x,y){return new Date(x.time)-new Date(y.time)});
+function kmStat0(list){var a=list.slice().sort(function(x,y){return new Date(x.time)-new Date(y.time)});
 var st={done:0,cancel:0,delc:0,shop:0,pend:0,streak:0,limit:5,blocked:false,risky:false,total:a.length};
 a.forEach(function(o){var c=kmCls(o);if(c==="d"){st.done++;st.streak=0}else if(c==="x1"){st.cancel++;st.streak++}else if(c==="x2"){st.delc++;st.streak++}else if(c==="xs"){st.shop++}else st.pend++});
 st.limit=st.delc>=2?3:5;st.blocked=(st.streak>=st.limit)||st.delc>=3;st.risky=st.streak>=3;return st}
 
-function kmShowBlock(){var d=document.getElementById("kmblk");if(d)d.remove();d=document.createElement("div");d.id="kmblk";
+/* ===== ID ON/OFF: दुकान ने ID चालू की हो तो ब्लॉक हट जाता है ===== */ var KMOVC="kms_idov"; function ovC(){try{return JSON.parse(localStorage.getItem(KMOVC)||"null")}catch(e){return null}} (function(){var J=Response.prototype.json;Response.prototype.json=function(){return J.apply(this,arguments).then(function(j){try{if(j&&j.idblock&&j.idblock.m&&j.idblock.s)localStorage.setItem(KMOVC,JSON.stringify({m:t10(j.idblock.m),s:j.idblock.s,t:Number(j.idblock.t)||0}))}catch(e){}return j})}})(); function kmStat(list){var st=kmStat0(list);if(!list.length)return st;var m=t10(list[0].mobile),ov=ovC();if(!ov||ov.m!==m)return st; if(ov.s==="off"){st.blocked=true;st.manual=true;return st} var p=list.filter(function(o){return new Date(o.time).getTime()>ov.t}),sd=false,nc=0;p.forEach(function(o){var c=kmCls(o);if(c==="d")sd=true;else if(c==="x1"||c==="x2")nc++}); var b=sd?kmStat0(p).blocked:nc>0;st.blocked=b;st.risky=false;st.ovOn=true;if(!sd){st.streak=nc;st.limit=1}return st} function kmShowBlock(){var d=document.getElementById("kmblk");if(d)d.remove();d=document.createElement("div");d.id="kmblk";
 d.style.cssText="position:fixed;inset:0;z-index:2147483200;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:22px;font-family:inherit";
 d.innerHTML='<div style="background:#fff;color:#111;border-radius:16px;max-width:340px;width:100%;padding:22px 18px 16px;text-align:center"><div style="font-size:44px;line-height:1">🚫</div><div style="font-size:19px;font-weight:900;color:#b42410;margin:10px 0 8px">आपकी ID ब्लॉक हो गई है</div><div style="font-size:15px;font-weight:700;color:#222;line-height:1.6">आपने आइटम बुक करके बार-बार ऑर्डर कैंसल किए, इसलिए अब आप नया ऑर्डर बुक नहीं कर सकते।<br>कृपया दुकान से संपर्क करें:</div><a href="tel:9558222519" style="display:block;margin-top:10px;font-size:20px;font-weight:900;color:#0b57d0">📞 9558222519</a><button style="margin-top:14px;border:0;background:#e63c1f;color:#fff;font-weight:900;font-size:16px;border-radius:10px;padding:10px 34px;font-family:inherit">ठीक है</button></div>';
 d.addEventListener("click",function(e){if(e.target===d||e.target.tagName==="BUTTON")d.remove()});document.body.appendChild(d)}
